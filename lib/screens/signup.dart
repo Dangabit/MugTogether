@@ -13,11 +13,23 @@ class _SignUpPage extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final exceptionController = TextEditingController();
+  String _exception = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // For backward navigation
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text("Sign Up!"),
+      ),
+      // Sign Up Form
       body: Center(
         child: Form(
           key: _formKey,
@@ -50,7 +62,7 @@ class _SignUpPage extends State<SignUpPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
                   onPressed: () async {
-                    exceptionController.text = "";
+                    _exception = "";
                     if (_formKey.currentState!.validate()) {
                       try {
                         await FirebaseAuth.instance
@@ -58,15 +70,15 @@ class _SignUpPage extends State<SignUpPage> {
                           email: emailController.text,
                           password: passwordController.text,
                         );
+                        Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
-                          exceptionController.text =
-                              'The password provided is too weak.';
+                          _exception = 'The password provided is too weak.';
                         } else if (e.code == 'email-already-in-use') {
-                          exceptionController.text =
+                          _exception =
                               'The account already exists for that email.';
                         } else if (e.code == 'invalid-email') {
-                          exceptionController.text = 'Not a valid email.';
+                          _exception = 'Not a valid email.';
                         }
                       } catch (e) {
                         if (kDebugMode) {
@@ -81,7 +93,7 @@ class _SignUpPage extends State<SignUpPage> {
               ),
               // Display error, if any
               Text(
-                exceptionController.text,
+                _exception,
                 style: const TextStyle(color: Colors.redAccent),
               ),
             ],
