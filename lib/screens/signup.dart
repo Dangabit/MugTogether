@@ -10,10 +10,21 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPage extends State<SignUpPage> {
+  // Variables initialisation
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
   String _exception = "";
+
+  // Prevent memory leak
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +46,17 @@ class _SignUpPage extends State<SignUpPage> {
           key: _formKey,
           child: Column(
             children: <Widget>[
+              // Username input field
+              TextFormField(
+                controller: usernameController,
+                decoration: const InputDecoration(hintText: 'Username'),
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please input a username';
+                  }
+                  return null;
+                },
+              ),
               // Email input field
               TextFormField(
                 controller: emailController,
@@ -65,11 +87,13 @@ class _SignUpPage extends State<SignUpPage> {
                     _exception = "";
                     if (_formKey.currentState!.validate()) {
                       try {
-                        await FirebaseAuth.instance
+                        final credential = await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
                         );
+                        credential.user
+                            ?.updateDisplayName(usernameController.text);
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
@@ -85,6 +109,7 @@ class _SignUpPage extends State<SignUpPage> {
                           print(e);
                         }
                       }
+                      // Update page
                       setState(() {});
                     }
                   },
