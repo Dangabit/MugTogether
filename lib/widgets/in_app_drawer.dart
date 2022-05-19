@@ -30,6 +30,7 @@ class InAppDrawer {
           child: Row(
             children: <Widget>[
               ElevatedButton(
+                // Sign out and return to login page
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.popUntil(context, ModalRoute.withName('/'));

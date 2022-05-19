@@ -78,6 +78,7 @@ class _SignUpPage extends State<SignUpPage> {
                   }
                   return null;
                 },
+                obscureText: true,
               ),
               // Button, with function to create user in Firebase
               Padding(
@@ -85,8 +86,11 @@ class _SignUpPage extends State<SignUpPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     _exception = "";
+                    // If the inputs are valid
                     if (_formKey.currentState!.validate()) {
                       try {
+                        // Try to create account, if successful, tag
+                        // the user to the username and move the user to login
                         final credential = await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
                           email: emailController.text,
@@ -96,6 +100,7 @@ class _SignUpPage extends State<SignUpPage> {
                             ?.updateDisplayName(usernameController.text);
                         Navigator.pop(context);
                       } on FirebaseAuthException catch (e) {
+                        // Account creation problem, take note here
                         if (e.code == 'weak-password') {
                           _exception = 'The password provided is too weak.';
                         } else if (e.code == 'email-already-in-use') {
@@ -105,18 +110,19 @@ class _SignUpPage extends State<SignUpPage> {
                           _exception = 'Not a valid email.';
                         }
                       } catch (e) {
+                        // For debugging purposes
                         if (kDebugMode) {
                           print(e);
                         }
                       }
-                      // Update page
+                      // Reset page to update exception
                       setState(() {});
                     }
                   },
                   child: const Text('Create'),
                 ),
               ),
-              // Display error, if any
+              // Display firebase account creation issue, if any
               Text(
                 _exception,
                 style: const TextStyle(color: Colors.redAccent),

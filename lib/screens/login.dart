@@ -55,6 +55,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                     return null;
                   },
+                  obscureText: true,
                 ),
                 // Button, with function to login
                 Padding(
@@ -63,8 +64,11 @@ class _LoginPage extends State<LoginPage> {
                     child: const Text('Login!'),
                     onPressed: () async {
                       _exception = "";
+                      // If inputs are valid
                       if (_formKey.currentState!.validate()) {
                         try {
+                          // Try to login, once successful, reset the controllers
+                          // and move the user to their homepage
                           await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                             email: emailController.text,
@@ -74,6 +78,7 @@ class _LoginPage extends State<LoginPage> {
                           passwordController.clear();
                           Navigator.pushNamed(context, '/questions');
                         } on FirebaseAuthException catch (e) {
+                          // Login failure, take note of the cause
                           if (e.code == 'invalid-email' ||
                               e.code == 'wrong-password') {
                             _exception =
@@ -83,15 +88,18 @@ class _LoginPage extends State<LoginPage> {
                                 'This email is not used, try creating instead';
                           }
                         } catch (e) {
+                          // For debugging purposes
                           if (kDebugMode) {
                             print(e);
                           }
                         }
+                        // Reset the state to update the exception
                         setState(() {});
                       }
                     },
                   ),
                 ),
+                // Display any firebase login issue, if any
                 Text(_exception,
                     style: const TextStyle(color: Colors.redAccent)),
               ],
