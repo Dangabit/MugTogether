@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/homepage.dart';
+import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
 import 'package:mug_together/screens/signup.dart';
 
@@ -28,9 +28,9 @@ class AppRouter {
 
     // Routes available when user is logged in
     switch (settings.name) {
-      case '/home':
+      case '/questions':
         return MaterialPageRoute(
-          settings: const RouteSettings(name: "/home"),
+          settings: const RouteSettings(name: "/questions"),
           builder: (context) => const HomePage()
         );
     }

@@ -72,7 +72,7 @@ class _LoginPage extends State<LoginPage> {
                           );
                           emailController.clear();
                           passwordController.clear();
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pushNamed(context, '/questions');
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-email' ||
                               e.code == 'wrong-password') {
