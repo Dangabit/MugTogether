@@ -5,7 +5,7 @@ import 'package:mug_together/app_router.dart';
 
 // Initialising main method, also initialise Firebase
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized;
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
