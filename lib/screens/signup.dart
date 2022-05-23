@@ -67,6 +67,7 @@ class _SignUpPage extends State<SignUpPage> {
                   }
                   return null;
                 },
+                onFieldSubmitted: submit,
               ),
               // Password input field
               TextFormField(
@@ -79,46 +80,13 @@ class _SignUpPage extends State<SignUpPage> {
                   return null;
                 },
                 obscureText: true,
+                onFieldSubmitted: submit,
               ),
               // Button, with function to create user in Firebase
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () async {
-                    _exception = "";
-                    // If the inputs are valid
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        // Try to create account, if successful, tag
-                        // the user to the username and move the user to login
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                        credential.user
-                            ?.updateDisplayName(usernameController.text);
-                        Navigator.pop(context);
-                      } on FirebaseAuthException catch (e) {
-                        // Account creation problem, take note here
-                        if (e.code == 'weak-password') {
-                          _exception = 'The password provided is too weak.';
-                        } else if (e.code == 'email-already-in-use') {
-                          _exception =
-                              'The account already exists for that email.';
-                        } else if (e.code == 'invalid-email') {
-                          _exception = 'Not a valid email.';
-                        }
-                      } catch (e) {
-                        // For debugging purposes
-                        if (kDebugMode) {
-                          print(e);
-                        }
-                      }
-                      // Reset page to update exception
-                      setState(() {});
-                    }
-                  },
+                  onPressed: () => submit(null),
                   child: const Text('Create'),
                 ),
               ),
@@ -132,5 +100,39 @@ class _SignUpPage extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  Future<void> submit(String? value) async {
+    _exception = "";
+    // If the inputs are valid
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Try to create account, if successful, tag
+        // the user to the username and move the user to login
+        final credential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        credential.user?.updateDisplayName(usernameController.text);
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        // Account creation problem, take note here
+        if (e.code == 'weak-password') {
+          _exception = 'The password provided is too weak.';
+        } else if (e.code == 'email-already-in-use') {
+          _exception = 'The account already exists for that email.';
+        } else if (e.code == 'invalid-email') {
+          _exception = 'Not a valid email.';
+        }
+      } catch (e) {
+        // For debugging purposes
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+      // Reset page to update exception
+      setState(() {});
+    }
   }
 }

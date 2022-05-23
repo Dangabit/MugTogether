@@ -7,7 +7,7 @@ class InAppDrawer {
       child: Column(children: <Widget>[
         ListView(shrinkWrap: true, children: [
           DrawerHeader(
-            child: _generateProfileCard(),
+            child: _generateProfileCard(context),
           ),
           ListTile(
             title: const Text('My Questions'),
@@ -44,17 +44,18 @@ class InAppDrawer {
     );
   }
 
-  static Widget _generateProfileCard() {
+  static Widget _generateProfileCard(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
 
     return Card(
       // FIXME: Rounded corners might not be working
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: InkWell(
-        // TODO: Use user pic if have
-        child: Image.asset('assets/test.jpg', fit: BoxFit.cover),
+        child: user!.photoURL == null
+            ? Image.asset('assets/test.jpg', fit: BoxFit.cover)
+            : Image.network(user.photoURL!),
         onTap: () {
-          // TODO: Direct to user account screen
+          Navigator.pushNamed(context, '/profile/me');
         },
         splashColor: Colors.grey,
       ),

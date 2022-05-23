@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/add_question.dart';
+import 'package:mug_together/screens/profile.dart';
 import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
 import 'package:mug_together/screens/signup.dart';
 
 class AppRouter {
-
   // Handles Routing
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Arguments if needed
@@ -18,8 +18,8 @@ class AppRouter {
         return _notLoggedIn();
       case '/signup':
         return MaterialPageRoute(
-          settings: const RouteSettings(name: "/signup"),
-          builder: (context) => const SignUpPage());
+            settings: const RouteSettings(name: "/signup"),
+            builder: (context) => const SignUpPage());
     }
 
     // Checking if the user is logged in
@@ -32,12 +32,17 @@ class AppRouter {
       case '/questions':
         return MaterialPageRoute(
           settings: const RouteSettings(name: "/questions"),
-          builder: (context) => const QuestionsPage()
+          builder: (context) => const QuestionsPage(),
         );
       case '/questions/add':
         return MaterialPageRoute(
           settings: const RouteSettings(name: "/questions/add"),
           builder: (context) => const AddQuestion(),
+        );
+      case '/profile/me':
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: "/profile/me"),
+          builder: (context) => const ProfilePage(),
         );
     }
 
@@ -47,9 +52,8 @@ class AppRouter {
 
   static Route<dynamic> _notLoggedIn() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: "/"),
-      builder: (context) => const LoginPage()
-    );
+        settings: const RouteSettings(name: "/"),
+        builder: (context) => const LoginPage());
   }
 
   static Route<dynamic> _pageNotFound() {
