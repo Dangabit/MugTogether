@@ -24,6 +24,9 @@ class _ProfilePage extends State<ProfilePage> {
       body: Center(
         child: Column(
           children: <Widget>[
+            // TODO: Implement profile pic change here
+            // - Need to save into local storage
+            // - Pull data from local storage to display
             CircleAvatar(
               backgroundImage: NetworkImage(user!.photoURL == null ? "" : user!.photoURL!),
               backgroundColor: Colors.grey,
@@ -32,6 +35,7 @@ class _ProfilePage extends State<ProfilePage> {
             Text(user!.displayName!),
             ElevatedButton(
               onPressed: () {
+                // FIXME: Doesn't reset state when popped
                 Navigator.push(
                     context,
                     MaterialPageRoute(
