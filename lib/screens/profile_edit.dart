@@ -9,12 +9,14 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfile extends State<EditProfile> {
+  // Variables initialisation
   User? user = FirebaseAuth.instance.currentUser;
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  // Initialise the field to contain previous username & email
   @override
   void initState() {
     super.initState();
@@ -22,6 +24,7 @@ class _EditProfile extends State<EditProfile> {
     emailController.text = user!.email!;
   }
 
+  // Prevent memory leak
   @override
   void dispose() {
     nameController.dispose();
@@ -40,6 +43,7 @@ class _EditProfile extends State<EditProfile> {
         }),
       ),
       body: Center(
+        // Form to edit the profile
         child: Form(
           key: _formKey,
           child: Column(
@@ -70,6 +74,7 @@ class _EditProfile extends State<EditProfile> {
                 obscureText: true,
               ),
               ElevatedButton(
+                // Button to re-verify the user before committing the change
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     showDialog(
@@ -88,6 +93,8 @@ class _EditProfile extends State<EditProfile> {
   }
 
   AlertDialog _reverify(BuildContext context) {
+    // Pop-up window for the form to re-authenticate the user
+    // Once re-authenticated, update the users' credentials
     final newPassController = TextEditingController();
     return AlertDialog(
       content: Column(
