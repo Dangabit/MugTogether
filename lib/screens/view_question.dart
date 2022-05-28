@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mug_together/screens/edit_question.dart';
 
 class ViewQuestion extends StatefulWidget {
+  // Passing in document info
   const ViewQuestion({Key? key, required this.document}) : super(key: key);
   final QueryDocumentSnapshot document;
 
@@ -12,6 +13,7 @@ class ViewQuestion extends StatefulWidget {
 }
 
 class _ViewQuestion extends State<ViewQuestion> {
+  // Variables Initialisation
   User? user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -24,6 +26,7 @@ class _ViewQuestion extends State<ViewQuestion> {
         }),
       ),
       body: Flex(
+        // Display the info from the question document
         direction: Axis.vertical,
         children: [
           Text(widget.document.get("Question")),
