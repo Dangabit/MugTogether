@@ -85,6 +85,8 @@ class _AddQuestion extends State<AddQuestion> {
                           final question = <String, String?>{
                             "Question": questionController.text,
                             "Notes": pointersController.text,
+                            "Module": moduleController.text,
+                            "LastUpdate" : DateTime.now().toString(),
                           };
                           // Storing of the question
                           db

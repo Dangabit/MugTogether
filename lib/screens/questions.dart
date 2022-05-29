@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/screens/view_question.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 
 class QuestionsPage extends StatefulWidget {
@@ -11,6 +12,7 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPage extends State<QuestionsPage> {
+  // Variables Initialisation
   final user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   String currentValue = "ALL";
@@ -77,7 +79,7 @@ class _QuestionsPage extends State<QuestionsPage> {
     );
   }
 
-  // Generate a list of cards for each question 
+  // Generate a list of cards for each question
   Future<List<Widget>> _generateCards() async {
     List<QueryDocumentSnapshot> res = List.empty(growable: true);
     // Pull out all the questions from the user collection
@@ -118,11 +120,25 @@ class _QuestionsPage extends State<QuestionsPage> {
               children: [
                 TextButton(
                   child: const Text("Delete"),
-                  onPressed: () {}, // TODO: Delete question
+                  onPressed: () {
+                    db
+                        .collection(user!.uid)
+                        .doc(doc.get("Module"))
+                        .collection("questions")
+                        .doc(doc.id)
+                        .delete();
+                    setState(() {});
+                  }, // TODO: Delete question
                 ),
+                // Move to view question page
                 TextButton(
                   child: const Text("View"),
-                  onPressed: () {}, // TODO: Move to individual question screen
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ViewQuestion(document: doc)));
+                  },
                 ),
               ],
             ),
