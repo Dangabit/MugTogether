@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/add_question.dart';
+import 'package:mug_together/screens/profile.dart';
 import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
 import 'package:mug_together/screens/signup.dart';
@@ -36,6 +37,11 @@ class AppRouter {
         return MaterialPageRoute(
           settings: const RouteSettings(name: "/questions/add"),
           builder: (context) => const AddQuestion(),
+        );
+      case '/profile/me':
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: "/profile/me"),
+          builder: (context) => const ProfilePage(),
         );
     }
 

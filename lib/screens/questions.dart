@@ -12,6 +12,7 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPage extends State<QuestionsPage> {
+  // Variables Initialisation
   final user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   String currentValue = "ALL";

@@ -44,6 +44,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                     return null;
                   },
+                  onFieldSubmitted: submit,
                 ),
                 // Password input field
                 TextFormField(
@@ -56,47 +57,14 @@ class _LoginPage extends State<LoginPage> {
                     return null;
                   },
                   obscureText: true,
+                  onFieldSubmitted: submit,
                 ),
                 // Button, with function to login
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     child: const Text('Login!'),
-                    onPressed: () async {
-                      _exception = "";
-                      // If inputs are valid
-                      if (_formKey.currentState!.validate()) {
-                        try {
-                          // Try to login, once successful, reset the controllers
-                          // and move the user to their homepage
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
-                          emailController.clear();
-                          passwordController.clear();
-                          Navigator.pushNamed(context, '/questions');
-                        } on FirebaseAuthException catch (e) {
-                          // Login failure, take note of the cause
-                          if (e.code == 'invalid-email' ||
-                              e.code == 'wrong-password') {
-                            _exception =
-                                'The email or password is wrong, please try again';
-                          } else if (e.code == 'user-not-found') {
-                            _exception =
-                                'This email is not used, try creating instead';
-                          }
-                        } catch (e) {
-                          // For debugging purposes
-                          if (kDebugMode) {
-                            print(e);
-                          }
-                        }
-                        // Reset the state to update the exception
-                        setState(() {});
-                      }
-                    },
+                    onPressed: () => submit(null),
                   ),
                 ),
                 // Display any firebase login issue, if any
@@ -123,5 +91,37 @@ class _LoginPage extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future<void> submit(String? value) async {
+    _exception = "";
+    // If inputs are valid
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Try to login, once successful, reset the controllers
+        // and move the user to their homepage
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        emailController.clear();
+        passwordController.clear();
+        Navigator.pushNamed(context, '/questions');
+      } on FirebaseAuthException catch (e) {
+        // Login failure, take note of the cause
+        if (e.code == 'invalid-email' || e.code == 'wrong-password') {
+          _exception = 'The email or password is wrong, please try again';
+        } else if (e.code == 'user-not-found') {
+          _exception = 'This email is not used, try creating instead';
+        }
+      } catch (e) {
+        // For debugging purposes
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+      // Reset the state to update the exception
+      setState(() {});
+    }
   }
 }
