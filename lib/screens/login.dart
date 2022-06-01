@@ -93,6 +93,10 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
+  /// Submit the form to log a user in FirebaseAuth.
+  ///
+  /// [value] is needed for onFieldSubmitted to work. However, no actual value
+  /// is needed to pass into this function.
   Future<void> submit(String? value) async {
     _exception = "";
     // If inputs are valid
@@ -100,10 +104,19 @@ class _LoginPage extends State<LoginPage> {
       try {
         // Try to login, once successful, reset the controllers
         // and move the user to their homepage
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
-        );
+        )
+            .then((credential) {
+          // Immediately signout the user and throw exception if
+          // user is not verified
+          if (!credential.user!.emailVerified) {
+            FirebaseAuth.instance.signOut();
+            throw FirebaseAuthException(code: "email-not-verified");
+          }
+        });
         emailController.clear();
         passwordController.clear();
         Navigator.pushNamed(context, '/questions');
@@ -113,6 +126,8 @@ class _LoginPage extends State<LoginPage> {
           _exception = 'The email or password is wrong, please try again';
         } else if (e.code == 'user-not-found') {
           _exception = 'This email is not used, try creating instead';
+        } else if (e.code == 'email-not-verified') {
+          _exception = 'Please verify your email before logging in';
         }
       } catch (e) {
         // For debugging purposes

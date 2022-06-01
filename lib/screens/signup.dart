@@ -102,6 +102,10 @@ class _SignUpPage extends State<SignUpPage> {
     );
   }
 
+  /// Submit the form to create a user in FirebaseAuth.
+  ///
+  /// [value] is needed for onFieldSubmitted to work. However, no actual value
+  /// is needed to pass into this function.
   Future<void> submit(String? value) async {
     _exception = "";
     // If the inputs are valid
@@ -115,6 +119,7 @@ class _SignUpPage extends State<SignUpPage> {
           password: passwordController.text,
         );
         credential.user?.updateDisplayName(usernameController.text);
+        credential.user?.sendEmailVerification();
         Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         // Account creation problem, take note here
