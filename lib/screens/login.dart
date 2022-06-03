@@ -44,7 +44,7 @@ class _LoginPage extends State<LoginPage> {
                     }
                     return null;
                   },
-                  onFieldSubmitted: submit,
+                  onFieldSubmitted: _submit,
                 ),
                 // Password input field
                 TextFormField(
@@ -57,14 +57,14 @@ class _LoginPage extends State<LoginPage> {
                     return null;
                   },
                   obscureText: true,
-                  onFieldSubmitted: submit,
+                  onFieldSubmitted: _submit,
                 ),
                 // Button, with function to login
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     child: const Text('Login!'),
-                    onPressed: () => submit(null),
+                    onPressed: () => _submit(null),
                   ),
                 ),
                 // Display any firebase login issue, if any
@@ -88,6 +88,10 @@ class _LoginPage extends State<LoginPage> {
               ),
             ],
           ),
+          TextButton(
+            onPressed: () => showDialog(context: context, builder: _popupForm),
+            child: const Text("Forget Password"),
+          ),
         ],
       ),
     );
@@ -97,7 +101,7 @@ class _LoginPage extends State<LoginPage> {
   ///
   /// [value] is needed for onFieldSubmitted to work. However, no actual value
   /// is needed to pass into this function.
-  Future<void> submit(String? value) async {
+  Future<void> _submit(String? value) async {
     _exception = "";
     // If inputs are valid
     if (_formKey.currentState!.validate()) {
@@ -138,5 +142,39 @@ class _LoginPage extends State<LoginPage> {
       // Reset the state to update the exception
       setState(() {});
     }
+  }
+
+  /// A simple form for the user to input their email for resetting of password
+  StatefulBuilder _popupForm(BuildContext context) {
+    String _innerException = "";
+    return StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
+        content: Column(
+          children: <Widget>[
+            TextField(
+              decoration: const InputDecoration(hintText: "email"),
+              onSubmitted: (value) {
+                FirebaseAuth.instance.sendPasswordResetEmail(email: value).then(
+                  (_) => Navigator.pop(context),
+                  onError: (e) {
+                    if (e.code == "user-not-found") {
+                      setState(() {
+                        _innerException = "This email is not used";
+                      });
+                    } else {
+                      setState(() {
+                        _innerException = "There is an unforeseen problem...";
+                      });
+                    }
+                  },
+                );
+              },
+            ),
+            Text(_innerException,
+                style: const TextStyle(color: Colors.redAccent)),
+          ],
+        ),
+      );
+    });
   }
 }

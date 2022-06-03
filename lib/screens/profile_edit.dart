@@ -114,10 +114,12 @@ class _EditProfile extends State<EditProfile> {
                     .then((credential) {
                   user!.updateDisplayName(nameController.text);
                   user!.updateEmail(emailController.text);
+                  // FIXME exception thrown when new password is empty
                   user!.updatePassword(passwordController.text);
                 });
                 Navigator.pop(context);
               } on FirebaseAuthException {
+                // FIXME Use something else than a SnackBar
                 const fail = SnackBar(
                   content: Text("Invalid password, try again"),
                 );
