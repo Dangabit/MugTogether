@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class InAppDrawer {
+  /// Provide the common menu drawer to be used between all features screen
   static Drawer gibDrawer(BuildContext context) {
     return Drawer(
       child: Column(children: <Widget>[
@@ -33,7 +34,8 @@ class InAppDrawer {
                 // Sign out and return to login page
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "/", (route) => false);
                 },
                 child: const Text('Sign out'),
               ),
@@ -44,6 +46,7 @@ class InAppDrawer {
     );
   }
 
+  /// Generate the clickable profile card for the drawer header
   static Widget _generateProfileCard(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
 

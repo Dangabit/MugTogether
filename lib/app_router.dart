@@ -7,7 +7,11 @@ import 'package:mug_together/screens/login.dart';
 import 'package:mug_together/screens/signup.dart';
 
 class AppRouter {
-  // Handles Routing
+  /// Generate the route given the RouteSettings.
+  ///
+  /// [settings] holds the name and arguments, in which the function will
+  /// generate a route based on the name. If no routes with the name is found,
+  /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Arguments if needed
     final args = settings.arguments;
@@ -43,18 +47,19 @@ class AppRouter {
           settings: const RouteSettings(name: "/profile/me"),
           builder: (context) => const ProfilePage(),
         );
+      default:
+        return _pageNotFound();
     }
-
-    // Invalid page
-    return _pageNotFound();
   }
 
+  /// Generate a route that pushes user to the login page
   static Route<dynamic> _notLoggedIn() {
     return MaterialPageRoute(
         settings: const RouteSettings(name: "/"),
         builder: (context) => const LoginPage());
   }
 
+  /// Generate a route that pushes the user to an error 404 page
   static Route<dynamic> _pageNotFound() {
     return MaterialPageRoute(
       builder: (context) {
