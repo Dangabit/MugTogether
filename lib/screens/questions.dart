@@ -14,64 +14,99 @@ class QuestionsPage extends StatefulWidget {
 class _QuestionsPage extends State<QuestionsPage> {
   // Variables Initialisation
   final user = FirebaseAuth.instance.currentUser;
-  final db = FirebaseFirestore.instance;
-  String currentValue = "ALL";
+  final allValue = "ALL";
+  late String currentValue;
   List<Widget> cardList = List.empty();
+
+  @override
+  void initState() {
+    super.initState();
+    currentValue = allValue;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("${user?.displayName}'s Questions")),
       drawer: InAppDrawer.gibDrawer(context),
-      body: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              // Filter by Module, or not
-              FutureBuilder<List<DropdownMenuItem<String>>>(
-                future: _getModList(),
-                builder: (context, snapshot) {
-                  return DropdownButton<String>(
-                    value: currentValue,
-                    items: snapshot.data,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        currentValue = newValue!;
-                      });
-                    },
-                  );
-                },
-              ),
-              const Spacer(),
-              // Move to add_question screen, refresh upon returning
-              ElevatedButton(
-                onPressed: () =>
-                    Navigator.pushNamed(context, '/questions/add').then((_) {
-                  setState(() {});
-                }),
-                child: const Icon(Icons.add),
-              ),
-            ],
-          ),
-          // Display questions in grid
-          Expanded(child: _generateGrid()),
-        ],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection(user!.uid).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          } else {
+            return Column(
+              children: [
+                Row(
+                  children: <Widget>[
+                    // Filter by Module, or not
+                    DropdownButton<String>(
+                      value: currentValue,
+                      items: _getModList(snapshot),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          currentValue = newValue!;
+                        });
+                      },
+                    ),
+                    const Spacer(),
+                    // Move to add_question screen, refresh upon returning
+                    ElevatedButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/questions/add'),
+                      child: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+                // Display questions in grid
+                Expanded(child: _generateGrid(snapshot)),
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
+  List<DropdownMenuItem<String>> _getModList(
+      AsyncSnapshot<QuerySnapshot> snapshot) {
+    // Convert ids into DropdownMenuItem to use with DropdownButton
+    List<DropdownMenuItem<String>> res = snapshot.data!.docs
+        .map<DropdownMenuItem<String>>(
+            (doc) => DropdownMenuItem(value: doc.id, child: Text(doc.id)))
+        .toList();
+    res.add(DropdownMenuItem<String>(value: allValue, child: Text(allValue)));
+    return res;
+  }
+
+  // Generate list of modules from the user collection to limit
+  // filter choices
   // Layout the question cards in grid view
-  Widget _generateGrid() {
-    return FutureBuilder<List<Widget>>(
-      future: _generateCards(),
-      builder: (context, snapshot) {
+  Widget _generateGrid(AsyncSnapshot<QuerySnapshot> snapshot) {
+    late Stream<QuerySnapshot> docStream;
+    if (currentValue == allValue) {
+      // TODO: Find a way to bundle all subcollections...
+      docStream = FirebaseFirestore.instance
+          .collection(user!.uid)
+          .doc("HELPLAH123")
+          .collection("questions")
+          .snapshots();
+    } else {
+      docStream = FirebaseFirestore.instance
+          .collection(user!.uid)
+          .doc(currentValue)
+          .collection("questions")
+          .snapshots();
+    }
+    return StreamBuilder(
+      stream: docStream,
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         // Check if there are any questions
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+        if (snapshot.hasData) {
           return GridView.count(
-            physics: const ScrollPhysics(),
-            crossAxisCount: 2,
-            children: snapshot.data!,
-          );
+              physics: const ScrollPhysics(),
+              crossAxisCount: 2,
+              children: _generateCards(snapshot.data!.docs));
         } else {
           return const Text('You have no questions...');
         }
@@ -80,33 +115,7 @@ class _QuestionsPage extends State<QuestionsPage> {
   }
 
   // Generate a list of cards for each question
-  Future<List<Widget>> _generateCards() async {
-    List<QueryDocumentSnapshot> res = List.empty(growable: true);
-    // Pull out all the questions from the user collection
-    if (currentValue == "ALL") {
-      await db.collection(user!.uid).get().then((value) async {
-        for (var doc in value.docs) {
-          await db
-              .collection(user!.uid)
-              .doc(doc.id)
-              .collection("questions")
-              .get()
-              .then((innerDocs) {
-            res.addAll(innerDocs.docs);
-          });
-        }
-      });
-    } else {
-      // Pull out all the questions from the user collection filtered by module
-      await db
-          .collection(user!.uid)
-          .doc(currentValue)
-          .collection("questions")
-          .get()
-          .then((value) {
-        res.addAll(value.docs);
-      });
-    }
+  List<Widget> _generateCards(List<QueryDocumentSnapshot> res) {
     // Convert documents from database into cards
     return res.map((doc) {
       return Card(
@@ -121,14 +130,13 @@ class _QuestionsPage extends State<QuestionsPage> {
                 TextButton(
                   child: const Text("Delete"),
                   onPressed: () {
-                    db
+                    FirebaseFirestore.instance
                         .collection(user!.uid)
                         .doc(doc.get("Module"))
                         .collection("questions")
                         .doc(doc.id)
                         .delete();
-                    setState(() {});
-                  }, // TODO: Delete question
+                  },
                 ),
                 // Move to view question page
                 TextButton(
@@ -146,23 +154,5 @@ class _QuestionsPage extends State<QuestionsPage> {
         ),
       );
     }).toList();
-  }
-
-  // Generate list of modules from the user collection to limit
-  // filter choices
-  Future<List<DropdownMenuItem<String>>> _getModList() async {
-    List<String> res = List.empty(growable: true);
-    res.add("ALL");
-    // Get all the module ids
-    await db.collection(user!.uid).get().then((value) {
-      for (var doc in value.docs) {
-        res.add(doc.id);
-      }
-    });
-    // Convert ids into DropdownMenuItem to use with DropdownButton
-    return res
-        .map<DropdownMenuItem<String>>(
-            (e) => DropdownMenuItem(value: e, child: Text(e)))
-        .toList();
   }
 }
