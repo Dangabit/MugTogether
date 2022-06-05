@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/add_question.dart';
 import 'package:mug_together/screens/profile.dart';
+import 'package:mug_together/screens/questionbank.dart';
 import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
+import 'package:mug_together/screens/quiz.dart';
 import 'package:mug_together/screens/signup.dart';
 
 class AppRouter {
@@ -46,6 +48,16 @@ class AppRouter {
         return MaterialPageRoute(
           settings: const RouteSettings(name: "/profile/me"),
           builder: (context) => const ProfilePage(),
+        );
+      case '/bank':
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: "/bank"),
+          builder: (context) => const QuestionBankPage(),
+        );
+      case '/quiz':
+        return MaterialPageRoute(
+          settings: const RouteSettings(name: "/quiz"),
+          builder: (context) => const QuizPage(),
         );
       default:
         return _pageNotFound();

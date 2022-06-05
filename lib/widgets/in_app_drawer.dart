@@ -15,15 +15,13 @@ class InAppDrawer {
             onTap: () => Navigator.pushNamed(context, '/questions'),
           ),
           ListTile(
-              title: const Text('Question Bank'),
-              onTap: () {
-                //TODO: Add navigation to Question Bank
-              }),
+            title: const Text('Question Bank'),
+            onTap: () => Navigator.pushNamed(context, '/bank'),
+          ),
           ListTile(
-              title: const Text('Quiz'),
-              onTap: () {
-                //TODO: Add navigation to Question Bank
-              }),
+            title: const Text('Quiz'),
+            onTap: () => Navigator.pushNamed(context, '/quiz'),
+          )
         ]),
         const Spacer(),
         Container(
