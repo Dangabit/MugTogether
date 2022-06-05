@@ -38,7 +38,7 @@ class _ViewQuestion extends State<ViewQuestion> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const EditQuestion()));
+                      builder: (context) => EditQuestion(document: widget.document)));
             },
             child: const Text("edit"),
           ),
