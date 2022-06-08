@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/view_question.dart';
 
 class EditQuestion extends StatefulWidget {
   const EditQuestion({Key? key, required this.document}) : super(key: key);

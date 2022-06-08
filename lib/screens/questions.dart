@@ -101,14 +101,20 @@ class _QuestionsPage extends State<QuestionsPage> {
     return StreamBuilder(
       stream: docStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        // Check if there are any questions
-        if (snapshot.hasData) {
-          return GridView.count(
-              physics: const ScrollPhysics(),
-              crossAxisCount: 2,
-              children: _generateCards(snapshot.data!.docs));
-        } else {
-          return const Text('You have no questions...');
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Text('Disconnected');
+          case ConnectionState.waiting:
+            return const CircularProgressIndicator();
+          case ConnectionState.active:
+          case ConnectionState.done:
+            List<Widget> cardList = _generateCards(snapshot.data!.docs);
+            return cardList.isEmpty
+                ? const Text('You have no questions...')
+                : GridView.count(
+                    physics: const ScrollPhysics(),
+                    crossAxisCount: 2,
+                    children: cardList);
         }
       },
     );
@@ -119,10 +125,10 @@ class _QuestionsPage extends State<QuestionsPage> {
     // Convert documents from database into cards
     return res.map((doc) {
       DocumentReference currentDoc = FirebaseFirestore.instance
-              .collection(user!.uid)
-              .doc(doc.get("Module"))
-              .collection("questions")
-              .doc(doc.id);
+          .collection(user!.uid)
+          .doc(doc.get("Module"))
+          .collection("questions")
+          .doc(doc.id);
       return Card(
         child: Column(
           children: <Widget>[
@@ -145,7 +151,8 @@ class _QuestionsPage extends State<QuestionsPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewQuestion(document: currentDoc)));
+                            builder: (context) =>
+                                ViewQuestion(document: currentDoc)));
                   },
                 ),
               ],
