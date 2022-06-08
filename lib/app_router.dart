@@ -15,8 +15,6 @@ class AppRouter {
   /// generate a route based on the name. If no routes with the name is found,
   /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Arguments if needed
-    final args = settings.arguments;
 
     // Sign up and Log in
     switch (settings.name) {
@@ -26,39 +24,16 @@ class AppRouter {
         return MaterialPageRoute(
             settings: const RouteSettings(name: "/signup"),
             builder: (context) => const SignUpPage());
-    }
-
-    // Checking if the user is logged in
-    if (FirebaseAuth.instance.currentUser == null) {
-      return _notLoggedIn();
-    }
-
-    // Routes available when user is logged in
-    switch (settings.name) {
       case '/questions':
-        return MaterialPageRoute(
-            settings: const RouteSettings(name: "/questions"),
-            builder: (context) => const QuestionsPage());
+        return _checkUser(const QuestionsPage(), settings.name!);
       case '/questions/add':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/questions/add"),
-          builder: (context) => const AddQuestion(),
-        );
+        return _checkUser(const AddQuestion(), settings.name!);
       case '/profile/me':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/profile/me"),
-          builder: (context) => const ProfilePage(),
-        );
+        return _checkUser(const ProfilePage(), settings.name!);
       case '/bank':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/bank"),
-          builder: (context) => const QuestionBankPage(),
-        );
+        return _checkUser(const QuestionBankPage(), settings.name!);
       case '/quiz':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/quiz"),
-          builder: (context) => const QuizPage(),
-        );
+        return _checkUser(const QuizPage(), settings.name!);
       default:
         return _pageNotFound();
     }
@@ -69,6 +44,35 @@ class AppRouter {
     return MaterialPageRoute(
         settings: const RouteSettings(name: "/"),
         builder: (context) => const LoginPage());
+  }
+
+  /// Checks if the user is logged in before accessing the screen
+  static Route<dynamic> _checkUser(StatefulWidget screen, String routeName) {
+    return MaterialPageRoute(
+        settings: RouteSettings(name: routeName),
+        builder: (context) {
+          return StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, AsyncSnapshot<User?> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return const Center(
+                      child: Text("Not connected to Firebase"),
+                    );
+                  case ConnectionState.waiting:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      return screen;
+                    } else {
+                      return const LoginPage();
+                    }
+                }
+              });
+        });
   }
 
   /// Generate a route that pushes the user to an error 404 page
