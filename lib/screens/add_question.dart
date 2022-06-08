@@ -16,6 +16,9 @@ class _AddQuestion extends State<AddQuestion> {
   final questionController = TextEditingController();
   final pointersController = TextEditingController();
   final moduleController = TextEditingController();
+  final tagsController = TextEditingController();
+  bool privacy = false;
+  int importance = 0;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _AddQuestion extends State<AddQuestion> {
     questionController.dispose();
     pointersController.dispose();
     moduleController.dispose();
+    tagsController.dispose();
     super.dispose();
   }
 
@@ -63,6 +67,11 @@ class _AddQuestion extends State<AddQuestion> {
                   controller: pointersController,
                   decoration: const InputDecoration(hintText: 'Any notes'),
                 ),
+                TextFormField(
+                  controller: tagsController,
+                  decoration: const InputDecoration(
+                      hintText: 'Separate multi labels with commas!'),
+                ),
                 Row(
                   children: <Widget>[
                     // Module id field
@@ -77,16 +86,25 @@ class _AddQuestion extends State<AddQuestion> {
                             return null;
                           }),
                     ),
+                    Checkbox(value: privacy, onChanged: (newValue) => setState(() {
+                      privacy = newValue!;
+                    })),
                     const Spacer(),
                     ElevatedButton(
                       onPressed: () {
                         // If inputs are valid, store into database
                         if (_formKey.currentState!.validate()) {
-                          final question = <String, String?>{
+                          final question = <String, dynamic>{
                             "Question": questionController.text,
                             "Notes": pointersController.text,
                             "Module": moduleController.text,
-                            "LastUpdate" : DateTime.now().toString(),
+                            "LastUpdate": DateTime.now().toString(),
+                            "Tags": tagsController.text
+                                .split(', ')
+                                .toSet()
+                                .toList(),
+                            "Importance": importance,
+                            "Privacy": privacy,
                           };
                           // Storing of the question
                           db

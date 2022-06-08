@@ -118,6 +118,11 @@ class _QuestionsPage extends State<QuestionsPage> {
   List<Widget> _generateCards(List<QueryDocumentSnapshot> res) {
     // Convert documents from database into cards
     return res.map((doc) {
+      DocumentReference currentDoc = FirebaseFirestore.instance
+              .collection(user!.uid)
+              .doc(doc.get("Module"))
+              .collection("questions")
+              .doc(doc.id);
       return Card(
         child: Column(
           children: <Widget>[
@@ -130,12 +135,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                 TextButton(
                   child: const Text("Delete"),
                   onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection(user!.uid)
-                        .doc(doc.get("Module"))
-                        .collection("questions")
-                        .doc(doc.id)
-                        .delete();
+                    currentDoc.delete();
                   },
                 ),
                 // Move to view question page
@@ -145,7 +145,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewQuestion(document: doc)));
+                            builder: (context) => ViewQuestion(document: currentDoc)));
                   },
                 ),
               ],
