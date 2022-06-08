@@ -19,7 +19,9 @@ class AppRouter {
     // Sign up and Log in
     switch (settings.name) {
       case '/':
-        return _notLoggedIn();
+        return MaterialPageRoute(
+            settings: const RouteSettings(name: "/"),
+            builder: (context) => const LoginPage());
       case '/signup':
         return MaterialPageRoute(
             settings: const RouteSettings(name: "/signup"),
@@ -37,13 +39,6 @@ class AppRouter {
       default:
         return _pageNotFound();
     }
-  }
-
-  /// Generate a route that pushes user to the login page
-  static Route<dynamic> _notLoggedIn() {
-    return MaterialPageRoute(
-        settings: const RouteSettings(name: "/"),
-        builder: (context) => const LoginPage());
   }
 
   /// Checks if the user is logged in before accessing the screen
