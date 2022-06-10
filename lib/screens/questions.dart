@@ -14,14 +14,16 @@ class QuestionsPage extends StatefulWidget {
 class _QuestionsPage extends State<QuestionsPage> {
   // Variables Initialisation
   final user = FirebaseAuth.instance.currentUser;
-  final allValue = "ALL";
-  late String currentValue;
+  final nilValue = "ALL";
+  late String currentModule;
+  late String currentFilter;
   List<Widget> cardList = List.empty();
 
   @override
   void initState() {
     super.initState();
-    currentValue = allValue;
+    currentModule = nilValue;
+    currentFilter = nilValue;
   }
 
   @override
@@ -41,15 +43,16 @@ class _QuestionsPage extends State<QuestionsPage> {
                   children: <Widget>[
                     // Filter by Module, or not
                     DropdownButton<String>(
-                      value: currentValue,
+                      value: currentModule,
                       items: _getModList(snapshot),
                       onChanged: (String? newValue) {
                         setState(() {
-                          currentValue = newValue!;
+                          currentModule = newValue!;
                         });
                       },
                     ),
                     const Spacer(),
+                    _generateDropdown(),
                     // Move to add_question screen, refresh upon returning
                     ElevatedButton(
                       onPressed: () =>
@@ -75,7 +78,7 @@ class _QuestionsPage extends State<QuestionsPage> {
         .map<DropdownMenuItem<String>>(
             (doc) => DropdownMenuItem(value: doc.id, child: Text(doc.id)))
         .toList();
-    res.add(DropdownMenuItem<String>(value: allValue, child: Text(allValue)));
+    res.add(DropdownMenuItem<String>(value: nilValue, child: Text(nilValue)));
     return res;
   }
 
@@ -84,7 +87,7 @@ class _QuestionsPage extends State<QuestionsPage> {
   // Layout the question cards in grid view
   Widget _generateGrid(AsyncSnapshot<QuerySnapshot> snapshot) {
     late Stream<QuerySnapshot> docStream;
-    if (currentValue == allValue) {
+    if (currentModule == nilValue) {
       // TODO: Find a way to bundle all subcollections...
       docStream = FirebaseFirestore.instance
           .collection(user!.uid)
@@ -94,7 +97,7 @@ class _QuestionsPage extends State<QuestionsPage> {
     } else {
       docStream = FirebaseFirestore.instance
           .collection(user!.uid)
-          .doc(currentValue)
+          .doc(currentModule)
           .collection("questions")
           .snapshots();
     }
@@ -161,5 +164,33 @@ class _QuestionsPage extends State<QuestionsPage> {
         ),
       );
     }).toList();
+  }
+
+  FutureBuilder _generateDropdown() {
+    return FutureBuilder<DocumentSnapshot<Map>>(
+      future:
+          FirebaseFirestore.instance.collection(user!.uid).doc("Tags").get(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot<Map>> snapshot) {
+        if (snapshot.hasData) {
+          Map? data = snapshot.data!.data();
+          List<String> tagsList = (data == null) || data.isEmpty
+              ? List.empty(growable: true)
+              : snapshot.data!.data()!.keys.toList() as List<String>;
+          tagsList.add(nilValue);
+          return DropdownButton<String>(
+            value: currentFilter,
+            items: tagsList
+                .map((value) =>
+                    DropdownMenuItem(value: value, child: Text(value)))
+                .toList(),
+            onChanged: (String? value) => setState(() {
+              currentFilter = value!;
+            }),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }
