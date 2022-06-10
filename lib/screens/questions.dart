@@ -32,7 +32,10 @@ class _QuestionsPage extends State<QuestionsPage> {
       appBar: AppBar(title: Text("${user?.displayName}'s Questions")),
       drawer: InAppDrawer.gibDrawer(context),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection(user!.uid).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(user!.uid)
+            .where("isEmpty", isNull: false)
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator();
@@ -75,6 +78,7 @@ class _QuestionsPage extends State<QuestionsPage> {
       AsyncSnapshot<QuerySnapshot> snapshot) {
     // Convert ids into DropdownMenuItem to use with DropdownButton
     List<DropdownMenuItem<String>> res = snapshot.data!.docs
+        .where((doc) => !doc.get("isEmpty"))
         .map<DropdownMenuItem<String>>(
             (doc) => DropdownMenuItem(value: doc.id, child: Text(doc.id)))
         .toList();
@@ -88,17 +92,19 @@ class _QuestionsPage extends State<QuestionsPage> {
   Widget _generateGrid(AsyncSnapshot<QuerySnapshot> snapshot) {
     late Stream<QuerySnapshot> docStream;
     if (currentModule == nilValue) {
-      // TODO: Find a way to bundle all subcollections...
       docStream = FirebaseFirestore.instance
-          .collection(user!.uid)
-          .doc("HELPLAH123")
-          .collection("questions")
+          .collectionGroup("questions")
+          .where("Owner", isEqualTo: user!.uid)
+          .where("Tags",
+              arrayContains: currentFilter == nilValue ? null : currentFilter)
           .snapshots();
     } else {
       docStream = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc(currentModule)
           .collection("questions")
+          .where("Tags",
+              arrayContains: currentFilter == nilValue ? null : currentFilter)
           .snapshots();
     }
     return StreamBuilder(
@@ -173,9 +179,13 @@ class _QuestionsPage extends State<QuestionsPage> {
       builder: (context, AsyncSnapshot<DocumentSnapshot<Map>> snapshot) {
         if (snapshot.hasData) {
           Map? data = snapshot.data!.data();
-          List<String> tagsList = (data == null) || data.isEmpty
-              ? List.empty(growable: true)
-              : snapshot.data!.data()!.keys.toList() as List<String>;
+          late List<String> tagsList;
+          if ((data == null) || data.isEmpty) {
+            tagsList = List.empty();
+          } else {
+            tagsList = data.keys.toList() as List<String>;
+            tagsList.removeWhere((key) => data[key] <= 0);
+          }
           tagsList.add(nilValue);
           return DropdownButton<String>(
             value: currentFilter,

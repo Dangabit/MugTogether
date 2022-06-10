@@ -46,14 +46,15 @@ class _EditQuestion extends State<EditQuestion> {
                     privacy = newValue!;
                   })),
           ElevatedButton(
-              onPressed: () => _submitChange(context), child: const Icon(Icons.save)),
+              onPressed: () => _submitChange(context),
+              child: const Icon(Icons.save)),
         ],
       ),
     );
   }
 
   Future<void> _submitChange(BuildContext context) async {
-    await FirebaseFirestore.instance
+    Future updateQnChange = FirebaseFirestore.instance
         .collection(user!.uid)
         .doc(widget.document.get("Module"))
         .collection("questions")
@@ -62,7 +63,14 @@ class _EditQuestion extends State<EditQuestion> {
       "Notes": notesController.text,
       "Tags": tagsController.text.split(", ").toSet().toList(),
       "Privacy": privacy
-    }).then((_) =>
-    Navigator.pop(context));
+    });
+    Future updateTags = FirebaseFirestore.instance
+        .collection(user!.uid)
+        .doc("Tags")
+        .update(Map.fromIterable(tagsController.text.split(", ").toSet(),
+            value: (element) => FieldValue.increment(1)));
+
+    Future.wait([updateQnChange, updateTags])
+        .then((_) => Navigator.pop(context));
   }
 }
