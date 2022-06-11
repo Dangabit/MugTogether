@@ -39,7 +39,8 @@ class _EditProfile extends State<EditProfile> {
       appBar: AppBar(
         title: const Text("Edit Profile"),
         leading: BackButton(onPressed: () {
-          Navigator.pop(context);
+          Navigator.pushNamedAndRemoveUntil(
+              context, "/profile/me", ModalRoute.withName("/questions"));
         }),
       ),
       body: Center(
@@ -80,7 +81,7 @@ class _EditProfile extends State<EditProfile> {
                     showDialog(
                             context: context,
                             builder: (context) => _reverify(context))
-                        .then((_) => Navigator.pop(context));
+                        .then((_) => setState(() {}));
                   }
                 },
                 child: const Icon(Icons.save),
@@ -92,44 +93,47 @@ class _EditProfile extends State<EditProfile> {
     );
   }
 
-  AlertDialog _reverify(BuildContext context) {
+  StatefulBuilder _reverify(BuildContext context) {
     // Pop-up window for the form to re-authenticate the user
     // Once re-authenticated, update the users' credentials
     final newPassController = TextEditingController();
-    return AlertDialog(
-      content: Column(
-        children: <Widget>[
-          TextField(
-            controller: newPassController,
-            obscureText: true,
-            decoration:
-                const InputDecoration(hintText: "Input current password"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await user!
-                    .reauthenticateWithCredential(EmailAuthProvider.credential(
-                        email: user!.email!, password: newPassController.text))
-                    .then((credential) {
-                  user!.updateDisplayName(nameController.text);
-                  user!.updateEmail(emailController.text);
-                  // FIXME exception thrown when new password is empty
-                  user!.updatePassword(passwordController.text);
-                });
-                Navigator.pop(context);
-              } on FirebaseAuthException {
-                // FIXME Use something else than a SnackBar
-                const fail = SnackBar(
-                  content: Text("Invalid password, try again"),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(fail);
-              }
-            },
-            child: const Text("Confirm"),
-          ),
-        ],
-      ),
+    String _fail = "";
+    return StatefulBuilder(
+      builder: ((context, setState) => AlertDialog(
+            content: Column(
+              children: <Widget>[
+                TextField(
+                  controller: newPassController,
+                  obscureText: true,
+                  decoration:
+                      const InputDecoration(hintText: "Input current password"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      user!.reauthenticateWithCredential(
+                              EmailAuthProvider.credential(
+                                  email: user!.email!,
+                                  password: newPassController.text))
+                          .then((credential) {
+                        user!.updateDisplayName(nameController.text);
+                        user!.updateEmail(emailController.text);
+                        if (passwordController.text.isNotEmpty) {
+                          user!.updatePassword(passwordController.text);
+                        }
+                      }).then((_) => Navigator.pop(context));
+                    } on FirebaseAuthException {
+                      setState(() {
+                        _fail = "Invalid password, try again";
+                      });
+                    }
+                  },
+                  child: const Text("Confirm"),
+                ),
+                Text(_fail),
+              ],
+            ),
+          )),
     );
   }
 }
