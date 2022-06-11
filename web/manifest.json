@@ -1,11 +1,11 @@
 {
-    "name": "mug_together",
+    "name": "MugTogether",
     "short_name": "mug_together",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Notes management app to reduce your exam stress!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

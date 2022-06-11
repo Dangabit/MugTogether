@@ -2,59 +2,75 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/add_question.dart';
 import 'package:mug_together/screens/profile.dart';
+import 'package:mug_together/screens/questionbank.dart';
 import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
+import 'package:mug_together/screens/quiz.dart';
 import 'package:mug_together/screens/signup.dart';
 
 class AppRouter {
-  // Handles Routing
+  /// Generate the route given the RouteSettings.
+  ///
+  /// [settings] holds the name and arguments, in which the function will
+  /// generate a route based on the name. If no routes with the name is found,
+  /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Arguments if needed
-    final args = settings.arguments;
 
     // Sign up and Log in
     switch (settings.name) {
       case '/':
-        return _notLoggedIn();
+        return MaterialPageRoute(
+            settings: const RouteSettings(name: "/"),
+            builder: (context) => const LoginPage());
       case '/signup':
         return MaterialPageRoute(
             settings: const RouteSettings(name: "/signup"),
             builder: (context) => const SignUpPage());
-    }
-
-    // Checking if the user is logged in
-    if (FirebaseAuth.instance.currentUser == null) {
-      return _notLoggedIn();
-    }
-
-    // Routes available when user is logged in
-    switch (settings.name) {
       case '/questions':
-        return MaterialPageRoute(
-            settings: const RouteSettings(name: "/questions"),
-            builder: (context) => const QuestionsPage());
+        return _checkUser(const QuestionsPage(), settings.name!);
       case '/questions/add':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/questions/add"),
-          builder: (context) => const AddQuestion(),
-        );
+        return _checkUser(const AddQuestion(), settings.name!);
       case '/profile/me':
-        return MaterialPageRoute(
-          settings: const RouteSettings(name: "/profile/me"),
-          builder: (context) => const ProfilePage(),
-        );
+        return _checkUser(const ProfilePage(), settings.name!);
+      case '/bank':
+        return _checkUser(const QuestionBankPage(), settings.name!);
+      case '/quiz':
+        return _checkUser(const QuizPage(), settings.name!);
+      default:
+        return _pageNotFound();
     }
-
-    // Invalid page
-    return _pageNotFound();
   }
 
-  static Route<dynamic> _notLoggedIn() {
+  /// Checks if the user is logged in before accessing the screen
+  static Route<dynamic> _checkUser(StatefulWidget screen, String routeName) {
     return MaterialPageRoute(
-        settings: const RouteSettings(name: "/"),
-        builder: (context) => const LoginPage());
+        settings: RouteSettings(name: routeName),
+        builder: (context) {
+          return StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, AsyncSnapshot<User?> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return const Center(
+                      child: Text("Not connected to Firebase"),
+                    );
+                  case ConnectionState.waiting:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ConnectionState.active:
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      return screen;
+                    } else {
+                      return const LoginPage();
+                    }
+                }
+              });
+        });
   }
 
+  /// Generate a route that pushes the user to an error 404 page
   static Route<dynamic> _pageNotFound() {
     return MaterialPageRoute(
       builder: (context) {
