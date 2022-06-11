@@ -113,14 +113,16 @@ class _SignUpPage extends State<SignUpPage> {
       try {
         // Try to create account, if successful, tag
         // the user to the username and move the user to login
-        final credential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
-        );
-        credential.user?.updateDisplayName(usernameController.text);
-        credential.user?.sendEmailVerification();
-        Navigator.pop(context);
+        )
+            .then((credential) {
+          credential.user
+              ?.updateDisplayName(usernameController.text)
+              .then((_) => credential.user?.sendEmailVerification());
+        }).then((_) => Navigator.pop(context));
       } on FirebaseAuthException catch (e) {
         // Account creation problem, take note here
         if (e.code == 'weak-password') {
