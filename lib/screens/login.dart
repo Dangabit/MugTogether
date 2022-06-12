@@ -27,43 +27,100 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple[300],
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          const Text(
+            'Welcome to MugTogether!',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 5.0, bottom: 50.0, left: 20.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Your app for exam success'),
+            ),
+          ),
+
           // Login Form
           Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
                 // Email input field
-                TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(hintText: 'Email'),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please input your email';
-                    }
-                    return null;
-                  },
-                  onFieldSubmitted: _submit,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.pink[100],
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextFormField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                        ),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please input your email';
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: _submit,
+                      ),
+                    ),
+                  ),
                 ),
+
+                const Padding(padding: EdgeInsets.all(5)),
+
                 // Password input field
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(hintText: 'Password'),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please input your password';
-                    }
-                    return null;
-                  },
-                  obscureText: true,
-                  onFieldSubmitted: _submit,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.pink[100],
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: TextFormField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Password',
+                        ),
+                        validator: (String? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please input your password';
+                          }
+                          return null;
+                        },
+                        obscureText: true,
+                        onFieldSubmitted: _submit,
+                      ),
+                    ),
+                  ),
                 ),
                 // Button, with function to login
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
-                    child: const Text('Login!'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue[900],
+                    ),
+                    child: const Text(
+                      'Login!',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     onPressed: () => _submit(null),
                   ),
                 ),
@@ -75,12 +132,23 @@ class _LoginPage extends State<LoginPage> {
           ),
           // Sign Up
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text("Not registered yet? Create one!"),
+              const Text(
+                "Not registered yet? Create one!",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Padding(padding: EdgeInsets.only(right: 10.0)),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(),
                 child: ElevatedButton(
-                  child: const Text('Sign Up'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue[900],
+                  ),
+                  child: const Text(
+                    'Sign Up',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   onPressed: () {
                     Navigator.pushNamed(context, '/signup');
                   },
@@ -90,7 +158,10 @@ class _LoginPage extends State<LoginPage> {
           ),
           TextButton(
             onPressed: () => showDialog(context: context, builder: _popupForm),
-            child: const Text("Forget Password"),
+            child: const Text(
+              "Forgot Password?",
+              style: TextStyle(color: Colors.blue),
+            ),
           ),
         ],
       ),
