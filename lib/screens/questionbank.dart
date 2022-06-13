@@ -32,7 +32,7 @@ class _QuestionBankPage extends State<QuestionBankPage> {
   void _submit() {
     if (currentValue.text != null) {
       Navigator.pushNamed(context, "/bank/module",
-          arguments: {"mod": currentValue.text});
+          arguments: currentValue.text);
     }
     ;
   }
