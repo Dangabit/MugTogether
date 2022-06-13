@@ -38,9 +38,6 @@ class _BankModulePage extends State<BankModulePage> {
       body: FutureBuilder(
           future: allQuestions,
           builder: (content, AsyncSnapshot<QuerySnapshot<Map>> snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-            }
             if (snapshot.hasData) {
               return _generateListView(snapshot.data!.docs, context);
             } else {
@@ -53,6 +50,9 @@ class _BankModulePage extends State<BankModulePage> {
   Widget _generateListView(
       List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
     return ListView.builder(
+      // TODO: Limit count to prevent the need to render large amount of Listview
+      itemCount: docslist.length,
+      // TODO: Button to pull question to /question/add
       itemBuilder: (context, index) => Container(
           margin: const EdgeInsets.all(1),
           child: Text(docslist[index].get("Question"))),
