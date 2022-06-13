@@ -35,9 +35,13 @@ class AppRouter {
       case '/bank':
         return _checkUser((_) => const QuestionBankPage(), settings);
       case '/bank/module':
-        return _checkUser(
-            (user) => BankModulePage(user: user, module: args as String),
-            settings);
+        if (args != null) {
+          return _checkUser(
+              (user) => BankModulePage(user: user, module: args as String),
+              settings);
+        } else {
+          return _checkUser((_) => const QuestionBankPage(), const RouteSettings(name: '/bank'));
+        }
       case '/quiz':
         return _checkUser((_) => const QuizPage(), settings);
       default:

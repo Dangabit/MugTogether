@@ -16,6 +16,9 @@ class _AddQuestion extends State<AddQuestion> {
   final questionController = TextEditingController();
   final pointersController = TextEditingController();
   final moduleController = TextEditingController();
+  final tagsController = TextEditingController();
+  bool privacy = false;
+  int importance = 0;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _AddQuestion extends State<AddQuestion> {
     questionController.dispose();
     pointersController.dispose();
     moduleController.dispose();
+    tagsController.dispose();
     super.dispose();
   }
 
@@ -63,6 +67,11 @@ class _AddQuestion extends State<AddQuestion> {
                   controller: pointersController,
                   decoration: const InputDecoration(hintText: 'Any notes'),
                 ),
+                TextFormField(
+                  controller: tagsController,
+                  decoration: const InputDecoration(
+                      hintText: 'Separate multi labels with commas!'),
+                ),
                 Row(
                   children: <Widget>[
                     // Module id field
@@ -77,31 +86,49 @@ class _AddQuestion extends State<AddQuestion> {
                             return null;
                           }),
                     ),
+                    Checkbox(
+                        value: privacy,
+                        onChanged: (newValue) => setState(() {
+                              privacy = newValue!;
+                            })),
                     const Spacer(),
                     ElevatedButton(
                       onPressed: () {
                         // If inputs are valid, store into database
                         if (_formKey.currentState!.validate()) {
-                          final question = <String, String?>{
+                          final question = <String, dynamic>{
                             "Question": questionController.text,
                             "Notes": pointersController.text,
                             "Module": moduleController.text,
-                            "LastUpdate" : DateTime.now().toString(),
+                            "LastUpdate": DateTime.now().toString(),
+                            "Tags": tagsController.text
+                                .split(', ')
+                                .toSet()
+                                .toList(),
+                            "Importance": importance,
+                            "Privacy": privacy,
+                            "Owner": user!.uid,
                           };
                           // Storing of the question
-                          db
+                          Future addQuestion = db
                               .collection(user!.uid)
                               .doc(moduleController.text)
                               .collection("questions")
                               .add(question);
-                          // Storing of the module id...
-                          // Firestore doesn't let me get a subcollection list
-                          db
+                          // Creating subcollection
+                          Future addModuleSub = db
                               .collection(user!.uid)
                               .doc(moduleController.text)
-                              .set({"mod": moduleController.text});
+                              .set({"isEmpty": false});
+                          // Counting tags
+                          Future addTags = db
+                              .collection(user!.uid)
+                              .doc("Tags")
+                              .update(Map.fromIterable(question["Tags"],
+                                  value: (element) => FieldValue.increment(1)));
                           // Return to question overview
-                          Navigator.pop(context);
+                          Future.wait([addQuestion, addModuleSub, addTags])
+                              .then((_) => Navigator.pop(context));
                         }
                       },
                       child: const Icon(Icons.save),

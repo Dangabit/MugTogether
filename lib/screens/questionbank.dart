@@ -34,6 +34,5 @@ class _QuestionBankPage extends State<QuestionBankPage> {
       Navigator.pushNamed(context, "/bank/module",
           arguments: currentValue.text);
     }
-    ;
   }
 }

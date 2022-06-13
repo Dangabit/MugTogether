@@ -22,6 +22,7 @@ class _BankModulePage extends State<BankModulePage> {
         .collectionGroup("questions")
         .where("Module", isEqualTo: widget.module)
         .where("Owner", isNotEqualTo: widget.user.uid)
+        .where("Privacy", isEqualTo: false)
         .get();
   }
 
@@ -37,6 +38,9 @@ class _BankModulePage extends State<BankModulePage> {
       body: FutureBuilder(
           future: allQuestions,
           builder: (content, AsyncSnapshot<QuerySnapshot<Map>> snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+            }
             if (snapshot.hasData) {
               return _generateListView(snapshot.data!.docs, context);
             } else {
@@ -46,12 +50,12 @@ class _BankModulePage extends State<BankModulePage> {
     );
   }
 
-  Widget _generateListView(List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
+  Widget _generateListView(
+      List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) => Container(
-        margin: const EdgeInsets.all(1),
-        child: Text(docslist[index].get("Question"))
-      ),
+          margin: const EdgeInsets.all(1),
+          child: Text(docslist[index].get("Question"))),
     );
   }
 }

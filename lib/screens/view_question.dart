@@ -6,7 +6,7 @@ import 'package:mug_together/screens/edit_question.dart';
 class ViewQuestion extends StatefulWidget {
   // Passing in document info
   const ViewQuestion({Key? key, required this.document}) : super(key: key);
-  final QueryDocumentSnapshot document;
+  final DocumentReference document;
 
   @override
   State<ViewQuestion> createState() => _ViewQuestion();
@@ -25,25 +25,52 @@ class _ViewQuestion extends State<ViewQuestion> {
           Navigator.pop(context);
         }),
       ),
-      body: Flex(
-        // Display the info from the question document
-        direction: Axis.vertical,
-        children: [
-          Text(widget.document.get("Question")),
-          Text(widget.document.get("Notes")),
-          Text(widget.document.get("Module")),
-          Text(widget.document.get("LastUpdate")),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditQuestion()));
-            },
-            child: const Text("edit"),
-          ),
-        ],
-      ),
+      body: FutureBuilder(
+          future: widget.document.get(),
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return Flex(
+                // Display the info from the question document
+                direction: Axis.vertical,
+                children: [
+                  Text(snapshot.data!.get("Question")),
+                  Text(snapshot.data!.get("Notes")),
+                  Text(snapshot.data!.get("Module")),
+                  Text(snapshot.data!.get("LastUpdate")),
+                  Row(
+                    children: _tagList(snapshot.data!),
+                  ),
+                  Text(snapshot.data!.get("Privacy")
+                      ? "This question is private"
+                      : "This question can be seen in Question Bank"),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditQuestion(document: snapshot.data!)))
+                          .then((_) => setState(() {}));
+                    },
+                    child: const Text("edit"),
+                  ),
+                ],
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          }),
     );
+  }
+
+  List<Widget> _tagList(DocumentSnapshot currentDoc) {
+    List<dynamic> tags = currentDoc.get("Tags");
+    return tags.map((tag) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Text(tag),
+      );
+    }).toList();
   }
 }
