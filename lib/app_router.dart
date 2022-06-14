@@ -29,7 +29,11 @@ class AppRouter {
       case '/questions':
         return _checkUser((_) => const QuestionsPage(), settings);
       case '/questions/add':
-        return _checkUser((_) => const AddQuestion(), settings);
+        if (args != null) {
+          return _checkUser((_) => AddQuestion(data: args as Map), settings);
+        } else {
+          return _checkUser((_) => const AddQuestion(), settings);
+        }
       case '/profile/me':
         return _checkUser((_) => const ProfilePage(), settings);
       case '/bank':
@@ -40,7 +44,8 @@ class AppRouter {
               (user) => BankModulePage(user: user, module: args as String),
               settings);
         } else {
-          return _checkUser((_) => const QuestionBankPage(), const RouteSettings(name: '/bank'));
+          return _checkUser((_) => const QuestionBankPage(),
+              const RouteSettings(name: '/bank'));
         }
       case '/quiz':
         return _checkUser((_) => const QuizPage(), settings);

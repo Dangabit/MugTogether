@@ -15,6 +15,7 @@ class _EditQuestion extends State<EditQuestion> {
   final notesController = TextEditingController();
   final tagsController = TextEditingController();
   late bool privacy;
+  late bool fromBank;
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _EditQuestion extends State<EditQuestion> {
     String tags = widget.document.get("Tags").toString();
     tagsController.text = tags.substring(1, tags.length - 1);
     privacy = widget.document.get("Privacy");
+    fromBank = widget.document.get("FromBank");
   }
 
   @override
@@ -40,11 +42,13 @@ class _EditQuestion extends State<EditQuestion> {
           TextField(controller: notesController),
           Text(widget.document.get("Module")),
           TextField(controller: tagsController),
-          Checkbox(
-              value: privacy,
-              onChanged: (newValue) => setState(() {
-                    privacy = newValue!;
-                  })),
+          fromBank
+              ? const Text("")
+              : Checkbox(
+                  value: privacy,
+                  onChanged: (newValue) => setState(() {
+                        privacy = newValue!;
+                      })),
           ElevatedButton(
               onPressed: () => _submitChange(context),
               child: const Icon(Icons.save)),

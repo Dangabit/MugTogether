@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/widgets/data.dart';
 
 class BankModulePage extends StatefulWidget {
   const BankModulePage({Key? key, required this.module, required this.user})
@@ -52,10 +53,25 @@ class _BankModulePage extends State<BankModulePage> {
     return ListView.builder(
       // TODO: Limit count to prevent the need to render large amount of Listview
       itemCount: docslist.length,
-      // TODO: Button to pull question to /question/add
-      itemBuilder: (context, index) => Container(
+      itemBuilder: (context, index) {
+        String question = docslist[index].get("Question");
+        return Container(
           margin: const EdgeInsets.all(1),
-          child: Text(docslist[index].get("Question"))),
+          child: Row(
+            children: <Widget>[
+              Text(question),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/questions/add", arguments: {
+                      "module": widget.module,
+                      "question" : question,
+                    });
+                  },
+                  child: const Icon(Icons.download))
+            ],
+          ),
+        );
+      },
     );
   }
 }
