@@ -29,6 +29,7 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 231, 198, 255),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
@@ -36,25 +37,26 @@ class _LoginPage extends State<LoginPage> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 100.0),
-                  child: Text(
-                    'Welcome to MugTogether!',
-                    style: GoogleFonts.robotoSerif(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                  padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
+                  child: Image.asset('assets/images/logo.png'),
+                ),
+                Text(
+                  'Welcome to MugTogether!',
+                  style: GoogleFonts.firaSans(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, left: 23.0),
+                  padding: const EdgeInsets.only(top: 5.0, bottom: 20.0),
                   child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Text(
                       'Your app for exam success',
-                      style: GoogleFonts.robotoSerif(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
+                      style: GoogleFonts.cardo(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                         color: Colors.black,
                       ),
                     ),
@@ -63,23 +65,23 @@ class _LoginPage extends State<LoginPage> {
               ],
             ),
             Container(
-              margin: const EdgeInsets.only(top: 150.0),
+              margin: const EdgeInsets.only(top: 0.0),
               color: Colors.transparent,
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(98, 180, 180, 180),
+                  color: Color.fromARGB(200, 200, 182, 255),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 20),
+                  padding: const EdgeInsets.only(bottom: 30),
                   child: Column(
                     children: <Widget>[
                       // Login Form
                       Padding(
-                        padding: const EdgeInsets.only(top: 55),
+                        padding: const EdgeInsets.only(top: 40),
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -88,12 +90,12 @@ class _LoginPage extends State<LoginPage> {
                                 'Log In',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 25,
                                 ),
                               ),
                               const SizedBox(
-                                height: 50.0,
+                                height: 40.0,
                               ),
                               // Email input field
                               Padding(
@@ -182,10 +184,22 @@ class _LoginPage extends State<LoginPage> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 230.0),
+                                child: TextButton(
+                                  onPressed: () => showDialog(
+                                      context: context, builder: _popupForm),
+                                  child: const Text(
+                                    "Forgot Password?",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.deepPurple),
+                                  ),
+                                ),
+                              ),
                               // Button, with function to login
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16.0),
+                                padding: const EdgeInsets.only(top: 10.0),
                                 child: SizedBox(
                                   width: 350.0,
                                   height: 55.0,
@@ -203,9 +217,10 @@ class _LoginPage extends State<LoginPage> {
                                 ),
                               ),
                               // Display any firebase login issue, if any
-                              Text(_exception,
-                                  style:
-                                      const TextStyle(color: Colors.redAccent)),
+                              Text(
+                                _exception,
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
                             ],
                           ),
                         ),
@@ -218,45 +233,22 @@ class _LoginPage extends State<LoginPage> {
                             "Not registered yet?",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          const Padding(padding: EdgeInsets.only(right: 5.0)),
                           Padding(
                             padding: const EdgeInsets.symmetric(),
-                            child: InkWell(
-                              onTap: () {
+                            child: TextButton(
+                              onPressed: () {
                                 Navigator.pushNamed(context, '/signup');
                               },
                               child: const Text(
                                 "Sign up here!",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
                                   color: Colors.deepPurple,
                                 ),
                               ),
                             ),
-                            // child: ElevatedButton(
-                            //   style: ElevatedButton.styleFrom(
-                            //     primary: Colors.blue[900],
-                            //   ),
-                            //   child: const Text(
-                            //     'Sign Up',
-                            //     style: TextStyle(fontWeight: FontWeight.bold),
-                            //   ),
-                            //   onPressed: () {
-                            //     Navigator.pushNamed(context, '/signup');
-                            //   },
-                            // ),
                           ),
                         ],
-                      ),
-                      TextButton(
-                        onPressed: () =>
-                            showDialog(context: context, builder: _popupForm),
-                        child: const Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepPurple),
-                        ),
                       ),
                     ],
                   ),

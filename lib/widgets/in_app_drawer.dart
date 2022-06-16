@@ -53,7 +53,7 @@ class InAppDrawer {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: InkWell(
         child: user!.photoURL == null
-            ? Image.asset('assets/test.jpg', fit: BoxFit.cover)
+            ? Image.asset('assets/images/test.jpg', fit: BoxFit.cover)
             : Image.network(user.photoURL!),
         onTap: () {
           Navigator.pushNamed(context, '/profile/me');
