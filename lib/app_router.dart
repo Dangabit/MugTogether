@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/add_question.dart';
 import 'package:mug_together/screens/bank_module.dart';
+import 'package:mug_together/screens/past_attempts.dart';
 import 'package:mug_together/screens/profile.dart';
 import 'package:mug_together/screens/questionbank.dart';
 import 'package:mug_together/screens/questions.dart';
@@ -49,6 +50,8 @@ class AppRouter {
         }
       case '/quiz':
         return _checkUser((_) => const QuizPage(), settings);
+      case '/quiz/past':
+        return _checkUser((_) => const PastAttempts(), settings);
       default:
         return _pageNotFound();
     }
