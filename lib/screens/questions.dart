@@ -181,7 +181,7 @@ class _QuestionsPage extends State<QuestionsPage> {
           Map? data = snapshot.data!.data();
           late List<String> tagsList;
           if ((data == null) || data.isEmpty) {
-            tagsList = List.empty();
+            tagsList = List.empty(growable: true);
           } else {
             tagsList = data.keys.toList() as List<String>;
             tagsList.removeWhere((key) => data[key] <= 0);
