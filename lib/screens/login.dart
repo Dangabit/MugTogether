@@ -103,8 +103,9 @@ class _LoginPage extends State<LoginPage> {
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(12)),
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 5),
                                     child: TextFormField(
