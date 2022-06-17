@@ -9,31 +9,37 @@ class TimerWidget {
   }
 
   int totalTime;
-  bool started = false;
+  bool _started = false;
+  bool _ended = false;
   Timer? _timer;
 
   Widget display() {
     return StatefulBuilder(builder: ((context, setState) {
-      if (started) {
+      if (_started) {
         return Text("${totalTime} seconds left");
       } else {
-        return ElevatedButton(
-          onPressed: () => setState(() {
-            started = true;
-            _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-              if (totalTime <= 0) {
-                setState(() {
-                  _timer!.cancel();
-                });
-              } else {
-                setState(() {
-                  totalTime--;
-                });
-              }
-            });
-          }),
-          child: const Text("Start the time!"),
-        );
+        if (_ended) {
+          return const Text("The timer has ended!");
+        } else {
+          return ElevatedButton(
+            onPressed: () => setState(() {
+              _started = true;
+              _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                if (totalTime <= 0) {
+                  setState(() {
+                    _ended = true;
+                    _timer!.cancel();
+                  });
+                } else {
+                  setState(() {
+                    totalTime--;
+                  });
+                }
+              });
+            }),
+            child: const Text("Start the time!"),
+          );
+        }
       }
     }));
   }

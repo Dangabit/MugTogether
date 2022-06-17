@@ -128,5 +128,17 @@ class _QuizAttempt extends State<QuizAttempt> {
     });
   }
 
-  void _submit() {}
+  void _submit() {
+    _future.then((qnsList) {
+      db
+          .collection(user!.uid)
+          .doc("Quiz Attempts")
+          .collection("Attempts")
+          .doc()
+          .set({
+        "Questions": qnsList,
+        "Attempts": _attemptsArray.map((e) => e.text).toList()
+      }).then((_) => Navigator.pop(context));
+    });
+  }
 }
