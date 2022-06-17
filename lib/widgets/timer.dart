@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class TimerWidget {
   TimerWidget(
     this.totalTime,
-  );
+  ) {
+    totalTime *= 60;
+  }
 
   int totalTime;
   bool started = false;
@@ -13,7 +15,7 @@ class TimerWidget {
   Widget display() {
     return StatefulBuilder(builder: ((context, setState) {
       if (started) {
-        return Text("$totalTime");
+        return Text("${totalTime} seconds left");
       } else {
         return ElevatedButton(
           onPressed: () => setState(() {

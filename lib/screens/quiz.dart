@@ -13,7 +13,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPage extends State<QuizPage> {
   final Data _currentMod = Data();
-  double _noOfQns = 0;
+  double _noOfQns = 1;
   bool _timerCheck = false;
   double _countdown = 10;
 
@@ -32,7 +32,8 @@ class _QuizPage extends State<QuizPage> {
         Slider(
           value: _noOfQns,
           max: 10,
-          divisions: 10,
+          min: 1,
+          divisions: 9,
           label: _noOfQns.round().toString(),
           onChanged: (value) {
             setState(() {

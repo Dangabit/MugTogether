@@ -27,6 +27,8 @@ class _QuizAttempt extends State<QuizAttempt> {
   int currentQn = 0;
   FirebaseFirestore db = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
+  late List<Widget> _buttonsArray;
+  late Future<List> _future;
 
   @override
   void initState() {
@@ -36,6 +38,16 @@ class _QuizAttempt extends State<QuizAttempt> {
     }
     _attemptsArray =
         List.generate(widget.totalQns, (index) => TextEditingController());
+    _buttonsArray = List.generate(
+        widget.totalQns,
+        (index) => ElevatedButton(
+            onPressed: (() {
+              setState(() {
+                currentQn = index;
+              });
+            }),
+            child: Text(index.toString())));
+    _future = _grabQns();
   }
 
   @override
@@ -57,7 +69,7 @@ class _QuizAttempt extends State<QuizAttempt> {
         title: const Text("Quiz Attempt"),
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: _grabQns(),
+        future: _future,
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
@@ -69,7 +81,7 @@ class _QuizAttempt extends State<QuizAttempt> {
                   children: <Widget>[
                     widget.timerCheck ? _timer.display() : const Text(""),
                     _questionBody(snapshot.data!),
-                    _buttons(),
+                    Row(children: _buttonsArray),
                     ElevatedButton(
                         onPressed: _submit, child: const Text("Finish Quiz")),
                   ],
@@ -82,23 +94,6 @@ class _QuizAttempt extends State<QuizAttempt> {
         },
       ),
     );
-  }
-
-  Widget _buttons() {
-    List<ElevatedButton> buttons = List.generate(
-        widget.totalQns,
-        (index) => ElevatedButton(
-            onPressed: (() {
-              setState(() {
-                currentQn = index;
-              });
-            }),
-            child: Text(index.toString())));
-    return StatefulBuilder(builder: ((context, setState) {
-      return Row(
-        children: buttons,
-      );
-    }));
   }
 
   Widget _questionBody(List<dynamic> _qnsArray) {
