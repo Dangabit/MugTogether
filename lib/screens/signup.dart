@@ -32,14 +32,14 @@ class _SignUpPage extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 231, 198, 255),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-              child: Image.asset('assets/images/logo.png'),
+              child: Image.asset('assets/images/logo2.png'),
             ),
             // Sign Up Form
             Container(
@@ -47,14 +47,14 @@ class _SignUpPage extends State<SignUpPage> {
               color: Colors.transparent,
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(200, 200, 182, 255),
+                  color: Color.fromARGB(197, 213, 198, 255),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
+                  padding: const EdgeInsets.only(bottom: 65),
                   child: Form(
                     key: _formKey,
                     child: Column(

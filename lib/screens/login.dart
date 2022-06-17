@@ -29,7 +29,7 @@ class _LoginPage extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 231, 198, 255),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
@@ -38,14 +38,17 @@ class _LoginPage extends State<LoginPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-                  child: Image.asset('assets/images/logo.png'),
+                  child: Image.asset('assets/images/logo2.png'),
                 ),
-                Text(
-                  'Welcome to MugTogether!',
-                  style: GoogleFonts.firaSans(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    'Welcome to MugTogether!',
+                    style: GoogleFonts.firaSans(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
                 Padding(
@@ -65,23 +68,23 @@ class _LoginPage extends State<LoginPage> {
               ],
             ),
             Container(
-              margin: const EdgeInsets.only(top: 0.0),
+              margin: const EdgeInsets.only(top: 20.0),
               color: Colors.transparent,
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(200, 200, 182, 255),
+                  color: Color.fromARGB(197, 213, 198, 255),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
+                  padding: const EdgeInsets.only(bottom: 15),
                   child: Column(
                     children: <Widget>[
                       // Login Form
                       Padding(
-                        padding: const EdgeInsets.only(top: 40),
+                        padding: const EdgeInsets.only(top: 50),
                         child: Form(
                           key: _formKey,
                           child: Column(
@@ -95,7 +98,7 @@ class _LoginPage extends State<LoginPage> {
                                 ),
                               ),
                               const SizedBox(
-                                height: 40.0,
+                                height: 50.0,
                               ),
                               // Email input field
                               Padding(
