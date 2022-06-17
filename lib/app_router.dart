@@ -51,7 +51,7 @@ class AppRouter {
       case '/quiz':
         return _checkUser((_) => const QuizPage(), settings);
       case '/quiz/past':
-        return _checkUser((_) => const PastAttempts(), settings);
+        return _checkUser((user) => PastAttempts(user: user), settings);
       default:
         return _pageNotFound();
     }

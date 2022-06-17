@@ -137,7 +137,9 @@ class _QuizAttempt extends State<QuizAttempt> {
           .doc()
           .set({
         "Questions": qnsList,
-        "Attempts": _attemptsArray.map((e) => e.text).toList()
+        "Attempts": _attemptsArray.map((e) => e.text).toList(),
+        "Module" : widget.modName,
+        "Date" : DateTime.now().toString(),
       }).then((_) => Navigator.pop(context));
     });
   }
