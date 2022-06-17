@@ -134,7 +134,7 @@ class _SignUpPage extends State<SignUpPage> {
                                 ),
                                 validator: (String? value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please input a username';
+                                    return 'Please input an email';
                                   }
                                   return null;
                                 },
