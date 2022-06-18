@@ -7,21 +7,26 @@ class InAppDrawer {
     return Drawer(
       child: Column(children: <Widget>[
         ListView(shrinkWrap: true, children: [
-          DrawerHeader(
-            child: _generateProfileCard(context),
+          _createHeader(context),
+          const Divider(
+            thickness: 1,
+            color: Colors.grey,
           ),
-          ListTile(
-            title: const Text('My Questions'),
-            onTap: () => Navigator.pushNamed(context, '/questions'),
+          _createDrawerItem(
+            Icons.assignment_sharp,
+            'My Questions',
+            () => Navigator.pushNamed(context, '/questions'),
           ),
-          ListTile(
-            title: const Text('Question Bank'),
-            onTap: () => Navigator.pushNamed(context, '/bank'),
+          _createDrawerItem(
+            Icons.account_balance_sharp,
+            'Question Bank',
+            () => Navigator.pushNamed(context, '/bank'),
           ),
-          ListTile(
-            title: const Text('Quiz'),
-            onTap: () => Navigator.pushNamed(context, '/quiz'),
-          )
+          _createDrawerItem(
+            Icons.quiz_outlined,
+            'Quiz',
+            () => Navigator.pushNamed(context, '/quiz'),
+          ),
         ]),
         const Spacer(),
         Container(
@@ -30,12 +35,20 @@ class InAppDrawer {
             children: <Widget>[
               ElevatedButton(
                 // Sign out and return to login page
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.deepPurple,
+                ),
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushNamedAndRemoveUntil(
                       context, "/", (route) => false);
                 },
-                child: const Text('Sign out'),
+                child: const Text(
+                  'Sign out',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -45,21 +58,50 @@ class InAppDrawer {
   }
 
   /// Generate the clickable profile card for the drawer header
-  static Widget _generateProfileCard(BuildContext context) {
+  static Widget _createHeader(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
-
-    return Card(
-      // FIXME: Rounded corners might not be working
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: InkWell(
-        child: user!.photoURL == null
-            ? Image.asset('assets/images/test.jpg', fit: BoxFit.cover)
-            : Image.network(user.photoURL!),
-        onTap: () {
-          Navigator.pushNamed(context, '/profile/me');
-        },
-        splashColor: Colors.grey,
+    return DrawerHeader(
+      margin: EdgeInsets.zero,
+      //padding: EdgeInsets.zero,
+      child: Card(
+        // FIXME: Rounded corners might not be working
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: InkWell(
+          child: user!.photoURL == null
+              ? Image.asset('assets/images/test.jpg', fit: BoxFit.cover)
+              : Image.network(user.photoURL!),
+          onTap: () {
+            Navigator.pushNamed(context, '/profile/me');
+          },
+          splashColor: Colors.grey,
+        ),
       ),
+    );
+  }
+
+  /// Generate each feature category to navigate to
+  static Widget _createDrawerItem(
+      IconData icon, String text, GestureTapCallback onTap) {
+    return ListTile(
+      title: Row(
+        children: <Widget>[
+          Icon(
+            icon,
+            color: Colors.deepPurple,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        ],
+      ),
+      onTap: onTap,
     );
   }
 }

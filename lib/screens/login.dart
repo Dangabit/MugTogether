@@ -79,7 +79,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: Column(
                     children: <Widget>[
                       // Login Form
@@ -214,7 +214,8 @@ class _LoginPage extends State<LoginPage> {
                                     child: const Text(
                                       'Login!',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     onPressed: () => _submit(null),
                                   ),
