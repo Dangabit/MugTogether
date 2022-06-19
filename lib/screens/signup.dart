@@ -132,9 +132,12 @@ class _SignUpPage extends State<SignUpPage> {
                                     color: Colors.deepPurple,
                                   ),
                                 ),
+                                // Checking for an NUS email using Regex
                                 validator: (String? value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please input an email';
+                                  if (!RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@u.nus.edu")
+                                      .hasMatch(value!)) {
+                                    return 'Please input an NUS email';
                                   }
                                   return null;
                                 },
@@ -259,7 +262,8 @@ class _SignUpPage extends State<SignUpPage> {
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.deepPurple,
                                   ),
-                                  onPressed: () => Navigator.pop(context),
+                                  onPressed: () => Navigator.popUntil(context,
+                                      (route) => route.settings.name == "/"),
                                   child: const Text(
                                     'Back',
                                     style: TextStyle(
