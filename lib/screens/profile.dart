@@ -19,34 +19,128 @@ class _ProfilePage extends State<ProfilePage> {
           if (snapshot.hasData) {
             User user = snapshot.data!;
             return Scaffold(
+              backgroundColor: const Color.fromARGB(255, 242, 233, 248),
               appBar: AppBar(
-                title: Text("${user.displayName}'s profile"),
+                backgroundColor: Colors.deepPurple,
+                title: Text("${user.displayName}'s Profile"),
               ),
               drawer: InAppDrawer.gibDrawer(context),
-              body: Center(
-                child: Column(
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      child: Text(user.displayName!.substring(0, 1)),
+              body: ListView(
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Center(
+                    child: Stack(children: [
+                      _buildImage(),
+                      Positioned(
+                        bottom: 0,
+                        right: 4,
+                        child: _buildEditIcon(
+                          Colors.deepPurple,
+                        ),
+                      )
+                    ]),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        user.displayName!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4.0,
+                      ),
+                      Text(
+                        user.email!,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 400.0,
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: 160.0,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.deepPurple),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const EditProfile()));
+                        },
+                        child: const Text(
+                          'Edit Details',
+                          style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                    Text(user.displayName!),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EditProfile()));
-                      },
-                      child: const Text('Update'),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           } else {
             return const CircularProgressIndicator();
           }
         });
+  }
+
+  Widget _buildImage() {
+    return ClipOval(
+      child: Material(
+        color: Colors.transparent,
+        child: Image.asset(
+          'assets/images/user-profile.png',
+          fit: BoxFit.cover,
+          width: 128,
+          height: 128,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditIcon(Color color) {
+    return _buildCircle(
+      color: Colors.white,
+      all: 3,
+      child: _buildCircle(
+        color: color,
+        all: 8,
+        child: const Icon(
+          Icons.edit,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCircle({
+    required Widget child,
+    required double all,
+    required Color color,
+  }) {
+    return ClipOval(
+      child: Container(
+        padding: EdgeInsets.all(all),
+        color: color,
+        child: child,
+      ),
+    );
   }
 }

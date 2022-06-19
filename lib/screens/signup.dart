@@ -39,7 +39,7 @@ class _SignUpPage extends State<SignUpPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-              child: Image.asset('assets/images/logo2.png'),
+              child: Image.asset('assets/images/logo3.png'),
             ),
             // Sign Up Form
             Container(
@@ -54,7 +54,7 @@ class _SignUpPage extends State<SignUpPage> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
+                  padding: const EdgeInsets.only(bottom: 65),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -92,7 +92,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   labelText: 'Username',
                                   hintText: 'Enter your username',
                                   prefixIcon: Icon(
-                                    Icons.supervised_user_circle_outlined,
+                                    Icons.account_circle_outlined,
                                     color: Colors.deepPurple,
                                   ),
                                 ),

@@ -38,16 +38,17 @@ class _LoginPage extends State<LoginPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-                  child: Image.asset('assets/images/logo2.png'),
+                  child: Image.asset('assets/images/logo3.png'),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Text(
                     'Welcome to MugTogether!',
-                    style: GoogleFonts.firaSans(
+                    style: GoogleFonts.firaSansCondensed(
                       fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black,
+                      wordSpacing: 1.5,
                     ),
                   ),
                 ),
@@ -57,10 +58,11 @@ class _LoginPage extends State<LoginPage> {
                     alignment: Alignment.center,
                     child: Text(
                       'Your app for exam success',
-                      style: GoogleFonts.cardo(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                      style: GoogleFonts.firaSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
                         color: Colors.black,
+                        wordSpacing: 1.5,
                       ),
                     ),
                   ),
@@ -79,7 +81,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 18),
                   child: Column(
                     children: <Widget>[
                       // Login Form
