@@ -20,24 +20,28 @@ class PastAttempts extends StatelessWidget {
         future: FirebaseFirestore.instance
             .collection(user.uid)
             .doc("Quiz Attempts")
-            .collection("Attempts")
             .get(),
-        builder: (context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        builder: (context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
-            List<QueryDocumentSnapshot<Map<String, dynamic>>> _attemptsList =
-                snapshot.data!.docs;
+            List<Map<String, dynamic>> _attemptsList =
+                snapshot.data!.get("AttemptList").cast<Map<String, dynamic>>();
+            int len = _attemptsList.length;
             return ListView.builder(
-              itemCount: _attemptsList.length,
+              itemCount: len,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text("Attempt ${index + 1}"),
-                  subtitle: Text("Date: ${_attemptsList[index].get("Date")}"),
+                  title: Text("Attempt ${len - index}"),
+                  subtitle:
+                      Text("Date: ${_attemptsList[len - index - 1]["Date"]}"),
                   onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                IndividualAttempt(doc: _attemptsList[index], user: user,)));
+                            builder: (context) => IndividualAttempt(
+                                  attempt: _attemptsList[len - index - 1],
+                                  user: user,
+                                )));
                   },
                 );
               },

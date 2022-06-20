@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class IndividualAttempt extends StatefulWidget {
-  const IndividualAttempt({Key? key, required this.doc, required this.user})
+  const IndividualAttempt({Key? key, required this.attempt, required this.user})
       : super(key: key);
-  final QueryDocumentSnapshot<Map<String, dynamic>> doc;
+  final Map<String, dynamic> attempt;
   final User user;
 
   @override
@@ -14,15 +14,6 @@ class IndividualAttempt extends StatefulWidget {
 
 class _IndividualAttempt extends State<IndividualAttempt> {
   int currentIndex = 0;
-  late int total;
-  late Map<String, dynamic> data;
-
-  @override
-  void initState() {
-    super.initState();
-    data = widget.doc.data();
-    total = data["Questions"].length;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +31,9 @@ class _IndividualAttempt extends State<IndividualAttempt> {
   Widget _qnNum() {
     return DropdownButton<int>(
         items: List<DropdownMenuItem<int>>.generate(
-            total,
+            widget.attempt["Questions"].length,
             (index) =>
-                DropdownMenuItem(child: Text(index.toString()), value: index)),
+                DropdownMenuItem(child: Text("${index + 1}"), value: index)),
         onChanged: (value) {
           setState(() {
             currentIndex = value!;
@@ -53,24 +44,24 @@ class _IndividualAttempt extends State<IndividualAttempt> {
   Widget _questionBody() {
     return Column(
       children: <Widget>[
-        Text(data["Questions"][currentIndex]),
-        Text(data["Attempts"][currentIndex]),
+        Text(widget.attempt["Questions"][currentIndex]),
+        Text(widget.attempt["Attempts"][currentIndex]),
         ElevatedButton(
             onPressed: () {
               FirebaseFirestore.instance
                   .collection(widget.user.uid)
-                  .doc(data["Module"])
+                  .doc(widget.attempt["Module"])
                   .collection("questions")
                   .add({
-                "Question": data["Questions"][currentIndex],
-                "Notes": data["Attempts"][currentIndex],
-                "Module": data["Module"],
-                "LastUpdate": data["Date"],
+                "Question": widget.attempt["Questions"][currentIndex],
+                "Notes": widget.attempt["Attempts"][currentIndex],
+                "Module": widget.attempt["Module"],
+                "LastUpdate": widget.attempt["Date"],
                 "Tags": List.empty(),
                 "Importance": 0,
                 "Privacy": true,
                 "Owner": widget.user.uid,
-                "FromBank": true,
+                "FromCommunity": true,
               }).then((_) => Navigator.pop(context));
             },
             child: const Text("Add to MyQuestions"))

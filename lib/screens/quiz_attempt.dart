@@ -130,16 +130,25 @@ class _QuizAttempt extends State<QuizAttempt> {
 
   void _submit() {
     _future.then((qnsList) {
-      db
-          .collection(user!.uid)
-          .doc("Quiz Attempts")
-          .collection("Attempts")
-          .doc()
-          .set({
-        "Questions": qnsList,
-        "Attempts": _attemptsArray.map((e) => e.text).toList(),
-        "Module" : widget.modName,
-        "Date" : DateTime.now().toString(),
+      db.collection(user!.uid).doc("Quiz Attempts").get().then((doc) {
+        List attempts = doc.get("AttemptList") as List;
+        Map attempt = {
+          "Questions": qnsList,
+          "Attempts": _attemptsArray.map((e) => e.text).toList(),
+          "Module": widget.modName,
+          "Date": DateTime.now().toString(),
+        };
+        if (widget.timerCheck) {
+          if (!_timer.checkEnd()) {
+            _timer.forceStop();
+          }
+          attempt.addAll(_timer.quizTime());
+        }
+        attempts.add(attempt);
+        db
+            .collection(user!.uid)
+            .doc("Quiz Attempts")
+            .update({"AttemptList": attempts});
       }).then((_) => Navigator.pop(context));
     });
   }
