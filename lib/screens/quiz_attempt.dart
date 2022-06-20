@@ -22,6 +22,7 @@ class QuizAttempt extends StatefulWidget {
 }
 
 class _QuizAttempt extends State<QuizAttempt> {
+  // Variables Initialisation
   late TimerWidget _timer;
   late List<TextEditingController> _attemptsArray;
   int currentQn = 0;
@@ -33,9 +34,11 @@ class _QuizAttempt extends State<QuizAttempt> {
   @override
   void initState() {
     super.initState();
+    // Creates a timer if needed
     if (widget.timerCheck) {
       _timer = TimerWidget(widget.countdown);
     }
+    // Creates arrays based on the number of qns wanted
     _attemptsArray =
         List.generate(widget.totalQns, (index) => TextEditingController());
     _buttonsArray = List.generate(
@@ -47,11 +50,13 @@ class _QuizAttempt extends State<QuizAttempt> {
               });
             }),
             child: Text(index.toString())));
+    // Create a one-time future
     _future = _grabQns();
   }
 
   @override
   void dispose() {
+    // Closing everything to prevent memory leaks
     if (widget.timerCheck) {
       _timer.forceStop();
     }
@@ -73,9 +78,11 @@ class _QuizAttempt extends State<QuizAttempt> {
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
+              // Not enough questions widget
               return const Text(
                   "There is not enough questions in our bank, sorry :C");
             } else {
+              // Create a quiz layout
               return Center(
                 child: Column(
                   children: <Widget>[
@@ -89,6 +96,7 @@ class _QuizAttempt extends State<QuizAttempt> {
               );
             }
           } else {
+            // If future not loaded, put loading screen
             return const CircularProgressIndicator();
           }
         },
@@ -96,6 +104,7 @@ class _QuizAttempt extends State<QuizAttempt> {
     );
   }
 
+  /// Show the particular question
   Widget _questionBody(List<dynamic> _qnsArray) {
     return Column(
       children: <Widget>[
@@ -107,6 +116,7 @@ class _QuizAttempt extends State<QuizAttempt> {
     );
   }
 
+  /// Grab a random list of questions from the database
   Future<List<dynamic>> _grabQns() async {
     return db
         .collectionGroup("questions")
@@ -128,6 +138,7 @@ class _QuizAttempt extends State<QuizAttempt> {
     });
   }
 
+  /// Submitting of the attempt
   void _submit() {
     _future.then((qnsList) {
       db.collection(user!.uid).doc("Quiz Attempts").get().then((doc) {

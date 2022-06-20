@@ -12,6 +12,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPage extends State<QuizPage> {
+  // Variable initialisation
   final Data _currentMod = Data();
   double _noOfQns = 1;
   bool _timerCheck = false;
@@ -26,9 +27,11 @@ class _QuizPage extends State<QuizPage> {
     );
   }
 
+  /// Build the required form to receive all the needed info
   Widget _buildForm() {
     return Column(
       children: <Widget>[
+        // Get number of questions, 1 - 10
         Slider(
           value: _noOfQns,
           max: 10,
@@ -41,7 +44,9 @@ class _QuizPage extends State<QuizPage> {
             });
           },
         ),
+        // Get the module choice
         ModuleList.createListing(_currentMod),
+        // Check if the user wants a timer
         Checkbox(
           value: _timerCheck,
           onChanged: (value) {
@@ -50,6 +55,7 @@ class _QuizPage extends State<QuizPage> {
             });
           },
         ),
+        // If the user wants a timer, choose how long (10 - 60 min)
         _timerCheck
             ? Slider(
                 value: _countdown,
@@ -63,10 +69,12 @@ class _QuizPage extends State<QuizPage> {
                   });
                 })
             : const Text(""),
+        // Start the quiz
         ElevatedButton(
           onPressed: _submit,
           child: const Text("Start quiz!"),
         ),
+        // View past quiz attempts
         ElevatedButton(
           onPressed: () => Navigator.pushNamed(context, "/quiz/past"),
           child: const Text("Past records"),
@@ -75,6 +83,7 @@ class _QuizPage extends State<QuizPage> {
     );
   }
 
+  /// Push the information needed into the next screen
   void _submit() {
     if (_currentMod.text != null) {
       Navigator.push(

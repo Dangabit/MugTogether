@@ -17,6 +17,7 @@ class PastAttempts extends StatelessWidget {
         title: const Text("Past Attempts"),
       ),
       body: FutureBuilder(
+        // Retrieve the list of quiz attempts
         future: FirebaseFirestore.instance
             .collection(user.uid)
             .doc("Quiz Attempts")
@@ -24,9 +25,11 @@ class PastAttempts extends StatelessWidget {
         builder: (context,
             AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
+            // Due to firebase not saving nested typing, casting is required
             List<Map<String, dynamic>> _attemptsList =
                 snapshot.data!.get("AttemptList").cast<Map<String, dynamic>>();
             int len = _attemptsList.length;
+            // Build a list view of the attempts, in order from the newest
             return ListView.builder(
               itemCount: len,
               itemBuilder: (context, index) {
