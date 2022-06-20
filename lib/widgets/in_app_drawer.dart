@@ -5,44 +5,46 @@ class InAppDrawer {
   /// Provide the common menu drawer to be used between all features screen
   static Drawer gibDrawer(BuildContext context, User user) {
     return Drawer(
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(children: <Widget>[
-          ListView(shrinkWrap: true, children: [
-            _createHeader(context, user),
-            const Padding(
-              padding: EdgeInsets.only(top: 5.0),
+      child: LayoutBuilder(builder: (context, constraint) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraint.maxHeight),
+            child: IntrinsicHeight(
+              child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                _createHeader(context, user),
+                const Padding(
+                  padding: EdgeInsets.only(top: 5.0),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                _createDrawerItem(
+                  Icons.account_circle_sharp,
+                  'My Profile',
+                  () => Navigator.popAndPushNamed(context, '/profile/me'),
+                ),
+                _createDrawerItem(
+                  Icons.assignment_sharp,
+                  'My Questions',
+                  () => Navigator.popAndPushNamed(context, '/questions'),
+                ),
+                _createDrawerItem(
+                  Icons.account_balance_sharp,
+                  'Question Bank',
+                  () => Navigator.popAndPushNamed(context, '/bank'),
+                ),
+                _createDrawerItem(
+                  Icons.quiz_outlined,
+                  'Quiz',
+                  () => Navigator.popAndPushNamed(context, '/quiz'),
+                ),
+                const Spacer(),
+                _signOutButton(context),
+              ]),
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            _createDrawerItem(
-              Icons.account_circle_sharp,
-              'My Profile',
-              () => Navigator.popAndPushNamed(context, '/profile/me'),
-            ),
-            _createDrawerItem(
-              Icons.assignment_sharp,
-              'My Questions',
-              () => Navigator.popAndPushNamed(context, '/questions'),
-            ),
-            _createDrawerItem(
-              Icons.account_balance_sharp,
-              'Question Bank',
-              () => Navigator.popAndPushNamed(context, '/bank'),
-            ),
-            _createDrawerItem(
-              Icons.quiz_outlined,
-              'Quiz',
-              () => Navigator.popAndPushNamed(context, '/quiz'),
-            ),
-            const SizedBox(
-              height: 270.0,
-            ),
-            _signOutButton(context),
-          ]),
-        ]),
-      ),
+          ),
+        );
+      }),
     );
   }
 
