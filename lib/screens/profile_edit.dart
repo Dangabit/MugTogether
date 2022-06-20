@@ -194,69 +194,74 @@ class _EditProfile extends State<EditProfile> {
     return StatefulBuilder(
       builder: ((context, setState) => AlertDialog(
             insetPadding: const EdgeInsets.symmetric(vertical: 200),
-            content: Column(
-              children: <Widget>[
-                TextField(
-                  controller: newPassController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "Input current password",
-                    errorText: _validate ? 'username cannot be empty' : null,
-                  ),
-                ),
-                Text(
-                  _fail,
-                  style: const TextStyle(color: Colors.redAccent),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
-                  ),
-                  onPressed: () async {
-                    setState(() {
-                      newPassController.text.isEmpty ? _validate = true : false;
-                    });
-                    widget.user
-                        .reauthenticateWithCredential(
-                            EmailAuthProvider.credential(
-                                email: widget.user.email!,
-                                password: newPassController.text))
-                        .then((credential) async {
-                          widget.user.updateDisplayName(nameController.text);
-                          if (passwordController.text.isNotEmpty) {
-                            await widget.user
-                                .updatePassword(passwordController.text);
-                          }
-                        })
-                        .then((_) => Navigator.pushNamedAndRemoveUntil(
-                            context, "/profile/me", ModalRoute.withName("/")))
-                        .onError<FirebaseAuthException>((error, stackTrace) {
-                          switch (error.code) {
-                            case "weak-password":
-                              setState(() {
-                                _fail = "New password is too weak";
-                              });
-                              break;
-                            case "wrong-password":
-                              setState(() {
-                                _fail = "Wrong password, try again";
-                              });
-                              break;
-                          }
-                          return null;
-                        });
-                  },
-                  child: const Text(
-                    "Confirm",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
+            content: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    controller: newPassController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: "Input current password",
+                      errorText: _validate ? 'username cannot be empty' : null,
                     ),
                   ),
-                ),
-              ],
+                  Text(
+                    _fail,
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.deepPurple,
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        newPassController.text.isEmpty
+                            ? _validate = true
+                            : false;
+                      });
+                      widget.user
+                          .reauthenticateWithCredential(
+                              EmailAuthProvider.credential(
+                                  email: widget.user.email!,
+                                  password: newPassController.text))
+                          .then((credential) async {
+                            widget.user.updateDisplayName(nameController.text);
+                            if (passwordController.text.isNotEmpty) {
+                              await widget.user
+                                  .updatePassword(passwordController.text);
+                            }
+                          })
+                          .then((_) => Navigator.pushNamedAndRemoveUntil(
+                              context, "/profile/me", ModalRoute.withName("/")))
+                          .onError<FirebaseAuthException>((error, stackTrace) {
+                            switch (error.code) {
+                              case "weak-password":
+                                setState(() {
+                                  _fail = "New password is too weak";
+                                });
+                                break;
+                              case "wrong-password":
+                                setState(() {
+                                  _fail = "Wrong password, try again";
+                                });
+                                break;
+                            }
+                            return null;
+                          });
+                    },
+                    child: const Text(
+                      "Confirm",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           )),
     );
