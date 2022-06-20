@@ -30,7 +30,7 @@ class _QuestionsPage extends State<QuestionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("${user?.displayName}'s Questions")),
-      drawer: InAppDrawer.gibDrawer(context),
+      drawer: InAppDrawer.gibDrawer(context, user!),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection(user!.uid)

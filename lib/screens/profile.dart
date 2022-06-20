@@ -4,7 +4,8 @@ import 'package:mug_together/screens/profile_edit.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   State<ProfilePage> createState() => _ProfilePage();
@@ -13,91 +14,82 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.idTokenChanges(),
-        builder: (context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.hasData) {
-            User user = snapshot.data!;
-            return Scaffold(
-              backgroundColor: const Color.fromARGB(255, 242, 233, 248),
-              appBar: AppBar(
-                backgroundColor: Colors.deepPurple,
-                title: Text("${user.displayName}'s Profile"),
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 242, 233, 248),
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        title: Text("${widget.user.displayName}'s Profile"),
+      ),
+      drawer: InAppDrawer.gibDrawer(context, widget.user),
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          const SizedBox(
+            height: 20.0,
+          ),
+          Center(
+            child: Stack(children: [
+              _buildImage(),
+              Positioned(
+                bottom: 0,
+                right: 4,
+                child: _buildEditIcon(
+                  Colors.deepPurple,
+                ),
+              )
+            ]),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Column(
+            children: [
+              Text(
+                widget.user.displayName!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24,
+                ),
               ),
-              drawer: InAppDrawer.gibDrawer(context),
-              body: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Center(
-                    child: Stack(children: [
-                      _buildImage(),
-                      Positioned(
-                        bottom: 0,
-                        right: 4,
-                        child: _buildEditIcon(
-                          Colors.deepPurple,
-                        ),
-                      )
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        user.displayName!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                        user.email!,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 400.0,
-                  ),
-                  Center(
-                    child: SizedBox(
-                      width: 160.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.deepPurple),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const EditProfile()));
-                        },
-                        child: const Text(
-                          'Edit Details',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(
+                height: 4.0,
               ),
-            );
-          } else {
-            return const CircularProgressIndicator();
-          }
-        });
+              Text(
+                widget.user.email!,
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 400.0,
+          ),
+          Center(
+            child: SizedBox(
+              width: 160.0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.deepPurple),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditProfile(user: widget.user)));
+                },
+                child: const Text(
+                  'Edit Details',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildImage() {

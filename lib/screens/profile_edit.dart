@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  const EditProfile({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   State<EditProfile> createState() => _EditProfile();
@@ -10,26 +11,22 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfile extends State<EditProfile> {
   // Variables initialisation
-  User? user = FirebaseAuth.instance.currentUser;
   final nameController = TextEditingController();
-  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
 
-  // Initialise the field to contain previous username & email
+  // Initialise the field to contain previous username
   @override
   void initState() {
     super.initState();
-    nameController.text = user!.displayName!;
-    emailController.text = user!.email!;
+    nameController.text = widget.user.displayName!;
   }
 
   // Prevent memory leak
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -99,49 +96,6 @@ class _EditProfile extends State<EditProfile> {
                 height: 30.0,
               ),
               const Padding(
-                padding: EdgeInsets.only(right: 295.0, bottom: 5.0),
-                child: Text(
-                  "Email",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: TextFormField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 15),
-                        border: InputBorder.none,
-                        labelText: 'Email',
-                        prefixIcon: Icon(
-                          Icons.mail_outline,
-                          color: Colors.deepPurple,
-                        ),
-                      ),
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email cannot be empty';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              const Padding(
                 padding: EdgeInsets.only(right: 205.0, bottom: 5.0),
                 child: Text(
                   "Update Password",
@@ -194,7 +148,7 @@ class _EditProfile extends State<EditProfile> {
                 height: 30.0,
               ),
               ElevatedButton(
-                // Button to re-verify the user before committing the change
+                // Button to re-verify the widget.user before committing the change
                 style: ElevatedButton.styleFrom(
                   primary: Colors.deepPurple,
                 ),
@@ -216,8 +170,8 @@ class _EditProfile extends State<EditProfile> {
   }
 
   StatefulBuilder _reverify(BuildContext context) {
-    // Pop-up window for the form to re-authenticate the user
-    // Once re-authenticated, update the users' credentials
+    // Pop-up window for the form to re-authenticate the widget.user
+    // Once re-authenticated, update the widget.users' credentials
     final newPassController = TextEditingController();
     bool _validate = false;
     String _fail = "";
@@ -230,7 +184,7 @@ class _EditProfile extends State<EditProfile> {
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: "Input current password",
-                    errorText: _validate ? 'Username cannot be empty' : null,
+                    errorText: _validate ? 'username cannot be empty' : null,
                   ),
                 ),
                 const SizedBox(
@@ -244,24 +198,35 @@ class _EditProfile extends State<EditProfile> {
                     setState(() {
                       newPassController.text.isEmpty ? _validate = true : false;
                     });
-                    try {
-                      user!
-                          .reauthenticateWithCredential(
-                              EmailAuthProvider.credential(
-                                  email: user!.email!,
-                                  password: newPassController.text))
-                          .then((credential) {
-                        user!.updateDisplayName(nameController.text);
-                        user!.updateEmail(emailController.text);
-                        if (passwordController.text.isNotEmpty) {
-                          user!.updatePassword(passwordController.text);
-                        }
-                      }).then((_) => Navigator.pop(context));
-                    } on FirebaseAuthException {
-                      setState(() {
-                        _fail = "Invalid password, try again";
-                      });
-                    }
+                    widget.user
+                        .reauthenticateWithCredential(
+                            EmailAuthProvider.credential(
+                                email: widget.user.email!,
+                                password: newPassController.text))
+                        .then((credential) async {
+                          widget.user.updateDisplayName(nameController.text);
+                          if (passwordController.text.isNotEmpty) {
+                            await widget.user
+                                .updatePassword(passwordController.text);
+                          }
+                        })
+                        .then((_) => Navigator.pushNamedAndRemoveUntil(
+                            context, "/profile/me", ModalRoute.withName("/")))
+                        .onError<FirebaseAuthException>((error, stackTrace) {
+                          switch (error.code) {
+                            case "weak-password":
+                              setState(() {
+                                _fail = "New password is too weak";
+                              });
+                              break;
+                            case "wrong-password":
+                              setState(() {
+                                _fail = "Wrong password, try again";
+                              });
+                              break;
+                          }
+                          return null;
+                        });
                   },
                   child: const Text(
                     "Confirm",
@@ -270,7 +235,7 @@ class _EditProfile extends State<EditProfile> {
                     ),
                   ),
                 ),
-                Text(_fail),
+                Text(_fail, style: const TextStyle(color: Colors.redAccent)),
               ],
             ),
           )),

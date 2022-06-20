@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class InAppDrawer {
   /// Provide the common menu drawer to be used between all features screen
-  static Drawer gibDrawer(BuildContext context) {
+  static Drawer gibDrawer(BuildContext context, User user) {
     return Drawer(
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(children: <Widget>[
           ListView(shrinkWrap: true, children: [
-            _createHeader(context),
+            _createHeader(context, user),
             const Padding(
               padding: EdgeInsets.only(top: 5.0),
             ),
@@ -19,22 +19,22 @@ class InAppDrawer {
             _createDrawerItem(
               Icons.account_circle_sharp,
               'My Profile',
-              () => Navigator.pushNamed(context, '/profile/me'),
+              () => Navigator.popAndPushNamed(context, '/profile/me'),
             ),
             _createDrawerItem(
               Icons.assignment_sharp,
               'My Questions',
-              () => Navigator.pushNamed(context, '/questions'),
+              () => Navigator.popAndPushNamed(context, '/questions'),
             ),
             _createDrawerItem(
               Icons.account_balance_sharp,
               'Question Bank',
-              () => Navigator.pushNamed(context, '/bank'),
+              () => Navigator.popAndPushNamed(context, '/bank'),
             ),
             _createDrawerItem(
               Icons.quiz_outlined,
               'Quiz',
-              () => Navigator.pushNamed(context, '/quiz'),
+              () => Navigator.popAndPushNamed(context, '/quiz'),
             ),
             const SizedBox(
               height: 270.0,
@@ -47,8 +47,7 @@ class InAppDrawer {
   }
 
   /// Generate the clickable profile card for the drawer header
-  static Widget _createHeader(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
+  static Widget _createHeader(BuildContext context, User user) {
     return DrawerHeader(
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
@@ -62,7 +61,7 @@ class InAppDrawer {
           bottom: 40.0,
           left: 16.0,
           child: Text(
-            user!.displayName!,
+            user.displayName!,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 12.0,
