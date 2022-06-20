@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -324,14 +325,19 @@ class _SignUpPage extends State<SignUpPage> {
         // the user to the username and move the user to login
         FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        )
+              email: emailController.text,
+              password: passwordController.text,
+            )
             .then((credential) {
-          credential.user
-              ?.updateDisplayName(usernameController.text)
-              .then((_) => credential.user?.sendEmailVerification());
-        }).then((_) => Navigator.pop(context));
+              credential.user!.updateDisplayName(usernameController.text);
+              FirebaseFirestore.instance
+                  .collection(credential.user!.uid)
+                  .doc("Tags")
+                  .set({});
+              return credential;
+            })
+            .then((credential) => credential.user?.sendEmailVerification())
+            .then((_) => Navigator.pop(context));
       } on FirebaseAuthException catch (e) {
         // Account creation problem, take note here
         if (e.code == 'weak-password') {
