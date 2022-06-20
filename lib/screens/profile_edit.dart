@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/widgets/size_config.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key, required this.user}) : super(key: key);
@@ -33,6 +34,7 @@ class _EditProfile extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
@@ -45,126 +47,140 @@ class _EditProfile extends State<EditProfile> {
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              const SizedBox(
-                height: 30.0,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 265.0, bottom: 5.0),
-                child: Text(
-                  "Username",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
+        child: Center(
+          child: currentScreenWidth > 650
+              ? SizedBox(
+                  width: SizeConfig.widthSize(context, 60),
+                  child: _buildEditProfile(context),
+                )
+              : _buildEditProfile(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEditProfile(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          const SizedBox(
+            height: 30.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                "Username",
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: TextFormField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 15),
-                        border: InputBorder.none,
-                        labelText: 'Username',
-                        prefixIcon: Icon(
-                          Icons.account_circle_outlined,
-                          color: Colors.deepPurple,
-                        ),
-                      ),
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username cannot be empty';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 205.0, bottom: 5.0),
-                child: Text(
-                  "Update Password",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: TextFormField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 15),
-                        border: InputBorder.none,
-                        labelText: 'Password',
-                        prefixIcon: const Icon(
-                          Icons.lock_outline,
-                          color: Colors.deepPurple,
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                          icon: Icon(
-                            _passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.deepPurple,
-                          ),
-                        ),
-                      ),
-                      obscureText: !_passwordVisible,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ElevatedButton(
-                // Button to re-verify the widget.user before committing the change
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple,
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    showDialog(
-                            context: context,
-                            builder: (context) => _reverify(context))
-                        .then((_) => setState(() {}));
-                  }
-                },
-                child: const Icon(Icons.save),
               ),
             ],
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                    border: InputBorder.none,
+                    labelText: 'Username',
+                    prefixIcon: Icon(
+                      Icons.account_circle_outlined,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Username cannot be empty';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                "Update Password",
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: TextFormField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                    border: InputBorder.none,
+                    labelText: 'Password',
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.deepPurple,
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                  ),
+                  obscureText: !_passwordVisible,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          ElevatedButton(
+            // Button to re-verify the widget.user before committing the change
+            style: ElevatedButton.styleFrom(
+              primary: Colors.deepPurple,
+            ),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                showDialog(
+                        context: context,
+                        builder: (context) => _reverify(context))
+                    .then((_) => setState(() {}));
+              }
+            },
+            child: const Icon(Icons.save),
+          ),
+        ],
       ),
     );
   }
@@ -177,6 +193,7 @@ class _EditProfile extends State<EditProfile> {
     String _fail = "";
     return StatefulBuilder(
       builder: ((context, setState) => AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(vertical: 200),
             content: Column(
               children: <Widget>[
                 TextField(
@@ -186,6 +203,10 @@ class _EditProfile extends State<EditProfile> {
                     hintText: "Input current password",
                     errorText: _validate ? 'username cannot be empty' : null,
                   ),
+                ),
+                Text(
+                  _fail,
+                  style: const TextStyle(color: Colors.redAccent),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -231,11 +252,10 @@ class _EditProfile extends State<EditProfile> {
                   child: const Text(
                     "Confirm",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Text(_fail, style: const TextStyle(color: Colors.redAccent)),
               ],
             ),
           )),
