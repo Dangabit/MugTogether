@@ -15,12 +15,14 @@ class _EditQuestion extends State<EditQuestion> {
   final notesController = TextEditingController();
   final tagsController = TextEditingController();
   late bool privacy;
+  late List<String> oldtags;
 
   @override
   void initState() {
     super.initState();
     notesController.text = widget.document.get("Notes");
-    String tags = widget.document.get("Tags").toString();
+    oldtags = widget.document.get("Tags").cast<String>();
+    String tags = oldtags.toString();
     tagsController.text = tags.substring(1, tags.length - 1);
     privacy = widget.document.get("Privacy");
   }
@@ -31,7 +33,7 @@ class _EditQuestion extends State<EditQuestion> {
       appBar: AppBar(
         title: const Text("Edit Question"),
         leading: BackButton(onPressed: () {
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(context, "/questions");
         }),
       ),
       body: Column(
@@ -69,8 +71,14 @@ class _EditQuestion extends State<EditQuestion> {
         .doc("Tags")
         .update(Map.fromIterable(tagsController.text.split(", ").toSet(),
             value: (element) => FieldValue.increment(1)));
-
-    Future.wait([updateQnChange, updateTags])
+    Future reduceTags = FirebaseFirestore.instance
+        .collection(user!.uid)
+        .doc("Tags")
+        .update(Map.fromIterable(
+          oldtags,
+          value: (element) => FieldValue.increment(-1),
+        ));
+    Future.wait([updateQnChange, updateTags, reduceTags])
         .then((_) => Navigator.pop(context));
   }
 }

@@ -108,27 +108,37 @@ class _AddQuestion extends State<AddQuestion> {
                             "Importance": importance,
                             "Privacy": privacy,
                             "Owner": user!.uid,
+                            "FromCommunity": false,
                           };
                           // Storing of the question
-                          Future addQuestion = db
+                          db
                               .collection(user!.uid)
                               .doc(moduleController.text)
                               .collection("questions")
-                              .add(question);
-                          // Creating subcollection
-                          Future addModuleSub = db
-                              .collection(user!.uid)
-                              .doc(moduleController.text)
-                              .set({"isEmpty": false});
-                          // Counting tags
-                          Future addTags = db
-                              .collection(user!.uid)
-                              .doc("Tags")
-                              .update(Map.fromIterable(question["Tags"],
-                                  value: (element) => FieldValue.increment(1)));
-                          // Return to question overview
-                          Future.wait([addQuestion, addModuleSub, addTags])
-                              .then((_) => Navigator.pop(context));
+                              .add(question)
+                              .then((_) {
+                            // Creating subcollection
+                            Future addModuleSub = db
+                                .collection(user!.uid)
+                                .doc(moduleController.text)
+                                .update({
+                              "isEmpty": FieldValue.increment(1)
+                            }).onError((error, stackTrace) => db
+                                    .collection(user!.uid)
+                                    .doc(moduleController.text)
+                                    .set({"isEmpty": 1}));
+                            // Counting tags
+                            Future addTags = db
+                                .collection(user!.uid)
+                                .doc("Tags")
+                                .update(Map.fromIterable(question["Tags"],
+                                    value: (element) =>
+                                        FieldValue.increment(1)));
+                            // Return to question overview
+                            Future.wait([addModuleSub, addTags]).then((_) =>
+                                Navigator.pushReplacementNamed(
+                                    context, "/questions"));
+                          });
                         }
                       },
                       child: const Icon(Icons.save),
