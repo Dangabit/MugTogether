@@ -340,67 +340,67 @@ class _LoginPage extends State<LoginPage> {
     bool _validate = false;
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(vertical: 200),
-        content: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              TextField(
-                controller: newEmailController,
-                decoration: InputDecoration(
-                  hintText: "Input your email",
-                  errorText: _validate ? 'email cannot be empty' : null,
+        insetPadding: const EdgeInsets.symmetric(vertical: 100),
+        scrollable: true,
+        content: Column(
+          children: <Widget>[
+            TextField(
+              controller: newEmailController,
+              decoration: InputDecoration(
+                hintText: "Input your email",
+                errorText: _innerException.isNotEmpty ? _innerException : null,
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: () {
+                setState(() {
+                  newEmailController.text.isEmpty ? _validate = true : false;
+                });
+                FirebaseAuth.instance
+                    .sendPasswordResetEmail(email: newEmailController.text)
+                    .then((_) => Navigator.pop(context))
+                    .catchError((e) => {
+                          if (e.code == "user-not-found")
+                            {
+                              setState(() {
+                                _innerException = "This email is not used";
+                              })
+                            }
+                          else if (e.code == "invalid-email")
+                            {
+                              setState(() {
+                                _innerException = "This email is invalid";
+                              })
+                            }
+                          else if (_validate)
+                            {
+                              setState(() {
+                                _innerException = "Email cannot be empty";
+                              })
+                            }
+                          else
+                            {
+                              setState(() {
+                                _innerException =
+                                    "There is an unforeseen problem...";
+                              })
+                            }
+                        });
+              },
+              child: const Text(
+                "Confirm",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              Text(
-                _innerException,
-                style: const TextStyle(color: Colors.redAccent),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.deepPurple,
-                ),
-                onPressed: () {
-                  setState(() {
-                    newEmailController.text.isEmpty ? _validate = true : false;
-                  });
-                  FirebaseAuth.instance
-                      .sendPasswordResetEmail(email: newEmailController.text)
-                      .then((_) => Navigator.pop(context))
-                      .catchError((e) => {
-                            if (e.code == "user-not-found")
-                              {
-                                setState(() {
-                                  _innerException = "This email is not used";
-                                })
-                              }
-                            else if (e.code == "invalid-email")
-                              {
-                                setState(() {
-                                  _innerException = "This email is invalid";
-                                })
-                              }
-                            else
-                              {
-                                setState(() {
-                                  _innerException =
-                                      "There is an unforeseen problem...";
-                                })
-                              }
-                          });
-                },
-                child: const Text(
-                  "Confirm",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     });
