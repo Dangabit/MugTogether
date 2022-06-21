@@ -335,9 +335,8 @@ class _LoginPage extends State<LoginPage> {
 
   /// A simple form for the user to input their email for resetting of password
   StatefulBuilder _popupForm(BuildContext context) {
-    String _innerException = "";
+    String? _innerException;
     final newEmailController = TextEditingController();
-    bool _validate = false;
     return StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         insetPadding: const EdgeInsets.symmetric(vertical: 200),
@@ -347,12 +346,8 @@ class _LoginPage extends State<LoginPage> {
               controller: newEmailController,
               decoration: InputDecoration(
                 hintText: "Input your email",
-                errorText: _validate ? 'email cannot be empty' : null,
+                errorText: _innerException,
               ),
-            ),
-            Text(
-              _innerException,
-              style: const TextStyle(color: Colors.redAccent),
             ),
             const SizedBox(
               height: 20.0,
@@ -362,27 +357,26 @@ class _LoginPage extends State<LoginPage> {
                 primary: Colors.deepPurple,
               ),
               onPressed: () {
-                setState(() {
-                  newEmailController.text.isEmpty ? _validate = true : false;
-                });
                 FirebaseAuth.instance
                     .sendPasswordResetEmail(email: newEmailController.text)
-                    .then(
-                  (_) => Navigator.pop(context),
-                  onError: (e) {
-                    if (e.code == "user-not-found") {
-                      setState(() {
-                        _innerException = "This email is not used";
-                      });
-                    } else if (e.code == "invalid-email") {
-                      setState(() {
-                        _innerException = "This email is invalid";
-                      });
-                    } else {
-                      setState(() {
-                        _innerException = "There is an unforeseen problem...";
-                      });
-                    }
+                    .then((_) => Navigator.pop(context))
+                    .onError(
+                  (FirebaseAuthException e, stacktrace) {
+                    setState(() {
+                      switch (e.code) {
+                        case ("user-not-found"):
+                          _innerException = "This email is not used";
+                          break;
+                        case ("invalid-email"):
+                          _innerException = "This email is invalid";
+                          break;
+                        default:
+                          _innerException = newEmailController.text.isEmpty
+                              ? "Email cannot be empty"
+                              : "There is an unforeseen problem...";
+                          break;
+                      }
+                    });
                   },
                 );
               },

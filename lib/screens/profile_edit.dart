@@ -189,8 +189,7 @@ class _EditProfile extends State<EditProfile> {
     // Pop-up window for the form to re-authenticate the widget.user
     // Once re-authenticated, update the widget.users' credentials
     final newPassController = TextEditingController();
-    bool _validate = false;
-    String _fail = "";
+    String? _fail;
     return StatefulBuilder(
       builder: ((context, setState) => AlertDialog(
             insetPadding: const EdgeInsets.symmetric(vertical: 200),
@@ -201,12 +200,8 @@ class _EditProfile extends State<EditProfile> {
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: "Input current password",
-                    errorText: _validate ? 'username cannot be empty' : null,
+                    errorText: _fail,
                   ),
-                ),
-                Text(
-                  _fail,
-                  style: const TextStyle(color: Colors.redAccent),
                 ),
                 const SizedBox(
                   height: 20.0,
@@ -216,16 +211,14 @@ class _EditProfile extends State<EditProfile> {
                     primary: Colors.deepPurple,
                   ),
                   onPressed: () async {
-                    setState(() {
-                      newPassController.text.isEmpty ? _validate = true : false;
-                    });
                     widget.user
                         .reauthenticateWithCredential(
                             EmailAuthProvider.credential(
                                 email: widget.user.email!,
                                 password: newPassController.text))
                         .then((credential) async {
-                          widget.user.updateDisplayName(nameController.text);
+                          await widget.user
+                              .updateDisplayName(nameController.text);
                           if (passwordController.text.isNotEmpty) {
                             await widget.user
                                 .updatePassword(passwordController.text);
@@ -243,6 +236,13 @@ class _EditProfile extends State<EditProfile> {
                             case "wrong-password":
                               setState(() {
                                 _fail = "Wrong password, try again";
+                              });
+                              break;
+                            default:
+                              setState(() {
+                                _fail = newPassController.text.isEmpty
+                                    ? "Current password cannot be empty"
+                                    : "Unforeseen error has occurred";
                               });
                               break;
                           }
