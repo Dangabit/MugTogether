@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class IndividualAttempt extends StatefulWidget {
@@ -13,7 +14,6 @@ class IndividualAttempt extends StatefulWidget {
 }
 
 class _IndividualAttempt extends State<IndividualAttempt> {
-
   // Variables Initialisation
   int currentIndex = 0;
   late List<bool> added;
@@ -74,8 +74,12 @@ class _IndividualAttempt extends State<IndividualAttempt> {
         added[currentIndex]
             ? const Text("Qn added!")
             : ElevatedButton(
-              // Pulling of questions into the user collection
+                // Pulling of questions into the user collection
                 onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection(widget.user.uid)
+                      .doc(widget.attempt["Module"])
+                      .update({"isEmpty": FieldValue.increment(1)});
                   FirebaseFirestore.instance
                       .collection(widget.user.uid)
                       .doc(widget.attempt["Module"])
