@@ -93,6 +93,8 @@ class _LoginPage extends State<LoginPage> {
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30.0),
                 topRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
               ),
             ),
             child: Padding(
