@@ -165,12 +165,16 @@ class _QuestionsPage extends State<QuestionsPage> {
   List<Widget> _generateCards(List<QueryDocumentSnapshot> res) {
     // Convert documents from database into cards
     return res.map((doc) {
+      bool emptyNotes = doc.get("Notes") == "";
       DocumentReference currentDoc = FirebaseFirestore.instance
           .collection(user!.uid)
           .doc(doc.get("Module"))
           .collection("questions")
           .doc(doc.id);
       return Card(
+        color: emptyNotes ? Colors.yellow : null,
+        shadowColor: emptyNotes ? Color.fromARGB(255, 169, 169, 0) : null,
+        elevation: 2,
         child: Column(
           children: <Widget>[
             ListTile(
