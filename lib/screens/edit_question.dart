@@ -42,11 +42,13 @@ class _EditQuestion extends State<EditQuestion> {
           TextField(controller: notesController),
           Text(widget.document.get("Module")),
           TextField(controller: tagsController),
-          Checkbox(
-              value: privacy,
-              onChanged: (newValue) => setState(() {
-                    privacy = newValue!;
-                  })),
+          fromBank
+              ? const Text("")
+              : Checkbox(
+                  value: privacy,
+                  onChanged: (newValue) => setState(() {
+                        privacy = newValue!;
+                      })),
           ElevatedButton(
               onPressed: () => _submitChange(context),
               child: const Icon(Icons.save)),

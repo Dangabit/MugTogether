@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/widgets/data.dart';
 
 class AddQuestion extends StatefulWidget {
-  const AddQuestion({Key? key}) : super(key: key);
+  const AddQuestion({Key? key, this.data}) : super(key: key);
+  final Map? data;
 
   @override
   State<AddQuestion> createState() => _AddQuestion();
@@ -19,6 +21,7 @@ class _AddQuestion extends State<AddQuestion> {
   final tagsController = TextEditingController();
   bool privacy = false;
   int importance = 0;
+  bool fromBank = false;
 
   @override
   void initState() {
@@ -30,6 +33,12 @@ class _AddQuestion extends State<AddQuestion> {
         text: text,
       );
     });
+    if (widget.data != null) {
+      moduleController.text = widget.data!["module"];
+      questionController.text = widget.data!["question"];
+      fromBank = true;
+      privacy = true;
+    }
   }
 
   // Prevent memory leak
@@ -86,11 +95,13 @@ class _AddQuestion extends State<AddQuestion> {
                             return null;
                           }),
                     ),
-                    Checkbox(
-                        value: privacy,
-                        onChanged: (newValue) => setState(() {
-                              privacy = newValue!;
-                            })),
+                    fromBank
+                        ? const Spacer()
+                        : Checkbox(
+                            value: privacy,
+                            onChanged: (newValue) => setState(() {
+                                  privacy = newValue!;
+                                })),
                     const Spacer(),
                     ElevatedButton(
                       onPressed: () {

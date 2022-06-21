@@ -40,9 +40,11 @@ class _ViewQuestion extends State<ViewQuestion> {
                   Row(
                     children: _tagList(snapshot.data!),
                   ),
-                  Text(snapshot.data!.get("Privacy")
-                      ? "This question is private"
-                      : "This question can be seen in Question Bank"),
+                  Text(snapshot.data!.get("FromBank")
+                      ? "This question is taken from the Bank"
+                      : snapshot.data!.get("Privacy")
+                          ? "This question is private"
+                          : "This question can be seen in Question Bank"),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
