@@ -108,7 +108,7 @@ class _AddQuestion extends State<AddQuestion> {
                             "Importance": importance,
                             "Privacy": privacy,
                             "Owner": widget.user.uid,
-                            "FromCommunity": false,
+                            "FromCommunity": fromComm,
                           };
                           // Storing of the question
 
