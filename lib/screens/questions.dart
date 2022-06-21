@@ -127,14 +127,14 @@ class _QuestionsPage extends State<QuestionsPage> {
     if (currentModule == nilValue) {
       docStream = FirebaseFirestore.instance
           .collectionGroup("questions")
-          .where("Owner", isEqualTo: widget.user!.uid)
+          .where("Owner", isEqualTo: widget.user.uid)
           .where("Tags",
               arrayContains: currentFilter == nilValue ? null : currentFilter)
           .orderBy("Importance", descending: true)
           .snapshots();
     } else {
       docStream = FirebaseFirestore.instance
-          .collection(widget.user!.uid)
+          .collection(widget.user.uid)
           .doc(currentModule)
           .collection("questions")
           .where("Tags",
@@ -170,7 +170,7 @@ class _QuestionsPage extends State<QuestionsPage> {
     return res.map((doc) {
       bool emptyNotes = doc.get("Notes") == "";
       DocumentReference currentDoc = FirebaseFirestore.instance
-          .collection(widget.user!.uid)
+          .collection(widget.user.uid)
           .doc(doc.get("Module"))
           .collection("questions")
           .doc(doc.id);
@@ -196,7 +196,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                         .then((doc) => doc.get("Tags") as List)
                         .then((List taglist) {
                       FirebaseFirestore.instance
-                          .collection(widget.user!.uid)
+                          .collection(widget.user.uid)
                           .doc("Tags")
                           .update(Map.fromIterable(
                             taglist,
@@ -207,7 +207,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                       return doc.get("Module");
                     }).then((mod) {
                       FirebaseFirestore.instance
-                          .collection(widget.user!.uid)
+                          .collection(widget.user.uid)
                           .doc(mod)
                           .update({"isEmpty": FieldValue.increment(-1)});
                     });
