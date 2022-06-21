@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/widgets/data.dart';
 
 class AddQuestion extends StatefulWidget {
   const AddQuestion({Key? key, this.data}) : super(key: key);
@@ -21,7 +20,7 @@ class _AddQuestion extends State<AddQuestion> {
   final tagsController = TextEditingController();
   bool privacy = false;
   int importance = 0;
-  bool fromBank = false;
+  bool fromComm = false;
 
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _AddQuestion extends State<AddQuestion> {
     if (widget.data != null) {
       moduleController.text = widget.data!["module"];
       questionController.text = widget.data!["question"];
-      fromBank = true;
+      fromComm = true;
       privacy = true;
     }
   }
@@ -95,7 +94,7 @@ class _AddQuestion extends State<AddQuestion> {
                             return null;
                           }),
                     ),
-                    fromBank
+                    fromComm
                         ? const Spacer()
                         : Checkbox(
                             value: privacy,
@@ -119,7 +118,7 @@ class _AddQuestion extends State<AddQuestion> {
                             "Importance": importance,
                             "Privacy": privacy,
                             "Owner": user!.uid,
-                            "FromBank": fromBank,
+                            "FromCommunity": fromComm,
                           };
                           // Storing of the question
                           Future addQuestion = db
