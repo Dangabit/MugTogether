@@ -5,17 +5,16 @@ import 'package:mug_together/screens/edit_question.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in document info
-  const ViewQuestion({Key? key, required this.document}) : super(key: key);
+  const ViewQuestion({Key? key, required this.document, required this.user})
+      : super(key: key);
   final DocumentReference document;
+  final User user;
 
   @override
   State<ViewQuestion> createState() => _ViewQuestion();
 }
 
 class _ViewQuestion extends State<ViewQuestion> {
-  // Variables Initialisation
-  User? user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +39,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                   Row(
                     children: _tagList(snapshot.data!),
                   ),
-                  Text(snapshot.data!.get("FromBank")
+                  Text(snapshot.data!.get("FromCommunity")
                       ? "This question is taken from the Bank"
                       : snapshot.data!.get("Privacy")
                           ? "This question is private"
@@ -50,8 +49,9 @@ class _ViewQuestion extends State<ViewQuestion> {
                       Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditQuestion(document: snapshot.data!)))
+                                  builder: (context) => EditQuestion(
+                                      document: snapshot.data!,
+                                      user: widget.user)))
                           .then((_) => setState(() {}));
                     },
                     child: const Text("edit"),
@@ -65,6 +65,7 @@ class _ViewQuestion extends State<ViewQuestion> {
     );
   }
 
+  /// Makes a List of tags in containers
   List<Widget> _tagList(DocumentSnapshot currentDoc) {
     List<dynamic> tags = currentDoc.get("Tags");
     return tags.map((tag) {
