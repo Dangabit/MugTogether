@@ -368,7 +368,14 @@ class _LoginPage extends State<LoginPage> {
                     .sendPasswordResetEmail(email: newEmailController.text)
                     .then((_) => Navigator.pop(context))
                     .catchError((e) => {
-                          if (e.code == "user-not-found")
+                          if (_validate)
+                            {
+                              setState(() {
+                                _innerException = "Email cannot be empty";
+                                _validate = false;
+                              })
+                            }
+                          else if (e.code == "user-not-found")
                             {
                               setState(() {
                                 _innerException = "This email is not used";
@@ -378,12 +385,6 @@ class _LoginPage extends State<LoginPage> {
                             {
                               setState(() {
                                 _innerException = "This email is invalid";
-                              })
-                            }
-                          else if (_validate)
-                            {
-                              setState(() {
-                                _innerException = "Email cannot be empty";
                               })
                             }
                           else
