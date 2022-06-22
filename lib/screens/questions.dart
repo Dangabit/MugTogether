@@ -14,6 +14,7 @@ class QuestionsPage extends StatefulWidget {
 
 class _QuestionsPage extends State<QuestionsPage> {
   // Variables Initialisation
+  final user = FirebaseAuth.instance.currentUser;
   final nilValue = "ALL";
   late String currentModule;
   late String currentFilter;

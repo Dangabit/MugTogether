@@ -15,6 +15,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPage extends State<QuizPage> {
   // Variable initialisation
+  final user = FirebaseAuth.instance.currentUser;
   final Data _currentMod = Data();
   double _noOfQns = 1;
   bool _timerCheck = false;
