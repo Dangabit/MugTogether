@@ -107,11 +107,7 @@ class _AddQuestion extends State<AddQuestion> {
                                     .toList(),
                             "Importance": importance,
                             "Privacy": privacy,
-<<<<<<< HEAD
                             "Owner": widget.user.uid,
-=======
-                            "Owner": user!.uid,
->>>>>>> c8f4f25ba24a81fb78efe56d861ac5d9c4be6063
                             "FromCommunity": fromComm,
                           };
                           // Storing of the question
