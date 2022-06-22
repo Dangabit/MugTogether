@@ -14,6 +14,7 @@ class QuestionsPage extends StatefulWidget {
 
 class _QuestionsPage extends State<QuestionsPage> {
   // Variables Initialisation
+  final user = FirebaseAuth.instance.currentUser;
   final nilValue = "ALL";
   late String currentModule;
   late String currentFilter;
@@ -48,7 +49,7 @@ class _QuestionsPage extends State<QuestionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("${widget.user.displayName}'s Questions")),
-      drawer: InAppDrawer.gibDrawer(context),
+      drawer: InAppDrawer.gibDrawer(context, user!),
       body: FutureBuilder(
         // Future builder to check if everything is initialised completely
         future: checkInit,

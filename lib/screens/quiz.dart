@@ -13,8 +13,8 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPage extends State<QuizPage> {
-
   // Variable initialisation
+  final user = FirebaseAuth.instance.currentUser;
   final Data _currentMod = Data();
   double _noOfQns = 1;
   bool _timerCheck = false;
@@ -24,7 +24,7 @@ class _QuizPage extends State<QuizPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Quiz")),
-      drawer: InAppDrawer.gibDrawer(context),
+      drawer: InAppDrawer.gibDrawer(context, user!),
       body: _buildForm(),
     );
   }
