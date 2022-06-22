@@ -49,7 +49,7 @@ class AppRouter {
               const RouteSettings(name: '/bank'));
         }
       case '/quiz':
-        return _checkUser((_) => const QuizPage(), settings);
+        return _checkUser((user) => QuizPage(user: user), settings);
       case '/quiz/past':
         return _checkUser((user) => PastAttempts(user: user), settings);
       default:

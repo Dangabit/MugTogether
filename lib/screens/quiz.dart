@@ -6,14 +6,14 @@ import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class QuizPage extends StatefulWidget {
-  const QuizPage({Key? key}) : super(key: key);
+  const QuizPage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   State<QuizPage> createState() => _QuizPage();
 }
 
 class _QuizPage extends State<QuizPage> {
-
   // Variable initialisation
   final Data _currentMod = Data();
   double _noOfQns = 1;
@@ -24,7 +24,7 @@ class _QuizPage extends State<QuizPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Quiz")),
-      drawer: InAppDrawer.gibDrawer(context),
+      drawer: InAppDrawer.gibDrawer(context, widget.user),
       body: _buildForm(),
     );
   }
