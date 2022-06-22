@@ -36,7 +36,7 @@ class AppRouter {
           return _checkUser((user) => AddQuestion(user: user), settings);
         }
       case '/profile/me':
-        return _checkUser((_) => const ProfilePage(), settings);
+        return _checkUser((user) => ProfilePage(user: user), settings);
       case '/bank':
         return _checkUser((_) => const QuestionBankPage(), settings);
       case '/bank/module':

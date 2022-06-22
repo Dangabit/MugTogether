@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/quiz_attempt.dart';
 import 'package:mug_together/widgets/data.dart';
@@ -12,6 +13,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPage extends State<QuizPage> {
+
   // Variable initialisation
   final Data _currentMod = Data();
   double _noOfQns = 1;

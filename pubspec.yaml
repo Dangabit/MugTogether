@@ -37,6 +37,7 @@ dependencies:
   firebase_core: ^1.16.0
   firebase_auth: ^3.3.18
   cloud_firestore: ^3.1.15
+  google_fonts: ^3.0.1
   http: ^0.13.4
   dropdown_search: ^3.0.1
   audioplayers: ^1.0.1
@@ -64,6 +65,12 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/test.jpg
+    - assets/images/logo.png
+    - assets/images/logo2.png
+    - assets/images/logo3.png
+    - assets/images/user-profile.png
+    - assets/images/drawerheader.jpg
     - assets/test.jpg
     - assets/audio/timer.wav
 

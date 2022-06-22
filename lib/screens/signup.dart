@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/widgets/size_config.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -13,10 +14,13 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPage extends State<SignUpPage> {
   // Variables initialisation
   final _formKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final usernameController = TextEditingController();
+  final confirmPassController = TextEditingController();
   String _exception = "";
+  bool _passwordVisible1 = false;
+  bool _passwordVisible2 = false;
 
   // Prevent memory leak
   @override
@@ -29,77 +33,296 @@ class _SignUpPage extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      // For backward navigation
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Center(
+          child: currentScreenWidth > 650
+              ? SizedBox(
+                  width: SizeConfig.widthSize(context, 60),
+                  child: _buildSignupScreen(context),
+                )
+              : _buildSignupScreen(context),
         ),
-        title: const Text("Sign Up!"),
       ),
-      // Sign Up Form
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              // Username input field
-              TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(hintText: 'Username'),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please input a username';
-                  }
-                  return null;
-                },
+    );
+  }
+
+  Widget _buildSignupScreen(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
+          child: Image.asset('assets/images/logo3.png'),
+        ),
+        // Sign Up Form
+        Container(
+          margin: const EdgeInsets.only(top: 20.0),
+          color: Colors.transparent,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(197, 213, 198, 255),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
               ),
-              // Email input field
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(hintText: 'Email'),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please input an email';
-                  }
-                  return null;
-                },
-                onFieldSubmitted: submit,
-              ),
-              // Password input field
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(hintText: 'Password'),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please input a password';
-                  }
-                  return null;
-                },
-                obscureText: true,
-                onFieldSubmitted: submit,
-              ),
-              // Button, with function to create user in Firebase
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () => submit(null),
-                  child: const Text('Create'),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 65),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.only(top: 30.0),
+                      child: Text(
+                        'Sign Up',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    // Username input field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: TextFormField(
+                            controller: usernameController,
+                            decoration: const InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 15),
+                              border: InputBorder.none,
+                              labelText: 'Username',
+                              hintText: 'Enter your username',
+                              prefixIcon: Icon(
+                                Icons.account_circle_outlined,
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please input a username';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const Padding(padding: EdgeInsets.all(5)),
+
+                    // Email input field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: TextFormField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 15),
+                              border: InputBorder.none,
+                              labelText: 'Email',
+                              hintText: 'Enter your email',
+                              prefixIcon: Icon(
+                                Icons.mail_outline,
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            // Checking for an NUS email using Regex
+                            validator: (String? value) {
+                              if (!RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@u.nus.edu")
+                                  .hasMatch(value!)) {
+                                return 'Please input an NUS email';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const Padding(padding: EdgeInsets.all(5)),
+
+                    // Password input field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: TextFormField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 15),
+                              border: InputBorder.none,
+                              labelText: 'Password',
+                              hintText: 'Enter your password',
+                              prefixIcon: const Icon(
+                                Icons.lock_outline,
+                                color: Colors.deepPurple,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible1 = !_passwordVisible1;
+                                  });
+                                },
+                                icon: Icon(
+                                  _passwordVisible1
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.deepPurple,
+                                ),
+                              ),
+                            ),
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please input your password';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible1,
+                            onFieldSubmitted: submit,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const Padding(padding: EdgeInsets.all(5)),
+
+                    // Confirm Password input field
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: TextFormField(
+                            controller: confirmPassController,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 15),
+                              border: InputBorder.none,
+                              labelText: 'Confirm Password',
+                              hintText: 'Retype your password',
+                              prefixIcon: const Icon(
+                                Icons.lock_outline,
+                                color: Colors.deepPurple,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible2 = !_passwordVisible2;
+                                  });
+                                },
+                                icon: Icon(
+                                  _passwordVisible2
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.deepPurple,
+                                ),
+                              ),
+                            ),
+                            validator: (String? value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm your password';
+                              }
+                              if (value != passwordController.text) {
+                                return 'Password does not match';
+                              }
+                              return null;
+                            },
+                            obscureText: !_passwordVisible2,
+                            onFieldSubmitted: submit,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // For backward navigation
+                          SizedBox(
+                            width: 100.0,
+                            height: 40.0,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.deepPurple,
+                              ),
+                              onPressed: () => Navigator.popUntil(context,
+                                  (route) => route.settings.name == "/"),
+                              child: const Text(
+                                'Back',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Padding(padding: EdgeInsets.only(right: 152)),
+                          // Create Button, with function to create user in Firebase
+                          SizedBox(
+                            width: 100.0,
+                            height: 40.0,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.deepPurple,
+                              ),
+                              onPressed: () => submit(null),
+                              child: const Text(
+                                'Create',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Display firebase account creation issue, if any
+                    Text(
+                      _exception,
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
+                  ],
                 ),
               ),
-              // Display firebase account creation issue, if any
-              Text(
-                _exception,
-                style: const TextStyle(color: Colors.redAccent),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
