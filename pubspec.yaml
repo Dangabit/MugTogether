@@ -40,6 +40,7 @@ dependencies:
   google_fonts: ^3.0.1
   http: ^0.13.4
   dropdown_search: ^3.0.1
+  audioplayers: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,8 @@ flutter:
     - assets/images/logo3.png
     - assets/images/user-profile.png
     - assets/images/drawerheader.jpg
+    - assets/test.jpg
+    - assets/audio/timer.wav
 
   # To add assets to your application, add an assets section, like this:
   # assets:

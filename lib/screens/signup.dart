@@ -337,7 +337,7 @@ class _SignUpPage extends State<SignUpPage> {
       try {
         // Try to create account, if successful, tag
         // the user to the username and move the user to login
-        FirebaseAuth.instance
+        await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
               email: emailController.text,
               password: passwordController.text,
@@ -348,6 +348,10 @@ class _SignUpPage extends State<SignUpPage> {
                   .collection(credential.user!.uid)
                   .doc("Tags")
                   .set({});
+              FirebaseFirestore.instance
+                  .collection(credential.user!.uid)
+                  .doc("Quiz Attempts")
+                  .set({"AttemptList": List.empty()});
               return credential;
             })
             .then((credential) => credential.user?.sendEmailVerification())
