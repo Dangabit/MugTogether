@@ -5,7 +5,8 @@ import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class AddQuestion extends StatefulWidget {
-  const AddQuestion({Key? key, this.data, required this.user}) : super(key: key);
+  const AddQuestion({Key? key, this.data, required this.user})
+      : super(key: key);
   final Map? data;
   final User user;
 
@@ -48,6 +49,11 @@ class _AddQuestion extends State<AddQuestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+      appBar: AppBar(
+        title: const Text("Add Question"),
+        backgroundColor: Colors.deepPurple,
+      ),
       body: Flex(
         direction: Axis.vertical,
         children: [
@@ -55,41 +61,133 @@ class _AddQuestion extends State<AddQuestion> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                // Question field
-                TextFormField(
-                    controller: questionController,
-                    decoration: const InputDecoration(hintText: 'Question'),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Question cannot be empty';
-                      }
-                      return null;
-                    }),
-                // Pointers field, can be empty
-                TextFormField(
-                  controller: pointersController,
-                  decoration: const InputDecoration(hintText: 'Any notes'),
+                const SizedBox(
+                  height: 20.0,
                 ),
-                TextFormField(
-                  controller: tagsController,
-                  decoration: const InputDecoration(
-                      hintText: 'Separate multi labels with commas!'),
+                // Question field
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: TextFormField(
+                          controller: questionController,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20),
+                            border: InputBorder.none,
+                            hintText: 'Input your question',
+                            prefixIcon: Icon(
+                              Icons.question_mark_outlined,
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Question cannot be empty';
+                            }
+                            return null;
+                          }),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                // Pointers field, can be empty
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: TextFormField(
+                        controller: pointersController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 50),
+                          border: InputBorder.none,
+                          hintText: 'Input any notes (Optional)',
+                          prefixIcon: Icon(
+                            Icons.notes_outlined,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                // Tags field, can be empty
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: TextFormField(
+                        controller: tagsController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 20),
+                          border: InputBorder.none,
+                          hintText: 'Tags, separated by commas (Optional)',
+                          prefixIcon: Icon(
+                            Icons.sell_outlined,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30.0,
                 ),
                 Row(
                   children: <Widget>[
+                    const SizedBox(
+                      width: 20.0,
+                    ),
                     // Module id field
                     Flexible(
                       child: ModuleList.createListing(module),
                     ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
                     fromComm
                         ? const Spacer()
-                        : Checkbox(
-                            value: privacy,
-                            onChanged: (newValue) => setState(() {
-                                  privacy = newValue!;
-                                })),
-                    const Spacer(),
+                        : Tooltip(
+                            message: "Check to privatise your question",
+                            child: Checkbox(
+                                value: privacy,
+                                onChanged: (newValue) => setState(() {
+                                      privacy = newValue!;
+                                    })),
+                          ),
+                    const SizedBox(
+                      width: 60.0,
+                    ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.deepPurple,
+                      ),
                       onPressed: () {
                         // If inputs are valid, store into database
                         if (_formKey.currentState!.validate() &&
@@ -143,6 +241,9 @@ class _AddQuestion extends State<AddQuestion> {
                         }
                       },
                       child: const Icon(Icons.save),
+                    ),
+                    const SizedBox(
+                      width: 20.0,
                     ),
                   ],
                 ),

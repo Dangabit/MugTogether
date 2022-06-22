@@ -32,6 +32,10 @@ class ModuleList {
   /// Creates a Dropdown searchable widget
   static Widget createListing(Data currentValue) {
     return DropdownSearch(
+      dropdownSearchDecoration: const InputDecoration(
+        hintText: "Module",
+        border: OutlineInputBorder(),
+      ),
       mode: Mode.DIALOG,
       showSearchBox: true,
       showSelectedItems: true,
