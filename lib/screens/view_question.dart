@@ -5,17 +5,16 @@ import 'package:mug_together/screens/edit_question.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in document info
-  const ViewQuestion({Key? key, required this.document}) : super(key: key);
-  final QueryDocumentSnapshot document;
+  const ViewQuestion({Key? key, required this.document, required this.user})
+      : super(key: key);
+  final DocumentReference document;
+  final User user;
 
   @override
   State<ViewQuestion> createState() => _ViewQuestion();
 }
 
 class _ViewQuestion extends State<ViewQuestion> {
-  // Variables Initialisation
-  User? user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,25 +24,56 @@ class _ViewQuestion extends State<ViewQuestion> {
           Navigator.pop(context);
         }),
       ),
-      body: Flex(
-        // Display the info from the question document
-        direction: Axis.vertical,
-        children: [
-          Text(widget.document.get("Question")),
-          Text(widget.document.get("Notes")),
-          Text(widget.document.get("Module")),
-          Text(widget.document.get("LastUpdate")),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EditQuestion()));
-            },
-            child: const Text("edit"),
-          ),
-        ],
-      ),
+      body: FutureBuilder(
+          future: widget.document.get(),
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return Flex(
+                // Display the info from the question document
+                direction: Axis.vertical,
+                children: [
+                  Text(snapshot.data!.get("Question")),
+                  Text(snapshot.data!.get("Notes")),
+                  Text(snapshot.data!.get("Module")),
+                  Text(snapshot.data!.get("LastUpdate")),
+                  Row(
+                    children: _tagList(snapshot.data!),
+                  ),
+                  Text(snapshot.data!.get("FromCommunity")
+                      ? "This question is taken from the Bank"
+                      : snapshot.data!.get("Privacy")
+                          ? "This question is private"
+                          : "This question can be seen in Question Bank"),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditQuestion(
+                                      document: snapshot.data!,
+                                      user: widget.user)))
+                          .then((_) => setState(() {}));
+                    },
+                    child: const Text("edit"),
+                  ),
+                ],
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          }),
     );
+  }
+
+  /// Makes a List of tags in containers
+  List<Widget> _tagList(DocumentSnapshot currentDoc) {
+    List<dynamic> tags = currentDoc.get("Tags");
+    return tags.map((tag) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Text(tag),
+      );
+    }).toList();
   }
 }
