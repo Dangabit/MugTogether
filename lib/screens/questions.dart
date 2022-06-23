@@ -48,7 +48,11 @@ class _QuestionsPage extends State<QuestionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.user.displayName}'s Questions")),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+      appBar: AppBar(
+        title: Text("${widget.user.displayName}'s Questions"),
+        backgroundColor: Colors.deepPurple,
+      ),
       drawer: InAppDrawer.gibDrawer(context, widget.user),
       body: FutureBuilder(
         // Future builder to check if everything is initialised completely
@@ -66,33 +70,124 @@ class _QuestionsPage extends State<QuestionsPage> {
                 } else {
                   return Column(
                     children: [
-                      Row(
-                        children: <Widget>[
-                          // Filter by Module, or not
-                          DropdownButton<String>(
-                            value: currentModule,
-                            items: modlist,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                currentModule = newValue!;
-                              });
-                            },
-                          ),
-                          const Spacer(),
-                          DropdownButton<String>(
-                            value: currentFilter,
-                            items: tagsList,
-                            onChanged: (String? value) => setState(() {
-                              currentFilter = value!;
-                            }),
-                          ),
-                          // Move to add_question screen, refresh upon returning
-                          ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/questions/add'),
-                            child: const Icon(Icons.add),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: <Widget>[
+                            // Filter by Module, or not
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Filter Modules:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: DropdownButton<String>(
+                                    value: currentModule,
+                                    items: modlist,
+                                    dropdownColor: Colors.grey[200],
+                                    menuMaxHeight: 300.0,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        currentModule = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 16.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Filter Tags:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: DropdownButton<String>(
+                                    value: currentFilter,
+                                    items: tagsList,
+                                    dropdownColor: Colors.grey[200],
+                                    menuMaxHeight: 300.0,
+                                    onChanged: (String? value) => setState(() {
+                                      currentFilter = value!;
+                                    }),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            // Move to add_question screen, refresh upon returning
+                            Column(
+                              children: [
+                                const Text(
+                                  "",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Tooltip(
+                                  message: "Add new question entry",
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.deepPurple,
+                                        side: const BorderSide(
+                                          width: 1.0,
+                                          color: Colors.black,
+                                        )),
+                                    onPressed: () => Navigator.pushNamed(
+                                        context, '/questions/add'),
+                                    child: const Icon(Icons.add_outlined),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       // Display questions in grid
                       Expanded(child: _generateGrid(snapshot)),
@@ -159,7 +254,8 @@ class _QuestionsPage extends State<QuestionsPage> {
                 : GridView.count(
                     physics: const ScrollPhysics(),
                     crossAxisCount: 2,
-                    children: cardList);
+                    children: cardList,
+                  );
         }
       },
     );
@@ -175,64 +271,122 @@ class _QuestionsPage extends State<QuestionsPage> {
           .doc(doc.get("Module"))
           .collection("questions")
           .doc(doc.id);
-      return Card(
-        // Glow if no notes
-        color: emptyNotes ? Colors.yellow : null,
-        shadowColor: emptyNotes ? const Color.fromARGB(255, 169, 169, 0) : null,
-        elevation: 2,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.donut_large),
-              title: Text(doc.get("Question")),
-            ),
-            Row(
-              children: [
-                // Delete button
-                TextButton(
-                  child: const Text("Delete"),
-                  onPressed: () async {
-                    Future updateTags = currentDoc
-                        .get()
-                        .then((doc) => doc.get("Tags") as List)
-                        .then((List taglist) {
-                      FirebaseFirestore.instance
-                          .collection(widget.user.uid)
-                          .doc("Tags")
-                          .update(Map.fromIterable(
-                            taglist,
-                            value: (element) => FieldValue.increment(-1),
-                          ));
-                    });
-                    Future updateMod = currentDoc.get().then<String>((doc) {
-                      return doc.get("Module");
-                    }).then((mod) {
-                      FirebaseFirestore.instance
-                          .collection(widget.user.uid)
-                          .doc(mod)
-                          .update({"isEmpty": FieldValue.increment(-1)});
-                    });
-                    Future.wait([updateMod, updateTags]).then(
-                      (_) => currentDoc.delete(),
-                    );
-                  },
+      return Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Container(
+          decoration: emptyNotes
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  boxShadow: const [
+                      BoxShadow(
+                        color: Colors.yellow,
+                        blurRadius: 20.0,
+                      ),
+                    ])
+              : null,
+          child: Card(
+            // Glow if no notes
+            color: emptyNotes
+                ? Colors.yellow[400]
+                : const Color.fromARGB(255, 242, 233, 248),
+            shadowColor:
+                emptyNotes ? const Color.fromARGB(255, 255, 255, 0) : null,
+            elevation: 2,
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  minLeadingWidth: 5.0,
+                  leading: const Icon(Icons.donut_large),
+                  title: Transform.translate(
+                    offset: const Offset(-10, 0),
+                    child: Text(
+                      doc.get("Question"),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 ),
-                // Move to view question page
-                TextButton(
-                  child: const Text("View"),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewQuestion(
-                                  document: currentDoc,
-                                  user: widget.user,
-                                )));
-                  },
+                const Spacer(),
+                Text(
+                  emptyNotes ? "(No notes)" : "",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Delete button
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    TextButton(
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Future updateTags = currentDoc
+                            .get()
+                            .then((doc) => doc.get("Tags") as List)
+                            .then((List taglist) {
+                          FirebaseFirestore.instance
+                              .collection(widget.user.uid)
+                              .doc("Tags")
+                              .update(Map.fromIterable(
+                                taglist,
+                                value: (element) => FieldValue.increment(-1),
+                              ));
+                        });
+                        Future updateMod = currentDoc.get().then<String>((doc) {
+                          return doc.get("Module");
+                        }).then((mod) {
+                          FirebaseFirestore.instance
+                              .collection(widget.user.uid)
+                              .doc(mod)
+                              .update({"isEmpty": FieldValue.increment(-1)});
+                        });
+                        Future.wait([updateMod, updateTags]).then(
+                          (_) => currentDoc.delete(),
+                        );
+                      },
+                    ),
+                    const Spacer(),
+                    // Move to view question page
+                    TextButton(
+                      child: const Text(
+                        "View",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewQuestion(
+                                      document: currentDoc,
+                                      user: widget.user,
+                                    )));
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       );
     }).toList();
