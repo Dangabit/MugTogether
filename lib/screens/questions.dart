@@ -76,12 +76,16 @@ class _QuestionsPage extends State<QuestionsPage> {
                           children: <Widget>[
                             // Filter by Module, or not
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Filter Modules:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Filter Modules:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -117,12 +121,16 @@ class _QuestionsPage extends State<QuestionsPage> {
                               width: 16.0,
                             ),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Filter Tags:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Filter Tags:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -298,6 +306,15 @@ class _QuestionsPage extends State<QuestionsPage> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  emptyNotes ? "(No notes)" : "",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
                 const Spacer(),

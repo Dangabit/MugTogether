@@ -32,8 +32,9 @@ class ModuleList {
   /// Creates a Dropdown searchable widget
   static Widget createListing(Data currentValue) {
     return DropdownSearch(
+      validator: (value) => value == null ? "Field required" : null,
       dropdownSearchDecoration: const InputDecoration(
-        hintText: "Module",
+        hintText: "Select Module",
         border: OutlineInputBorder(),
       ),
       mode: Mode.DIALOG,
