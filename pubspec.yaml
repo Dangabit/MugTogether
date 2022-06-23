@@ -73,14 +73,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/test.jpg
-    - assets/images/logo.png
-    - assets/images/logo2.png
-    - assets/images/logo3.png
-    - assets/images/user-profile.png
-    - assets/images/drawerheader.jpg
-    - assets/test.jpg
-    - assets/audio/timer.wav
+    - assets/images/
+    - assets/audio/
+    - integration_test/credentials.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
