@@ -18,12 +18,28 @@ class _QuestionBankPage extends State<QuestionBankPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Question Bank")),
+        backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+        appBar: AppBar(
+          title: const Text("Question Bank"),
+          backgroundColor: Colors.deepPurple,
+        ),
         drawer: InAppDrawer.gibDrawer(context, user!),
         body: Column(
           children: <Widget>[
-            ModuleList.createListing(currentValue),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30.0,
+                vertical: 10.0,
+              ),
+              child: ModuleList.createListing(currentValue),
+            ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
               onPressed: _submit,
               child: const Icon(Icons.arrow_right),
             )
