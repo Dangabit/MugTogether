@@ -27,6 +27,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
+  dropdown_button2: ^1.6.2
+  dropdown_search2: ^1.0.2
+
   flutter:
     sdk: flutter
 
@@ -43,8 +47,11 @@ dependencies:
   audioplayers: ^1.0.1
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.9.3"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -52,6 +59,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "web/icons/Icon-512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,14 +77,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/test.jpg
-    - assets/images/logo.png
-    - assets/images/logo2.png
-    - assets/images/logo3.png
-    - assets/images/user-profile.png
-    - assets/images/drawerheader.jpg
-    - assets/test.jpg
-    - assets/audio/timer.wav
+    - assets/images/
+    - assets/audio/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

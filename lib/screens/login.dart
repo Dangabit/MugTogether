@@ -132,6 +132,7 @@ class _LoginPage extends State<LoginPage> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: TextFormField(
+                                  key: const Key("emailFormField"),
                                   controller: emailController,
                                   decoration: const InputDecoration(
                                     contentPadding:
@@ -170,6 +171,7 @@ class _LoginPage extends State<LoginPage> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: TextFormField(
+                                  key: const Key("passwordFormField"),
                                   controller: passwordController,
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.symmetric(
@@ -213,6 +215,7 @@ class _LoginPage extends State<LoginPage> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 15.0),
                                 child: TextButton(
+                                  key: const Key("forgetPassword"),
                                   onPressed: () => showDialog(
                                       context: context, builder: _popupForm),
                                   child: const Text(
@@ -232,6 +235,7 @@ class _LoginPage extends State<LoginPage> {
                               width: 350.0,
                               height: 55.0,
                               child: ElevatedButton(
+                                key: const Key("loginButton"),
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.deepPurple,
                                 ),
@@ -265,6 +269,7 @@ class _LoginPage extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(),
                         child: TextButton(
+                          key: const Key("signupButton"),
                           onPressed: () {
                             Navigator.pushNamed(context, '/signup');
                           },

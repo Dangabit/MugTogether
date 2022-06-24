@@ -21,8 +21,7 @@ class _ProfilePage extends State<ProfilePage> {
         title: Text("${widget.user.displayName}'s Profile"),
       ),
       drawer: InAppDrawer.gibDrawer(context, widget.user),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
+      body: Column(
         children: [
           const SizedBox(
             height: 20.0,
@@ -62,9 +61,7 @@ class _ProfilePage extends State<ProfilePage> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 400.0,
-          ),
+          const Spacer(),
           Center(
             child: SizedBox(
               width: 160.0,
@@ -86,6 +83,9 @@ class _ProfilePage extends State<ProfilePage> {
                 ),
               ),
             ),
+          ),
+          const SizedBox(
+            height: 20.0,
           ),
         ],
       ),

@@ -29,7 +29,9 @@ class _BankModulePage extends State<BankModulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
         title: Text(widget.module),
         leading: BackButton(onPressed: () {
           Navigator.pop(context);
@@ -49,28 +51,95 @@ class _BankModulePage extends State<BankModulePage> {
 
   Widget _generateListView(
       List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
-    return ListView.builder(
-      // TODO: Limit count to prevent the need to render large amount of Listview
-      itemCount: docslist.length,
-      itemBuilder: (context, index) {
-        String question = docslist[index].get("Question");
-        return Container(
-          margin: const EdgeInsets.all(1),
-          child: Row(
-            children: <Widget>[
-              Text(question),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/questions/add", arguments: {
-                      "module": widget.module,
-                      "question" : question,
-                    });
-                  },
-                  child: const Icon(Icons.download))
+    return docslist.isNotEmpty
+        ? Column(
+            children: [
+              const SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: 15.0,
+                  ),
+                  Text(
+                    widget.module + " Questions",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              ListView.builder(
+                // TODO: Limit count to prevent the need to render large amount of Listview
+                shrinkWrap: true,
+                itemCount: docslist.length,
+                itemBuilder: (context, index) {
+                  String question = docslist[index].get("Question");
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                (index + 1).toString() + ") " + question,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10.0,
+                              ),
+                              SizedBox(
+                                height: 30.0,
+                                width: 40.0,
+                                child: Tooltip(
+                                  message: "Click to add this question",
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.deepPurple,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, "/questions/add",
+                                            arguments: {
+                                              "module": widget.module,
+                                              "question": question,
+                                            });
+                                      },
+                                      child: const Icon(Icons.download)),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
-          ),
-        );
-      },
-    );
+          )
+        : const Center(
+            child: Text(
+              "There are no questions publicly available for this module :(",
+            ),
+          );
   }
 }
