@@ -24,26 +24,53 @@ class _QuestionBankPage extends State<QuestionBankPage> {
           backgroundColor: Colors.deepPurple,
         ),
         drawer: InAppDrawer.gibDrawer(context, user!),
-        body: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 20.0,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30.0,
-                vertical: 10.0,
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 20.0,
               ),
-              child: ModuleList.createListing(currentValue),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.deepPurple,
+              // const Text(
+              //   "The question bank stores all questions that are publicly "
+              //   "available for every module!",
+              // ),
+              Wrap(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      "Begin by choosing your desired module! 😃",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              onPressed: _submit,
-              child: const Icon(Icons.arrow_right),
-            )
-          ],
+              const SizedBox(
+                height: 20.0,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30.0,
+                  vertical: 10.0,
+                ),
+                child: ModuleList.createListing(currentValue),
+              ),
+              Tooltip(
+                message: "Next!",
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurple,
+                  ),
+                  onPressed: _submit,
+                  child: const Icon(Icons.arrow_right),
+                ),
+              )
+            ],
+          ),
         ));
   }
 
