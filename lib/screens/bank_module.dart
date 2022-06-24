@@ -80,45 +80,51 @@ class _BankModulePage extends State<BankModulePage> {
                   String question = docslist[index].get("Question");
                   return Column(
                     children: [
+                      const SizedBox(
+                        height: 10.0,
+                      ),
                       Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 10.0,
                           vertical: 10.0,
                         ),
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              (index + 1).toString() + ") " + question,
-                              style: const TextStyle(
-                                fontSize: 17,
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                (index + 1).toString() + ") " + question,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                            SizedBox(
-                              height: 30.0,
-                              width: 40.0,
-                              child: Tooltip(
-                                message: "Click to add this question",
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.deepPurple,
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, "/questions/add",
-                                          arguments: {
-                                            "module": widget.module,
-                                            "question": question,
-                                          });
-                                    },
-                                    child: const Icon(Icons.download)),
+                              const SizedBox(
+                                width: 10.0,
                               ),
-                            )
-                          ],
+                              SizedBox(
+                                height: 30.0,
+                                width: 40.0,
+                                child: Tooltip(
+                                  message: "Click to add this question",
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.deepPurple,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, "/questions/add",
+                                            arguments: {
+                                              "module": widget.module,
+                                              "question": question,
+                                            });
+                                      },
+                                      child: const Icon(Icons.download)),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(
