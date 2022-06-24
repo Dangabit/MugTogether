@@ -201,6 +201,8 @@ class _AddQuestion extends State<AddQuestion> {
                           : Tooltip(
                               message: "Check to privatise your question",
                               child: Checkbox(
+                                  activeColor: Colors.deepPurple,
+                                  splashRadius: 20.0,
                                   value: privacy,
                                   onChanged: (newValue) => setState(() {
                                         privacy = newValue!;
