@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
 
-  dropdown_button2: ^1.0.0
+  dropdown_button2: ^1.6.2
   dropdown_search2: ^1.0.2
 
   flutter:
