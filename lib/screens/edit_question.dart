@@ -283,8 +283,12 @@ class _EditQuestion extends State<EditQuestion> {
         .doc(widget.document.get("Module"))
         .collection("questions")
         .doc(widget.document.id)
-        .update(
-            {"Notes": notesController.text, "Tags": tags, "Privacy": privacy});
+        .update({
+      "Notes": notesController.text,
+      "Tags": tags,
+      "Privacy": privacy,
+      "LastUpdate": DateTime.now().toString()
+    });
     Future updateTags = FirebaseFirestore.instance
         .collection(widget.user.uid)
         .doc("Tags")

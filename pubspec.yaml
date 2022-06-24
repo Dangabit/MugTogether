@@ -27,6 +27,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
+  dropdown_button2: ^1.0.0
+  dropdown_search2: ^1.0.2
+
   flutter:
     sdk: flutter
 

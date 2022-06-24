@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/view_question.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class QuestionsPage extends StatefulWidget {
   const QuestionsPage({Key? key, required this.user}) : super(key: key);
@@ -81,7 +82,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                                 const Padding(
                                   padding: EdgeInsets.only(left: 3.0),
                                   child: Text(
-                                    "Filter Modules:",
+                                    "Modules:",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -103,11 +104,20 @@ class _QuestionsPage extends State<QuestionsPage> {
                                     ),
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  child: DropdownButton<String>(
+                                  child: DropdownButton2<String>(
                                     value: currentModule,
                                     items: modlist,
-                                    dropdownColor: Colors.grey[200],
-                                    menuMaxHeight: 300.0,
+                                    buttonWidth: 110,
+                                    dropdownWidth: 120,
+                                    dropdownMaxHeight: 300,
+                                    dropdownDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    offset: const Offset(-5, 0),
                                     onChanged: (String? newValue) {
                                       setState(() {
                                         currentModule = newValue!;
@@ -126,7 +136,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                                 const Padding(
                                   padding: EdgeInsets.only(left: 3.0),
                                   child: Text(
-                                    "Filter Tags:",
+                                    "Tags:",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -148,11 +158,20 @@ class _QuestionsPage extends State<QuestionsPage> {
                                     ),
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  child: DropdownButton<String>(
+                                  child: DropdownButton2<String>(
                                     value: currentFilter,
                                     items: tagsList,
-                                    dropdownColor: Colors.grey[200],
-                                    menuMaxHeight: 300.0,
+                                    buttonWidth: 110,
+                                    dropdownWidth: 120,
+                                    dropdownMaxHeight: 300,
+                                    dropdownDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    offset: const Offset(-5, 0),
                                     onChanged: (String? value) => setState(() {
                                       currentFilter = value!;
                                     }),
@@ -220,6 +239,8 @@ class _QuestionsPage extends State<QuestionsPage> {
   Widget _generateGrid(AsyncSnapshot<QuerySnapshot> snapshot) {
     // Streaming based on filters
     late Stream<QuerySnapshot> docStream;
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+
     if (currentModule == nilValue) {
       docStream = FirebaseFirestore.instance
           .collectionGroup("questions")
@@ -250,10 +271,18 @@ class _QuestionsPage extends State<QuestionsPage> {
           case ConnectionState.done:
             List<Widget> cardList = _generateCards(snapshot.data!.docs);
             return cardList.isEmpty
-                ? const Text('You have no questions...')
+                ? const Center(
+                    child: Text('You have no questions...'),
+                  )
                 : GridView.count(
                     physics: const ScrollPhysics(),
-                    crossAxisCount: 2,
+                    crossAxisCount: currentScreenWidth < 560
+                        ? 2
+                        : currentScreenWidth < 1060
+                            ? 3
+                            : currentScreenWidth < 1360
+                                ? 4
+                                : 5,
                     children: cardList,
                   );
         }
@@ -279,7 +308,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                   borderRadius: BorderRadius.circular(30.0),
                   boxShadow: const [
                       BoxShadow(
-                        color: Colors.yellow,
+                        color: Color.fromARGB(255, 233, 42, 106),
                         blurRadius: 20.0,
                       ),
                     ])
@@ -287,10 +316,9 @@ class _QuestionsPage extends State<QuestionsPage> {
           child: Card(
             // Glow if no notes
             color: emptyNotes
-                ? Colors.yellow[400]
+                ? Colors.pink[200]
                 : const Color.fromARGB(255, 242, 233, 248),
-            shadowColor:
-                emptyNotes ? const Color.fromARGB(255, 255, 255, 0) : null,
+            shadowColor: emptyNotes ? Colors.pink[200] : null,
             elevation: 2,
             child: Column(
               children: <Widget>[
