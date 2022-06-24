@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mug_together/widgets/data.dart';
+import 'package:dropdown_search2/dropdown_search2.dart';
 
 class ModuleList {
   static late List<String> modList;
@@ -36,11 +36,22 @@ class ModuleList {
       dropdownSearchDecoration: const InputDecoration(
         hintText: "Select Module",
         border: OutlineInputBorder(),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        constraints: BoxConstraints(
+          maxWidth: 180.0,
+        ),
       ),
-      mode: Mode.DIALOG,
+      mode: Mode.MENU,
       showSearchBox: true,
       showSelectedItems: true,
       items: modList,
+      maxHeight: 250,
+      dropdownSearchBaseStyle: const TextStyle(
+        color: Colors.white,
+      ),
       onChanged: (String? newValue) {
         currentValue.text = newValue;
       },

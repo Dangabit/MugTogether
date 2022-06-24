@@ -151,7 +151,7 @@ class _AddQuestion extends State<AddQuestion> {
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20),
                             border: InputBorder.none,
-                            hintText: 'Tags, separated by commas (Optional)',
+                            hintText: 'Tags: <tag1>, <tag2>, <tag3> (Optional)',
                             prefixIcon: Icon(
                               Icons.sell_outlined,
                               color: Colors.deepPurple,
