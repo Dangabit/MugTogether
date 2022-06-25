@@ -3,7 +3,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class TimerWidget {
-
   /// Creates a timer that comes with a display
   TimerWidget(
     this.totalTime,
@@ -26,33 +25,59 @@ class TimerWidget {
   Widget display() {
     return StatefulBuilder(builder: ((context, setState) {
       if (_started) {
-        return Text("$totalTime seconds left");
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 2.0,
+            vertical: 5.0,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 5.0,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.blue[800],
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: Center(
+            child: Text(
+              "Time left: $totalTime s",
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
       } else {
         if (_ended) {
           return const Text("The timer has ended!");
         } else {
-          return ElevatedButton(
-            // Function that starts and runs the timer. With a callback when
-            // the timer ends
-            onPressed: () => setState(() {
-              _started = true;
-              _startTime = DateTime.now();
-              _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                if (totalTime <= 0) {
-                  _audioPlayer.resume();
-                  setState(() {
-                    _ended = true;
-                    _endTime = DateTime.now();
-                    _timer!.cancel();
-                  });
-                } else {
-                  setState(() {
-                    totalTime--;
-                  });
-                }
-              });
-            }),
-            child: const Text("Start the time!"),
+          return Tooltip(
+            message: "Click to start timer",
+            child: IconButton(
+              // Function that starts and runs the timer. With a callback when
+              // the timer ends
+              icon: const Icon(
+                Icons.timer_outlined,
+                size: 27,
+              ),
+              onPressed: () => setState(() {
+                _started = true;
+                _startTime = DateTime.now();
+                _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                  if (totalTime <= 0) {
+                    _audioPlayer.resume();
+                    setState(() {
+                      _ended = true;
+                      _endTime = DateTime.now();
+                      _timer!.cancel();
+                    });
+                  } else {
+                    setState(() {
+                      totalTime--;
+                    });
+                  }
+                });
+              }),
+            ),
           );
         }
       }

@@ -77,6 +77,7 @@ class _BankModulePage extends State<BankModulePage> {
                 ListView.builder(
                   // TODO: Limit count to prevent the need to render large amount of Listview
                   shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: docslist.length,
                   itemBuilder: (context, index) {
                     String question = docslist[index].get("Question");

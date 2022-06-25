@@ -42,14 +42,25 @@ class _QuizAttempt extends State<QuizAttempt> {
     _attemptsArray =
         List.generate(widget.totalQns, (index) => TextEditingController());
     _buttonsArray = List.generate(
-        widget.totalQns,
-        (index) => ElevatedButton(
-            onPressed: (() {
-              setState(() {
-                currentQn = index;
-              });
-            }),
-            child: Text(index.toString())));
+      widget.totalQns,
+      (index) => ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.deepPurple,
+          shape: const CircleBorder(),
+        ),
+        onPressed: (() {
+          setState(() {
+            currentQn = index;
+          });
+        }),
+        child: Text(
+          (index + 1).toString(),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
     // Create a one-time future
     _future = _grabQns();
   }
@@ -69,9 +80,15 @@ class _QuizAttempt extends State<QuizAttempt> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
         leading: BackButton(onPressed: () => Navigator.pop(context)),
+        centerTitle: false,
         title: const Text("Quiz Attempt"),
+        actions: [
+          widget.timerCheck ? _timer.display() : const Text(""),
+        ],
       ),
       body: FutureBuilder<List<dynamic>>(
         future: _future,
@@ -79,21 +96,73 @@ class _QuizAttempt extends State<QuizAttempt> {
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
               // Not enough questions widget
-              return const Text(
-                  "There is not enough questions in our bank, sorry :C");
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Center(
+                    child: Text(
+                      "There are not enough questions in our bank, sorry :C",
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Center(
+                    child: Text(
+                      "Try setting fewer questions or choose from another "
+                      "module.",
+                    ),
+                  ),
+                ],
+              );
             } else {
               // Create a quiz layout
-              return Center(
-                child: Column(
-                  children: <Widget>[
-                    widget.timerCheck ? _timer.display() : const Text(""),
-                    _questionBody(snapshot.data!),
-                    Row(children: _buttonsArray),
-                    ElevatedButton(
-                        onPressed: _submit, child: const Text("Finish Quiz")),
-                  ],
-                ),
-              );
+              return LayoutBuilder(builder: (context, constraint) {
+                return SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraint.maxHeight),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            physics: const ClampingScrollPhysics(),
+                            child: Row(
+                              children: _buttonsArray,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                          _questionBody(snapshot.data!),
+                          const Spacer(),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple,
+                            ),
+                            onPressed: _submit,
+                            child: const Text(
+                              "Finish Quiz",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              });
             }
           } else {
             // If future not loaded, put loading screen
@@ -108,9 +177,58 @@ class _QuizAttempt extends State<QuizAttempt> {
   Widget _questionBody(List<dynamic> _qnsArray) {
     return Column(
       children: <Widget>[
-        Text(_qnsArray[currentQn]),
-        TextField(
-          controller: _attemptsArray[currentQn],
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+              ),
+              child: Text(
+                "Question " +
+                    (currentQn + 1).toString() +
+                    ":  " +
+                    _qnsArray[currentQn],
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 8.0,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: TextFormField(
+                controller: _attemptsArray[currentQn],
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 30),
+                  border: InputBorder.none,
+                  hintText: 'Input your answer (Multiline)',
+                  prefixIcon: Icon(
+                    Icons.edit_note_outlined,
+                    color: Colors.deepPurple,
+                    size: 30,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
