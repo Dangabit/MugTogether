@@ -84,6 +84,8 @@ class _AddQuestion extends State<AddQuestion> {
                                   ? true
                                   : false,
                               controller: questionController,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
                               decoration: const InputDecoration(
                                 contentPadding:
                                     EdgeInsets.symmetric(vertical: 20),
