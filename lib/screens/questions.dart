@@ -48,6 +48,7 @@ class _QuestionsPage extends State<QuestionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -107,8 +108,10 @@ class _QuestionsPage extends State<QuestionsPage> {
                                   child: DropdownButton2<String>(
                                     value: currentModule,
                                     items: modlist,
-                                    buttonWidth: 110,
-                                    dropdownWidth: 120,
+                                    buttonWidth:
+                                        currentScreenWidth < 450 ? 100 : 110,
+                                    dropdownWidth:
+                                        currentScreenWidth < 450 ? 110 : 120,
                                     dropdownMaxHeight: 300,
                                     dropdownDecoration: BoxDecoration(
                                       color: Colors.white,
@@ -161,8 +164,10 @@ class _QuestionsPage extends State<QuestionsPage> {
                                   child: DropdownButton2<String>(
                                     value: currentFilter,
                                     items: tagsList,
-                                    buttonWidth: 110,
-                                    dropdownWidth: 120,
+                                    buttonWidth:
+                                        currentScreenWidth < 450 ? 90 : 110,
+                                    dropdownWidth:
+                                        currentScreenWidth < 450 ? 100 : 120,
                                     dropdownMaxHeight: 300,
                                     dropdownDecoration: BoxDecoration(
                                       color: Colors.white,
@@ -292,6 +297,7 @@ class _QuestionsPage extends State<QuestionsPage> {
 
   /// Generate a list of cards from the documents passed in
   List<Widget> _generateCards(List<QueryDocumentSnapshot> res) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     // Convert documents from database into cards
     return res.map((doc) {
       bool emptyNotes = doc.get("Notes") == "";
@@ -322,17 +328,45 @@ class _QuestionsPage extends State<QuestionsPage> {
             elevation: 2,
             child: Column(
               children: <Widget>[
-                ListTile(
-                  minLeadingWidth: 5.0,
-                  leading: const Icon(Icons.donut_large),
-                  title: Transform.translate(
-                    offset: const Offset(-10, 0),
-                    child: Text(
-                      doc.get("Question"),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 10.0,
+                    ),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.donut_large,
+                          color: Color.fromARGB(255, 121, 120, 120),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 3.0,
+                            vertical: 1.5,
+                          ),
+                          height: currentScreenWidth < 450
+                              ? 60
+                              : currentScreenWidth < 560
+                                  ? 80
+                                  : 90,
+                          child: SingleChildScrollView(
+                            physics: const ClampingScrollPhysics(),
+                            child: Text(
+                              doc.get("Question"),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -340,7 +374,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                 Text(
                   emptyNotes ? "(No notes)" : "",
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                     fontStyle: FontStyle.italic,
                   ),

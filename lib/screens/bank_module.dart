@@ -52,89 +52,115 @@ class _BankModulePage extends State<BankModulePage> {
   Widget _generateListView(
       List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
     return docslist.isNotEmpty
-        ? Column(
-            children: [
-              const SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 15.0,
-                  ),
-                  Text(
-                    widget.module + " Questions",
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+        ? SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 15.0,
                     ),
-                  ),
-                ],
-              ),
-              ListView.builder(
-                // TODO: Limit count to prevent the need to render large amount of Listview
-                shrinkWrap: true,
-                itemCount: docslist.length,
-                itemBuilder: (context, index) {
-                  String question = docslist[index].get("Question");
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 10.0,
+                    Text(
+                      widget.module + " Questions",
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                          vertical: 10.0,
+                    ),
+                  ],
+                ),
+                ListView.builder(
+                  // TODO: Limit count to prevent the need to render large amount of Listview
+                  shrinkWrap: true,
+                  itemCount: docslist.length,
+                  itemBuilder: (context, index) {
+                    String question = docslist[index].get("Question");
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 10.0,
                         ),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                (index + 1).toString() + ") " + question,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              SizedBox(
-                                height: 30.0,
-                                width: 40.0,
-                                child: Tooltip(
-                                  message: "Click to add this question",
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.deepPurple,
-                                        padding: EdgeInsets.zero,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                            vertical: 10.0,
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                            vertical: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                          ),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: IntrinsicHeight(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    "Q" + (index + 1).toString(),
+                                    style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const VerticalDivider(
+                                    thickness: 1,
+                                    color: Colors.black,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      question,
+                                      style: const TextStyle(
+                                        fontSize: 17,
                                       ),
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, "/questions/add",
-                                            arguments: {
-                                              "module": widget.module,
-                                              "question": question,
-                                            });
-                                      },
-                                      child: const Icon(Icons.download)),
-                                ),
-                              )
-                            ],
+                                    ),
+                                  ),
+                                  const VerticalDivider(
+                                    thickness: 1,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    height: 30.0,
+                                    width: 40.0,
+                                    child: Tooltip(
+                                      message: "Click to add this question",
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.deepPurple,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, "/questions/add",
+                                                arguments: {
+                                                  "module": widget.module,
+                                                  "question": question,
+                                                });
+                                          },
+                                          child: const Icon(Icons.download)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
+                        const SizedBox(
+                          height: 10.0,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           )
         : const Center(
             child: Text(
