@@ -31,7 +31,8 @@ class AppRouter {
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
         if (args != null) {
-          return _checkUser((user) => AddQuestion(data: args as Map, user: user), settings);
+          return _checkUser(
+              (user) => AddQuestion(data: args as Map, user: user), settings);
         } else {
           return _checkUser((user) => AddQuestion(user: user), settings);
         }
@@ -91,9 +92,47 @@ class AppRouter {
   static Route<dynamic> _pageNotFound() {
     return MaterialPageRoute(
       builder: (context) {
-        return const Scaffold(
+        return Scaffold(
+          backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+          appBar: AppBar(
+            backgroundColor: Colors.deepPurple,
+            leading: BackButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/", (route) => false);
+              },
+            ),
+            title: const Text(
+              "Error 404: Page not found",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           body: Center(
-            child: Text('Error 404: Page not found.'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "This page does not exist...",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  "Press back to return to our login page",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
