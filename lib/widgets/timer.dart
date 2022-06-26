@@ -50,14 +50,33 @@ class TimerWidget {
         if (_ended) {
           return const Text("The timer has ended!");
         } else {
-          return Tooltip(
-            message: "Click to start timer",
-            child: IconButton(
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 2.0,
+              vertical: 5.0,
+            ),
+            child: ElevatedButton(
               // Function that starts and runs the timer. With a callback when
               // the timer ends
-              icon: const Icon(
-                Icons.timer_outlined,
-                size: 27,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue[800],
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 7.0,
+                ),
+              ),
+              child: Row(
+                children: const [
+                  Icon(Icons.timer_outlined),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                  ),
+                  Text(
+                    'Start timer',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               onPressed: () => setState(() {
                 _started = true;
