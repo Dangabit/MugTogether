@@ -145,14 +145,18 @@ class _IndividualAttempt extends State<IndividualAttempt> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("Start: "),
-            Text(widget.attempt["StartTime"].toDate().toString()),
+            Text(widget.attempt["StartTime"]
+                .toDate()
+                .toString()
+                .substring(0, 19)),
           ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("End: "),
-            Text(widget.attempt["EndTime"].toDate().toString()),
+            Text(
+                widget.attempt["EndTime"].toDate().toString().substring(0, 19)),
           ],
         )
       ],
