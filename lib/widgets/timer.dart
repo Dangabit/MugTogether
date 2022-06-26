@@ -84,9 +84,22 @@ class TimerWidget {
     }));
   }
 
-  /// Check if the timer has ended
-  bool checkEnd() {
-    return _ended;
+  /// Check the status of the timer
+  /// 
+  /// States:
+  /// 0 - Timer started and ended
+  /// 1 - Timer started but not yet ended
+  /// 2 - Timer have not started
+  int checkState() {
+    if (_started) {
+      if (_ended) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      return 2;
+    }
   }
 
   /// Force the timer to stop

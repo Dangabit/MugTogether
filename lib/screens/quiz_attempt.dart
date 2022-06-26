@@ -265,10 +265,10 @@ class _QuizAttempt extends State<QuizAttempt> {
           "Questions": qnsList,
           "Attempts": _attemptsArray.map((e) => e.text).toList(),
           "Module": widget.modName,
-          "Date": DateTime.now().toString(),
+          "Date": DateTime.now().toString().substring(0, 19),
         };
-        if (widget.timerCheck) {
-          if (!_timer.checkEnd()) {
+        if (_timer.checkState() < 2) {
+          if (_timer.checkState() == 1) {
             _timer.forceStop();
           }
           attempt.addAll(_timer.quizTime());
