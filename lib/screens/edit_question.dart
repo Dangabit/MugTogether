@@ -14,6 +14,7 @@ class EditQuestion extends StatefulWidget {
 
 class _EditQuestion extends State<EditQuestion> {
   // Variables Initialisation
+  final questionController = TextEditingController();
   final notesController = TextEditingController();
   final tagsController = TextEditingController();
   late bool privacy;
@@ -23,6 +24,7 @@ class _EditQuestion extends State<EditQuestion> {
   @override
   void initState() {
     super.initState();
+    questionController.text = widget.document.get("Question");
     notesController.text = widget.document.get("Notes");
     oldtags = widget.document.get("Tags").cast<String>();
     String tags = oldtags.toString();
@@ -90,19 +92,22 @@ class _EditQuestion extends State<EditQuestion> {
                   vertical: 5.0,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
-                child: Wrap(
-                  children: [
-                    Text(
-                      widget.document.get("Question"),
-                      style: const TextStyle(
-                        fontSize: 17,
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: TextField(
+                    controller: questionController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 30),
+                      border: InputBorder.none,
+                      hintText: 'Input your question',
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -284,6 +289,7 @@ class _EditQuestion extends State<EditQuestion> {
         .collection("questions")
         .doc(widget.document.id)
         .update({
+      "Question": questionController.text,
       "Notes": notesController.text,
       "Tags": tags,
       "Privacy": privacy,
