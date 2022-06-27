@@ -42,28 +42,233 @@ class _EditQuestion extends State<EditQuestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
         title: const Text("Edit Question"),
         leading: BackButton(onPressed: () {
           Navigator.pushReplacementNamed(context, "/questions");
         }),
       ),
-      body: Column(
-        children: [
-          Text(widget.document.get("Question")),
-          TextField(controller: notesController),
-          Text(widget.document.get("Module")),
-          TextField(controller: tagsController),
-          fromComm
-              ? const Text("")
-              : Checkbox(
-                  value: privacy,
-                  onChanged: (newValue) => setState(() {
-                        privacy = newValue!;
-                      })),
-          ElevatedButton(
-              onPressed: _submitChange, child: const Icon(Icons.save)),
-        ],
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.question_mark_outlined,
+                  color: Colors.deepPurple,
+                  size: 18.0,
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  "Question",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5.0,
+                  vertical: 5.0,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(),
+                ),
+                child: Wrap(
+                  children: [
+                    Text(
+                      widget.document.get("Question"),
+                      style: const TextStyle(
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.notes_outlined,
+                  color: Colors.deepPurple,
+                  size: 18.0,
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  "Notes",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: TextField(
+                    controller: notesController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 30),
+                      border: InputBorder.none,
+                      hintText: 'Input any notes (Multiline) (Optional)',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.sell_outlined,
+                  color: Colors.deepPurple,
+                  size: 18.0,
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                Text(
+                  "Tags",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 5.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextField(
+                    controller: tagsController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 20),
+                      border: InputBorder.none,
+                      hintText: 'Tags, separated by commas (Optional)',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Module ->",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(
+                  width: 5.0,
+                ),
+                Container(
+                  height: 30.0,
+                  width: 100.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.document.get("Module"),
+                        style: const TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                Tooltip(
+                  message: "Check to privatise your question",
+                  child: fromComm
+                      ? const Text("")
+                      : Checkbox(
+                          value: privacy,
+                          onChanged: (newValue) => setState(() {
+                                privacy = newValue!;
+                              })),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50.0,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: _submitChange,
+              child: const Icon(Icons.save),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -78,8 +283,12 @@ class _EditQuestion extends State<EditQuestion> {
         .doc(widget.document.get("Module"))
         .collection("questions")
         .doc(widget.document.id)
-        .update(
-            {"Notes": notesController.text, "Tags": tags, "Privacy": privacy});
+        .update({
+      "Notes": notesController.text,
+      "Tags": tags,
+      "Privacy": privacy,
+      "LastUpdate": DateTime.now().toString()
+    });
     Future updateTags = FirebaseFirestore.instance
         .collection(widget.user.uid)
         .doc("Tags")
