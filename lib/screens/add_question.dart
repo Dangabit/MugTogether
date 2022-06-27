@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/widgets/data.dart';
@@ -77,26 +78,30 @@ class _AddQuestion extends State<AddQuestion> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: TextFormField(
-                            controller: questionController,
-                            decoration: const InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 20),
-                              border: InputBorder.none,
-                              hintText: 'Input your question',
-                              prefixIcon: Icon(
-                                Icons.question_mark_outlined,
-                                color: Colors.deepPurple,
+                          padding: const EdgeInsets.only(left: 5),
+                          child: TextFormField(
+                              enabled: questionController.text.isEmpty
+                                  ? true
+                                  : false,
+                              controller: questionController,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 20),
+                                border: InputBorder.none,
+                                hintText: 'Input your question',
+                                prefixIcon: Icon(
+                                  Icons.question_mark_outlined,
+                                  color: Colors.deepPurple,
+                                ),
                               ),
-                            ),
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Question cannot be empty';
-                              }
-                              return null;
-                            }),
-                      ),
+                              validator: (String? value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Question cannot be empty';
+                                }
+                                return null;
+                              })),
                     ),
                   ),
                   const SizedBox(
@@ -171,13 +176,30 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                       // Module id field
                       Flexible(
-                        child: ModuleList.createListing(module),
+                        child: module.text == null
+                            ? ModuleList.createListing(module)
+                            : DropdownSearch(
+                                enabled: false,
+                                selectedItem: module.text,
+                                dropdownSearchDecoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 5,
+                                  ),
+                                  constraints: BoxConstraints(
+                                    maxWidth: 180.0,
+                                  ),
+                                ),
+                              ),
                       ),
                       const SizedBox(
                         width: 5.0,
                       ),
                       fromComm
-                          ? const Spacer()
+                          ? const SizedBox(
+                              width: 10.0,
+                            )
                           : Tooltip(
                               message: "Check to privatise your question",
                               child: Checkbox(
@@ -189,63 +211,66 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 40.0,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          // If inputs are valid, store into database
-                          if (_formKey.currentState!.validate() &&
-                              module.text != null) {
-                            final question = <String, dynamic>{
-                              "Question": questionController.text,
-                              "Notes": pointersController.text,
-                              "Module": module.text,
-                              "LastUpdate": DateTime.now().toString(),
-                              "Tags": tagsController.text.isEmpty
-                                  ? List.empty()
-                                  : tagsController.text
-                                      .split(', ')
-                                      .toSet()
-                                      .toList(),
-                              "Importance": importance,
-                              "Privacy": privacy,
-                              "Owner": widget.user.uid,
-                              "FromCommunity": fromComm,
-                            };
-                            // Storing of the question
+                      Tooltip(
+                        message: "Click to save",
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.deepPurple,
+                          ),
+                          onPressed: () {
+                            // If inputs are valid, store into database
+                            if (_formKey.currentState!.validate() &&
+                                module.text != null) {
+                              final question = <String, dynamic>{
+                                "Question": questionController.text,
+                                "Notes": pointersController.text,
+                                "Module": module.text,
+                                "LastUpdate": DateTime.now().toString(),
+                                "Tags": tagsController.text.isEmpty
+                                    ? List.empty()
+                                    : tagsController.text
+                                        .split(', ')
+                                        .toSet()
+                                        .toList(),
+                                "Importance": importance,
+                                "Privacy": privacy,
+                                "Owner": widget.user.uid,
+                                "FromCommunity": fromComm,
+                              };
+                              // Storing of the question
 
-                            db
-                                .collection(widget.user.uid)
-                                .doc(module.text)
-                                .collection("questions")
-                                .add(question)
-                                .then((_) {
-                              // Creating subcollection
-                              Future addModuleSub = db
+                              db
                                   .collection(widget.user.uid)
                                   .doc(module.text)
-                                  .update({
-                                "isEmpty": FieldValue.increment(1)
-                              }).onError((error, stackTrace) => db
-                                      .collection(widget.user.uid)
-                                      .doc(module.text)
-                                      .set({"isEmpty": 1}));
-                              // Counting tags
-                              Future addTags = db
-                                  .collection(widget.user.uid)
-                                  .doc("Tags")
-                                  .update(Map.fromIterable(question["Tags"],
-                                      value: (element) =>
-                                          FieldValue.increment(1)));
-                              // Return to question overview
-                              Future.wait([addModuleSub, addTags]).then((_) =>
-                                  Navigator.pushReplacementNamed(
-                                      context, "/questions"));
-                            });
-                          }
-                        },
-                        child: const Icon(Icons.save),
+                                  .collection("questions")
+                                  .add(question)
+                                  .then((_) {
+                                // Creating subcollection
+                                Future addModuleSub = db
+                                    .collection(widget.user.uid)
+                                    .doc(module.text)
+                                    .update({
+                                  "isEmpty": FieldValue.increment(1)
+                                }).onError((error, stackTrace) => db
+                                        .collection(widget.user.uid)
+                                        .doc(module.text)
+                                        .set({"isEmpty": 1}));
+                                // Counting tags
+                                Future addTags = db
+                                    .collection(widget.user.uid)
+                                    .doc("Tags")
+                                    .update(Map.fromIterable(question["Tags"],
+                                        value: (element) =>
+                                            FieldValue.increment(1)));
+                                // Return to question overview
+                                Future.wait([addModuleSub, addTags]).then((_) =>
+                                    Navigator.pushReplacementNamed(
+                                        context, "/questions"));
+                              });
+                            }
+                          },
+                          child: const Icon(Icons.save),
+                        ),
                       ),
                       const SizedBox(
                         width: 20.0,

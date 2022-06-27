@@ -18,16 +18,59 @@ class _QuestionBankPage extends State<QuestionBankPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Question Bank")),
+        backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+        appBar: AppBar(
+          title: const Text("Question Bank"),
+          backgroundColor: Colors.deepPurple,
+        ),
         drawer: InAppDrawer.gibDrawer(context, user!),
-        body: Column(
-          children: <Widget>[
-            ModuleList.createListing(currentValue),
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Icon(Icons.arrow_right),
-            )
-          ],
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 20.0,
+              ),
+              // const Text(
+              //   "The question bank stores all questions that are publicly "
+              //   "available for every module!",
+              // ),
+              Wrap(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      "Begin by choosing your desired module! 😃",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30.0,
+                  vertical: 10.0,
+                ),
+                child: ModuleList.createListing(currentValue),
+              ),
+              Tooltip(
+                message: "Next!",
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurple,
+                  ),
+                  onPressed: _submit,
+                  child: const Icon(Icons.arrow_right),
+                ),
+              )
+            ],
+          ),
         ));
   }
 
