@@ -351,10 +351,10 @@ class _QuestionsPage extends State<QuestionsPage> {
                             vertical: 1.5,
                           ),
                           height: currentScreenWidth < 450
-                              ? 60
+                              ? 80
                               : currentScreenWidth < 560
-                                  ? 80
-                                  : 90,
+                                  ? 100
+                                  : 120,
                           child: SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
                             child: Text(
@@ -368,15 +368,6 @@ class _QuestionsPage extends State<QuestionsPage> {
                         ),
                       ],
                     ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  emptyNotes ? "(No notes)" : "",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.italic,
                   ),
                 ),
                 const Spacer(),

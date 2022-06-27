@@ -260,7 +260,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                     ),
                                     Text(
                                       snapshot.data!.get("FromCommunity")
-                                          ? "This question is taken from the Bank"
+                                          ? "This question is taken from the Community"
                                           : snapshot.data!.get("Privacy")
                                               ? "This question is private"
                                               : "This question can be seen in Question Bank",

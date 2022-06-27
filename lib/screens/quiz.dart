@@ -24,7 +24,11 @@ class _QuizPage extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Quiz")),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+      appBar: AppBar(
+        title: const Text("Quiz"),
+        backgroundColor: Colors.deepPurple,
+      ),
       drawer: InAppDrawer.gibDrawer(context, widget.user),
       body: _buildForm(),
     );
@@ -34,8 +38,21 @@ class _QuizPage extends State<QuizPage> {
   Widget _buildForm() {
     return Column(
       children: <Widget>[
+        const SizedBox(
+          height: 20.0,
+        ),
+        Wrap(
+          children: const [
+            Text(
+              "Choose a number of questions (1 - 10)",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
         // Get number of questions, 1 - 10
         Slider(
+          activeColor: Colors.deepPurple,
+          inactiveColor: Colors.purple[100],
           value: _noOfQns,
           max: 10,
           min: 1,
@@ -47,40 +64,99 @@ class _QuizPage extends State<QuizPage> {
             });
           },
         ),
-        // Get the module choice
-        ModuleList.createListing(_currentMod),
-        // Check if the user wants a timer
-        Checkbox(
-          value: _timerCheck,
-          onChanged: (value) {
-            setState(() {
-              _timerCheck = value!;
-            });
-          },
+        const SizedBox(
+          height: 30.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Get the module choice
+            ModuleList.createListing(_currentMod),
+            const SizedBox(
+              width: 20.0,
+            ),
+            // Check if the user wants a timer
+            Tooltip(
+              message: "Check to enable timer",
+              child: Checkbox(
+                value: _timerCheck,
+                activeColor: Colors.deepPurple,
+                splashRadius: 20.0,
+                onChanged: (value) {
+                  setState(() {
+                    _timerCheck = value!;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 50.0,
         ),
         // If the user wants a timer, choose how long (10 - 60 min)
         _timerCheck
-            ? Slider(
-                value: _countdown,
-                min: 10,
-                max: 60,
-                divisions: 10,
-                label: _countdown.round().toString() + " min",
-                onChanged: (value) {
-                  setState(() {
-                    _countdown = value;
-                  });
-                })
+            ? Column(
+                children: [
+                  const Text(
+                    "Select a time duration",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Slider(
+                      activeColor: Colors.deepPurple,
+                      inactiveColor: Colors.purple[100],
+                      value: _countdown,
+                      min: 10,
+                      max: 60,
+                      divisions: 10,
+                      label: _countdown.round().toString() + " min",
+                      onChanged: (value) {
+                        setState(() {
+                          _countdown = value;
+                        });
+                      }),
+                ],
+              )
             : const Text(""),
-        // Start the quiz
-        ElevatedButton(
-          onPressed: _submit,
-          child: const Text("Start quiz!"),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // View past quiz attempts
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: () => Navigator.pushNamed(context, "/quiz/past"),
+              child: const Text(
+                "Past records",
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 100.0,
+            ),
+            // Start the quiz
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: _submit,
+              child: const Text(
+                "Start quiz!",
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
-        // View past quiz attempts
-        ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, "/quiz/past"),
-          child: const Text("Past records"),
+        const SizedBox(
+          height: 20.0,
         ),
       ],
     );

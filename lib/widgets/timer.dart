@@ -3,7 +3,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class TimerWidget {
-
   /// Creates a timer that comes with a display
   TimerWidget(
     this.totalTime,
@@ -26,42 +25,100 @@ class TimerWidget {
   Widget display() {
     return StatefulBuilder(builder: ((context, setState) {
       if (_started) {
-        return Text("$totalTime seconds left");
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 2.0,
+            vertical: 5.0,
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 5.0,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.blue[800],
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: Center(
+            child: Text(
+              "Time left: $totalTime s",
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
       } else {
         if (_ended) {
           return const Text("The timer has ended!");
         } else {
-          return ElevatedButton(
-            // Function that starts and runs the timer. With a callback when
-            // the timer ends
-            onPressed: () => setState(() {
-              _started = true;
-              _startTime = DateTime.now();
-              _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-                if (totalTime <= 0) {
-                  _audioPlayer.resume();
-                  setState(() {
-                    _ended = true;
-                    _endTime = DateTime.now();
-                    _timer!.cancel();
-                  });
-                } else {
-                  setState(() {
-                    totalTime--;
-                  });
-                }
-              });
-            }),
-            child: const Text("Start the time!"),
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 2.0,
+              vertical: 5.0,
+            ),
+            child: ElevatedButton(
+              // Function that starts and runs the timer. With a callback when
+              // the timer ends
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue[800],
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 7.0,
+                ),
+              ),
+              child: Row(
+                children: const [
+                  Icon(Icons.timer_outlined),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                  ),
+                  Text(
+                    'Start timer',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              onPressed: () => setState(() {
+                _started = true;
+                _startTime = DateTime.now();
+                _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                  if (totalTime <= 0) {
+                    _audioPlayer.resume();
+                    setState(() {
+                      _ended = true;
+                      _endTime = DateTime.now();
+                      _timer!.cancel();
+                    });
+                  } else {
+                    setState(() {
+                      totalTime--;
+                    });
+                  }
+                });
+              }),
+            ),
           );
         }
       }
     }));
   }
 
-  /// Check if the timer has ended
-  bool checkEnd() {
-    return _ended;
+  /// Check the status of the timer
+  /// 
+  /// States:
+  /// 0 - Timer started and ended
+  /// 1 - Timer started but not yet ended
+  /// 2 - Timer have not started
+  int checkState() {
+    if (_started) {
+      if (_ended) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else {
+      return 2;
+    }
   }
 
   /// Force the timer to stop
