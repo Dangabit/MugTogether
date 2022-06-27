@@ -179,21 +179,23 @@ class _QuizAttempt extends State<QuizAttempt> {
       children: <Widget>[
         Align(
           alignment: Alignment.centerLeft,
-          child: Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-              ),
-              child: Text(
-                "Question " +
-                    (currentQn + 1).toString() +
-                    ":  " +
-                    _qnsArray[currentQn],
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+            ),
+            child: Wrap(
+              children: [
+                Text(
+                  "Question " +
+                      (currentQn + 1).toString() +
+                      ":  " +
+                      _qnsArray[currentQn],
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -267,11 +269,13 @@ class _QuizAttempt extends State<QuizAttempt> {
           "Module": widget.modName,
           "Date": DateTime.now().toString().substring(0, 19),
         };
-        if (_timer.checkState() < 2) {
-          if (_timer.checkState() == 1) {
-            _timer.forceStop();
+        if (widget.timerCheck) {
+          if (_timer.checkState() < 2) {
+            if (_timer.checkState() == 1) {
+              _timer.forceStop();
+            }
+            attempt.addAll(_timer.quizTime());
           }
-          attempt.addAll(_timer.quizTime());
         }
         attempts.add(attempt);
         db

@@ -104,7 +104,7 @@ class TimerWidget {
   }
 
   /// Check the status of the timer
-  /// 
+  ///
   /// States:
   /// 0 - Timer started and ended
   /// 1 - Timer started but not yet ended
