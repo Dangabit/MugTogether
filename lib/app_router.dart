@@ -28,12 +28,12 @@ class AppRouter {
         return MaterialPageRoute(
             settings: settings, builder: (context) => const SignUpPage());
       case '/questions':
-        return _checkUser((_) => const QuestionsPage(), settings);
+        return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
         if (args != null) {
-          return _checkUser((_) => AddQuestion(data: args as Map), settings);
+          return _checkUser((user) => AddQuestion(data: args as Map, user: user), settings);
         } else {
-          return _checkUser((_) => const AddQuestion(), settings);
+          return _checkUser((user) => AddQuestion(user: user), settings);
         }
       case '/profile/me':
         return _checkUser((user) => ProfilePage(user: user), settings);
@@ -49,7 +49,7 @@ class AppRouter {
               const RouteSettings(name: '/bank'));
         }
       case '/quiz':
-        return _checkUser((_) => const QuizPage(), settings);
+        return _checkUser((user) => QuizPage(user: user), settings);
       case '/quiz/past':
         return _checkUser((user) => PastAttempts(user: user), settings);
       default:
