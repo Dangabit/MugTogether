@@ -196,20 +196,38 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 5.0,
                       ),
+
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                      const Text(
+                        "Privatise question? ",
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                       fromComm
                           ? const SizedBox(
                               width: 10.0,
                             )
-                          : Tooltip(
-                              message: "Check to privatise your question",
-                              child: Checkbox(
-                                  activeColor: Colors.deepPurple,
-                                  splashRadius: 20.0,
-                                  value: privacy,
-                                  onChanged: (newValue) => setState(() {
-                                        privacy = newValue!;
-                                      })),
-                            ),
+                          : Checkbox(
+                              activeColor: Colors.deepPurple,
+                              splashRadius: 20.0,
+                              value: privacy,
+                              onChanged: (newValue) => setState(() {
+                                    privacy = newValue!;
+                                  })),
                       const SizedBox(
                         width: 40.0,
                       ),
@@ -274,11 +292,8 @@ class _AddQuestion extends State<AddQuestion> {
                           child: const Icon(Icons.save),
                         ),
                       ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
