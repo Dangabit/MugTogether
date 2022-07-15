@@ -202,8 +202,16 @@ class _SignUpPage extends State<SignUpPage> {
                               ),
                             ),
                             validator: (String? value) {
+                              RegExp regex = RegExp(
+                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                               if (value == null || value.isEmpty) {
                                 return 'Please input your password';
+                              }
+                              if (!regex.hasMatch(value)) {
+                                return 'Password should contain at least one ' +
+                                    'upper case, one lower case, one digit, ' +
+                                    'one special character, and be at least ' +
+                                    '8 characters long';
                               }
                               return null;
                             },
@@ -358,9 +366,7 @@ class _SignUpPage extends State<SignUpPage> {
             .then((_) => Navigator.pop(context));
       } on FirebaseAuthException catch (e) {
         // Account creation problem, take note here
-        if (e.code == 'weak-password') {
-          _exception = 'The password provided is too weak.';
-        } else if (e.code == 'email-already-in-use') {
+        if (e.code == 'email-already-in-use') {
           _exception = 'The account already exists for that email.';
         } else if (e.code == 'invalid-email') {
           _exception = 'Not a valid email.';
