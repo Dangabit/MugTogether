@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/view_question.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class QuestionsPage extends StatefulWidget {
   const QuestionsPage({Key? key, required this.user}) : super(key: key);
@@ -47,8 +48,13 @@ class _QuestionsPage extends State<QuestionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("${widget.user.displayName}'s Questions")),
+      backgroundColor: const Color.fromARGB(255, 241, 222, 255),
+      appBar: AppBar(
+        title: Text("${widget.user.displayName}'s Questions"),
+        backgroundColor: Colors.deepPurple,
+      ),
       drawer: InAppDrawer.gibDrawer(context, widget.user),
       body: FutureBuilder(
         // Future builder to check if everything is initialised completely
@@ -66,33 +72,146 @@ class _QuestionsPage extends State<QuestionsPage> {
                 } else {
                   return Column(
                     children: [
-                      Row(
-                        children: <Widget>[
-                          // Filter by Module, or not
-                          DropdownButton<String>(
-                            value: currentModule,
-                            items: modlist,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                currentModule = newValue!;
-                              });
-                            },
-                          ),
-                          const Spacer(),
-                          DropdownButton<String>(
-                            value: currentFilter,
-                            items: tagsList,
-                            onChanged: (String? value) => setState(() {
-                              currentFilter = value!;
-                            }),
-                          ),
-                          // Move to add_question screen, refresh upon returning
-                          ElevatedButton(
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/questions/add'),
-                            child: const Icon(Icons.add),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: <Widget>[
+                            // Filter by Module, or not
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Modules:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: DropdownButton2<String>(
+                                    value: currentModule,
+                                    items: modlist,
+                                    buttonWidth:
+                                        currentScreenWidth < 450 ? 100 : 110,
+                                    dropdownWidth:
+                                        currentScreenWidth < 450 ? 110 : 120,
+                                    dropdownMaxHeight: 300,
+                                    dropdownDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    offset: const Offset(-5, 0),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        currentModule = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 16.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 3.0),
+                                  child: Text(
+                                    "Tags:",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  child: DropdownButton2<String>(
+                                    value: currentFilter,
+                                    items: tagsList,
+                                    buttonWidth:
+                                        currentScreenWidth < 450 ? 90 : 110,
+                                    dropdownWidth:
+                                        currentScreenWidth < 450 ? 100 : 120,
+                                    dropdownMaxHeight: 300,
+                                    dropdownDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black26,
+                                      ),
+                                    ),
+                                    offset: const Offset(-5, 0),
+                                    onChanged: (String? value) => setState(() {
+                                      currentFilter = value!;
+                                    }),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            // Move to add_question screen, refresh upon returning
+                            Column(
+                              children: [
+                                const Text(
+                                  "",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Tooltip(
+                                  message: "Add new question entry",
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.deepPurple,
+                                        side: const BorderSide(
+                                          width: 1.0,
+                                          color: Colors.black,
+                                        )),
+                                    onPressed: () => Navigator.pushNamed(
+                                        context, '/questions/add'),
+                                    child: const Icon(Icons.add_outlined),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       // Display questions in grid
                       Expanded(child: _generateGrid(snapshot)),
@@ -125,6 +244,8 @@ class _QuestionsPage extends State<QuestionsPage> {
   Widget _generateGrid(AsyncSnapshot<QuerySnapshot> snapshot) {
     // Streaming based on filters
     late Stream<QuerySnapshot> docStream;
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+
     if (currentModule == nilValue) {
       docStream = FirebaseFirestore.instance
           .collectionGroup("questions")
@@ -155,11 +276,20 @@ class _QuestionsPage extends State<QuestionsPage> {
           case ConnectionState.done:
             List<Widget> cardList = _generateCards(snapshot.data!.docs);
             return cardList.isEmpty
-                ? const Text('You have no questions...')
+                ? const Center(
+                    child: Text('You have no questions...'),
+                  )
                 : GridView.count(
                     physics: const ScrollPhysics(),
-                    crossAxisCount: 2,
-                    children: cardList);
+                    crossAxisCount: currentScreenWidth < 560
+                        ? 2
+                        : currentScreenWidth < 1060
+                            ? 3
+                            : currentScreenWidth < 1360
+                                ? 4
+                                : 5,
+                    children: cardList,
+                  );
         }
       },
     );
@@ -167,6 +297,7 @@ class _QuestionsPage extends State<QuestionsPage> {
 
   /// Generate a list of cards from the documents passed in
   List<Widget> _generateCards(List<QueryDocumentSnapshot> res) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
     // Convert documents from database into cards
     return res.map((doc) {
       bool emptyNotes = doc.get("Notes") == "";
@@ -175,64 +306,140 @@ class _QuestionsPage extends State<QuestionsPage> {
           .doc(doc.get("Module"))
           .collection("questions")
           .doc(doc.id);
-      return Card(
-        // Glow if no notes
-        color: emptyNotes ? Colors.yellow : null,
-        shadowColor: emptyNotes ? const Color.fromARGB(255, 169, 169, 0) : null,
-        elevation: 2,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.donut_large),
-              title: Text(doc.get("Question")),
-            ),
-            Row(
-              children: [
-                // Delete button
-                TextButton(
-                  child: const Text("Delete"),
-                  onPressed: () async {
-                    Future updateTags = currentDoc
-                        .get()
-                        .then((doc) => doc.get("Tags") as List)
-                        .then((List taglist) {
-                      FirebaseFirestore.instance
-                          .collection(widget.user.uid)
-                          .doc("Tags")
-                          .update(Map.fromIterable(
-                            taglist,
-                            value: (element) => FieldValue.increment(-1),
-                          ));
-                    });
-                    Future updateMod = currentDoc.get().then<String>((doc) {
-                      return doc.get("Module");
-                    }).then((mod) {
-                      FirebaseFirestore.instance
-                          .collection(widget.user.uid)
-                          .doc(mod)
-                          .update({"isEmpty": FieldValue.increment(-1)});
-                    });
-                    Future.wait([updateMod, updateTags]).then(
-                      (_) => currentDoc.delete(),
-                    );
-                  },
+      return Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Container(
+          decoration: emptyNotes
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 233, 42, 106),
+                        blurRadius: 20.0,
+                      ),
+                    ])
+              : null,
+          child: Card(
+            // Glow if no notes
+            color: emptyNotes
+                ? Colors.pink[200]
+                : const Color.fromARGB(255, 242, 233, 248),
+            shadowColor: emptyNotes ? Colors.pink[200] : null,
+            elevation: 2,
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 10.0,
+                    ),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.donut_large,
+                          color: Color.fromARGB(255, 121, 120, 120),
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 3.0,
+                            vertical: 1.5,
+                          ),
+                          height: currentScreenWidth < 450
+                              ? 80
+                              : currentScreenWidth < 560
+                                  ? 100
+                                  : 120,
+                          child: SingleChildScrollView(
+                            physics: const ClampingScrollPhysics(),
+                            child: Text(
+                              doc.get("Question"),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                // Move to view question page
-                TextButton(
-                  child: const Text("View"),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ViewQuestion(
-                                  document: currentDoc,
-                                  user: widget.user,
-                                )));
-                  },
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Delete button
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    TextButton(
+                      child: const Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () async {
+                        Future updateTags = currentDoc
+                            .get()
+                            .then((doc) => doc.get("Tags") as List)
+                            .then((List taglist) {
+                          FirebaseFirestore.instance
+                              .collection(widget.user.uid)
+                              .doc("Tags")
+                              .update(Map.fromIterable(
+                                taglist,
+                                value: (element) => FieldValue.increment(-1),
+                              ));
+                        });
+                        Future updateMod = currentDoc.get().then<String>((doc) {
+                          return doc.get("Module");
+                        }).then((mod) {
+                          FirebaseFirestore.instance
+                              .collection(widget.user.uid)
+                              .doc(mod)
+                              .update({"isEmpty": FieldValue.increment(-1)});
+                        });
+                        Future.wait([updateMod, updateTags]).then(
+                          (_) => currentDoc.delete(),
+                        );
+                      },
+                    ),
+                    const Spacer(),
+                    // Move to view question page
+                    TextButton(
+                      child: const Text(
+                        "View",
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ViewQuestion(
+                                      document: currentDoc,
+                                      user: widget.user,
+                                    )));
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       );
     }).toList();

@@ -102,6 +102,7 @@ class _SignUpPage extends State<SignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: TextFormField(
+                            key: const Key("usernameField"),
                             controller: usernameController,
                             decoration: const InputDecoration(
                               contentPadding:
@@ -138,6 +139,7 @@ class _SignUpPage extends State<SignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: TextFormField(
+                            key: const Key("emailField"),
                             controller: emailController,
                             decoration: const InputDecoration(
                               contentPadding:
@@ -176,6 +178,7 @@ class _SignUpPage extends State<SignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: TextFormField(
+                            key: const Key("passwordField"),
                             controller: passwordController,
                             decoration: InputDecoration(
                               contentPadding:
@@ -234,6 +237,7 @@ class _SignUpPage extends State<SignUpPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: TextFormField(
+                            key: const Key("confirmPasswordField"),
                             controller: confirmPassController,
                             decoration: InputDecoration(
                               contentPadding:
@@ -304,6 +308,7 @@ class _SignUpPage extends State<SignUpPage> {
                             width: 100.0,
                             height: 40.0,
                             child: ElevatedButton(
+                              key: const Key("createUser"),
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.deepPurple,
                               ),
