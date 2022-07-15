@@ -236,14 +236,14 @@ class _EditProfile extends State<EditProfile> {
                               break;
                             case "wrong-password":
                               setState(() {
-                                _fail = "Wrong password, try again";
+                                _fail = newPassController.text.isEmpty
+                                    ? "Current password cannot be empty"
+                                    : "Wrong password, try again";
                               });
                               break;
                             default:
                               setState(() {
-                                _fail = newPassController.text.isEmpty
-                                    ? "Current password cannot be empty"
-                                    : "Unforeseen error has occurred";
+                                _fail = "Unforeseen error has occurred";
                               });
                               break;
                           }
