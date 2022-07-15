@@ -236,7 +236,8 @@ class _QuestionsPage extends State<QuestionsPage> {
         .map<DropdownMenuItem<String>>(
             (doc) => DropdownMenuItem(value: doc.id, child: Text(doc.id)))
         .toList();
-    res.add(DropdownMenuItem<String>(value: nilValue, child: Text(nilValue)));
+    res.insert(
+        0, DropdownMenuItem<String>(value: nilValue, child: Text(nilValue)));
     return res;
   }
 
@@ -455,7 +456,7 @@ class _QuestionsPage extends State<QuestionsPage> {
       tagsList = data.keys.toList() as List<String>;
       tagsList.removeWhere((key) => data[key] <= 0);
     }
-    tagsList.add(nilValue);
+    tagsList.insert(0, nilValue);
     return tagsList
         .map((value) => DropdownMenuItem(value: value, child: Text(value)))
         .toList();
