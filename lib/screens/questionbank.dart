@@ -30,10 +30,6 @@ class _QuestionBankPage extends State<QuestionBankPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              // const Text(
-              //   "The question bank stores all questions that are publicly "
-              //   "available for every module!",
-              // ),
               Wrap(
                 children: const [
                   Padding(

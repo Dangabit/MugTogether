@@ -102,36 +102,53 @@ class _BankModulePage extends State<BankModulePage> {
                             alignment: Alignment.topLeft,
                             child: IntrinsicHeight(
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
+                                  const SizedBox(
+                                    width: 30.0,
+                                  ),
                                   Text(
                                     "Q" + (index + 1).toString(),
                                     style: const TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.w500),
                                   ),
+                                  const SizedBox(
+                                    width: 30.0,
+                                  ),
                                   const VerticalDivider(
                                     thickness: 1,
                                     color: Colors.black,
                                   ),
+                                  const SizedBox(
+                                    width: 30.0,
+                                  ),
                                   Flexible(
-                                    child: Text(
-                                      question,
-                                      style: const TextStyle(
-                                        fontSize: 17,
+                                    child: Center(
+                                      child: Text(
+                                        question,
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(
+                                    width: 30.0,
+                                  ),
                                   const VerticalDivider(
                                     thickness: 1,
                                     color: Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    width: 30.0,
                                   ),
                                   SizedBox(
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message: "Click to add this question",
+                                      message:
+                                          "Click to view and add this question",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
@@ -147,7 +164,10 @@ class _BankModulePage extends State<BankModulePage> {
                                           },
                                           child: const Icon(Icons.download)),
                                     ),
-                                  )
+                                  ),
+                                  const SizedBox(
+                                    width: 30.0,
+                                  ),
                                 ],
                               ),
                             ),
