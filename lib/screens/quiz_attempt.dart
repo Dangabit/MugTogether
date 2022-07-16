@@ -30,10 +30,12 @@ class _QuizAttempt extends State<QuizAttempt> {
   User? user = FirebaseAuth.instance.currentUser;
   late List<Widget> _buttonsArray;
   late Future<List> _future;
+  late String _errorText;
 
   @override
   void initState() {
     super.initState();
+    _errorText = "";
     // Creates a timer if needed
     if (widget.timerCheck) {
       _timer = TimerWidget(widget.countdown);
@@ -182,14 +184,19 @@ class _QuizAttempt extends State<QuizAttempt> {
           child: Padding(
             padding: const EdgeInsets.only(
               left: 16.0,
+              right: 16.0,
             ),
             child: Wrap(
               children: [
                 Text(
-                  "Question " +
-                      (currentQn + 1).toString() +
-                      ":  " +
-                      _qnsArray[currentQn],
+                  "Question " + (currentQn + 1).toString() + ":  ",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _qnsArray[currentQn],
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -218,11 +225,12 @@ class _QuizAttempt extends State<QuizAttempt> {
                 controller: _attemptsArray[currentQn],
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 30),
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 30),
                   border: InputBorder.none,
                   hintText: 'Input your answer (Multiline)',
-                  prefixIcon: Icon(
+                  errorText: _errorText,
+                  prefixIcon: const Icon(
                     Icons.edit_note_outlined,
                     color: Colors.deepPurple,
                     size: 30,
@@ -260,6 +268,14 @@ class _QuizAttempt extends State<QuizAttempt> {
 
   /// Submitting of the attempt
   void _submit() {
+    for (TextEditingController controller in _attemptsArray) {
+      if (controller.text.isEmpty) {
+        setState(() {
+          _errorText = "Quiz is incomplete";
+        });
+        return;
+      }
+    }
     _future.then((qnsList) {
       db.collection(user!.uid).doc("Quiz Attempts").get().then((doc) {
         List attempts = doc.get("AttemptList") as List;

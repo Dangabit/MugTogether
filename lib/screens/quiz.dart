@@ -39,7 +39,7 @@ class _QuizPage extends State<QuizPage> {
     return Column(
       children: <Widget>[
         const SizedBox(
-          height: 20.0,
+          height: 30.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +70,7 @@ class _QuizPage extends State<QuizPage> {
           ],
         ),
         const SizedBox(
-          height: 30.0,
+          height: 40.0,
         ),
         Wrap(
           children: const [
