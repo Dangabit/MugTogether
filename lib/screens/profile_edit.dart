@@ -157,6 +157,20 @@ class _EditProfile extends State<EditProfile> {
                       ),
                     ),
                   ),
+                  validator: (String? value) {
+                    RegExp regex = RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                    if (value == null || value.isEmpty) {
+                      return null;
+                    }
+                    if (!regex.hasMatch(value)) {
+                      return 'Password should contain at least one ' +
+                          'upper case, one lower case, one digit, ' +
+                          'one special character, and be at least ' +
+                          '8 characters long';
+                    }
+                    return null;
+                  },
                   obscureText: !_passwordVisible,
                 ),
               ),

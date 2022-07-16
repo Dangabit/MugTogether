@@ -78,7 +78,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                 vertical: 10.0,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
+                                color: Colors.grey[300],
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(),
                               ),
@@ -135,7 +135,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                   vertical: 60.0,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: Colors.grey[300],
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(),
                                 ),
@@ -176,7 +176,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                 height: 30.0,
                                 width: 100.0,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: Colors.grey[300],
                                   borderRadius: BorderRadius.circular(5),
                                   border: Border.all(),
                                 ),

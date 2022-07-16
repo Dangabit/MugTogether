@@ -162,6 +162,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
                                   child: DropdownButton2<String>(
+                                    isExpanded: true,
                                     value: currentFilter,
                                     items: tagsList,
                                     buttonWidth:
@@ -352,9 +353,9 @@ class _QuestionsPage extends State<QuestionsPage> {
                             vertical: 1.5,
                           ),
                           height: currentScreenWidth < 450
-                              ? 80
-                              : currentScreenWidth < 560
-                                  ? 100
+                              ? 60
+                              : currentScreenWidth < 750
+                                  ? 90
                                   : 120,
                           child: SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
@@ -458,7 +459,12 @@ class _QuestionsPage extends State<QuestionsPage> {
     }
     tagsList.insert(0, nilValue);
     return tagsList
-        .map((value) => DropdownMenuItem(value: value, child: Text(value)))
+        .map((value) => DropdownMenuItem(
+            value: value,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+            )))
         .toList();
   }
 }

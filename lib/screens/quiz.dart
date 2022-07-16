@@ -41,6 +41,37 @@ class _QuizPage extends State<QuizPage> {
         const SizedBox(
           height: 20.0,
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Get the module choice
+            ModuleList.createListing(_currentMod),
+            const SizedBox(
+              width: 40.0,
+            ),
+            // Check if the user wants a timer
+            const Text(
+              "Enable timer? ",
+              style: TextStyle(
+                fontSize: 18,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            Checkbox(
+              value: _timerCheck,
+              activeColor: Colors.deepPurple,
+              splashRadius: 20.0,
+              onChanged: (value) {
+                setState(() {
+                  _timerCheck = value!;
+                });
+              },
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
         Wrap(
           children: const [
             Text(
@@ -66,33 +97,6 @@ class _QuizPage extends State<QuizPage> {
         ),
         const SizedBox(
           height: 30.0,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Get the module choice
-            ModuleList.createListing(_currentMod),
-            const SizedBox(
-              width: 20.0,
-            ),
-            // Check if the user wants a timer
-            Tooltip(
-              message: "Check to enable timer",
-              child: Checkbox(
-                value: _timerCheck,
-                activeColor: Colors.deepPurple,
-                splashRadius: 20.0,
-                onChanged: (value) {
-                  setState(() {
-                    _timerCheck = value!;
-                  });
-                },
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 50.0,
         ),
         // If the user wants a timer, choose how long (10 - 60 min)
         _timerCheck
