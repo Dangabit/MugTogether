@@ -203,6 +203,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   color: Colors.deepPurple,
                                 ),
                               ),
+                              errorMaxLines: 3,
                             ),
                             validator: (String? value) {
                               RegExp regex = RegExp(

@@ -156,6 +156,7 @@ class _EditProfile extends State<EditProfile> {
                         color: Colors.deepPurple,
                       ),
                     ),
+                    errorMaxLines: 3,
                   ),
                   validator: (String? value) {
                     RegExp regex = RegExp(
