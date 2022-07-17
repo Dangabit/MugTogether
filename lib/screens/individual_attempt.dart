@@ -38,7 +38,11 @@ class _IndividualAttempt extends State<IndividualAttempt> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         leading: BackButton(onPressed: () => Navigator.pop(context)),
-        title: Text("Attempt  " + widget.attemptNum.toString()),
+        title: Text("Attempt " +
+            widget.attemptNum.toString() +
+            "  (" +
+            widget.attempt["Module"] +
+            ")"),
       ),
       body: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
@@ -58,7 +62,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                     const Text(
                       "Question Number:  ",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -66,7 +70,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                   ],
                 ),
                 const SizedBox(
-                  height: 20.0,
+                  height: 30.0,
                 ),
                 _questionBody(),
                 const Spacer(),
@@ -79,7 +83,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                     ? const Text(
                         "Qn added!",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 17,
                           fontWeight: FontWeight.w500,
                         ),
                       )
@@ -166,6 +170,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
   /// Display a dropdrop menu to move between questions
   Widget _qnNum() {
     return Container(
+      height: 40.0,
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.black,
@@ -207,7 +212,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
           child: Text(
             "Question:",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -215,25 +220,33 @@ class _IndividualAttempt extends State<IndividualAttempt> {
         const SizedBox(
           height: 5.0,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              width: 15.0,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 45.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 10.0,
             ),
-            Flexible(
-              child: Text(
-                widget.attempt["Questions"][currentIndex],
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                ),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(),
+            ),
+            child: Center(
+              child: Wrap(
+                runSpacing: 5.0,
+                spacing: 5.0,
+                children: [
+                  Text(
+                    widget.attempt["Questions"][currentIndex],
+                    style: const TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              width: 15.0,
-            ),
-          ],
+          ),
         ),
         const SizedBox(
           height: 30.0,
@@ -243,7 +256,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
           child: Text(
             "Your Answer:",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 17,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -251,25 +264,33 @@ class _IndividualAttempt extends State<IndividualAttempt> {
         const SizedBox(
           height: 5.0,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              width: 15.0,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 45.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 10.0,
             ),
-            Flexible(
-              child: Text(
-                widget.attempt["Attempts"][currentIndex],
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                ),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(),
+            ),
+            child: Center(
+              child: Wrap(
+                runSpacing: 5.0,
+                spacing: 5.0,
+                children: [
+                  Text(
+                    widget.attempt["Attempts"][currentIndex],
+                    style: const TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              width: 15.0,
-            ),
-          ],
+          ),
         ),
       ],
     );

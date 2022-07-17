@@ -87,7 +87,7 @@ class _QuizAttempt extends State<QuizAttempt> {
         backgroundColor: Colors.deepPurple,
         leading: BackButton(onPressed: () => Navigator.pop(context)),
         centerTitle: false,
-        title: const Text("Quiz Attempt"),
+        title: Text("Quiz Attempt  (" + widget.modName + ")"),
         actions: [
           widget.timerCheck ? _timer.display() : const Text(""),
         ],

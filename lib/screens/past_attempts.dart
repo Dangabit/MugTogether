@@ -42,8 +42,10 @@ class PastAttempts extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text("Attempt ${len - index}"),
-                  subtitle:
-                      Text("Date: ${_attemptsList[len - index - 1]["Date"]}"),
+                  subtitle: Text(
+                    "Module: ${_attemptsList[len - index - 1]["Module"]}\nDate: ${_attemptsList[len - index - 1]["Date"]}",
+                  ),
+                  isThreeLine: true,
                   onTap: () {
                     Navigator.push(
                         context,
