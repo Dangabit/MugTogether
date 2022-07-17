@@ -38,6 +38,11 @@ class InAppDrawer {
                   'Quiz',
                   () => Navigator.popAndPushNamed(context, '/quiz'),
                 ),
+                _createDrawerItem(
+                  Icons.forum_outlined,
+                  'QnA Forum',
+                  () => Navigator.popAndPushNamed(context, '/qna'),
+                ),
                 const Spacer(),
                 _signOutButton(context),
               ]),

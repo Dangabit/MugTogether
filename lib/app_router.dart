@@ -9,6 +9,8 @@ import 'package:mug_together/screens/questions.dart';
 import 'package:mug_together/screens/login.dart';
 import 'package:mug_together/screens/quiz.dart';
 import 'package:mug_together/screens/signup.dart';
+import 'package:mug_together/screens/qna.dart';
+import 'package:mug_together/screens/qna_post.dart';
 
 class AppRouter {
   /// Generate the route given the RouteSettings.
@@ -39,20 +41,24 @@ class AppRouter {
       case '/profile/me':
         return _checkUser((user) => ProfilePage(user: user), settings);
       case '/bank':
-        return _checkUser((_) => const QuestionBankPage(), settings);
+        return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':
         if (args != null) {
           return _checkUser(
               (user) => BankModulePage(user: user, module: args as String),
               settings);
         } else {
-          return _checkUser((_) => const QuestionBankPage(),
+          return _checkUser((user) => QuestionBankPage(user: user),
               const RouteSettings(name: '/bank'));
         }
       case '/quiz':
         return _checkUser((user) => QuizPage(user: user), settings);
       case '/quiz/past':
         return _checkUser((user) => PastAttempts(user: user), settings);
+      case '/qna':
+        return _checkUser((user) => QnAPage(user: user), settings);
+      case '/qna/post':
+        return _checkUser((user) => QnaPost(user: user), settings);
       default:
         return _pageNotFound();
     }
