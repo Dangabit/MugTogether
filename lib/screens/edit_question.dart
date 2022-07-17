@@ -87,17 +87,13 @@ class _EditQuestion extends State<EditQuestion> {
                 horizontal: 20,
               ),
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 5.0,
-                  vertical: 5.0,
-                ),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: TextField(
                     controller: questionController,
                     keyboardType: TextInputType.multiline,
@@ -143,12 +139,12 @@ class _EditQuestion extends State<EditQuestion> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: TextField(
                     controller: notesController,
                     keyboardType: TextInputType.multiline,
@@ -194,12 +190,12 @@ class _EditQuestion extends State<EditQuestion> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: TextField(
                     controller: tagsController,
                     decoration: const InputDecoration(
@@ -212,7 +208,7 @@ class _EditQuestion extends State<EditQuestion> {
               ),
             ),
             const SizedBox(
-              height: 20.0,
+              height: 30.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -247,21 +243,34 @@ class _EditQuestion extends State<EditQuestion> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  width: 20.0,
-                ),
-                Tooltip(
-                  message: "Check to privatise your question",
-                  child: fromComm
-                      ? const Text("")
-                      : Checkbox(
-                          value: privacy,
-                          onChanged: (newValue) => setState(() {
-                                privacy = newValue!;
-                              })),
-                ),
               ],
             ),
+            fromComm
+                ? const Text("")
+                : Column(
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Privatise question? ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Checkbox(
+                              value: privacy,
+                              onChanged: (newValue) => setState(() {
+                                    privacy = newValue!;
+                                  })),
+                        ],
+                      ),
+                    ],
+                  ),
             const SizedBox(
               height: 50.0,
             ),

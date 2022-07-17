@@ -156,7 +156,22 @@ class _EditProfile extends State<EditProfile> {
                         color: Colors.deepPurple,
                       ),
                     ),
+                    errorMaxLines: 3,
                   ),
+                  validator: (String? value) {
+                    RegExp regex = RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                    if (value == null || value.isEmpty) {
+                      return null;
+                    }
+                    if (!regex.hasMatch(value)) {
+                      return 'Password should contain at least one ' +
+                          'upper case, one lower case, one digit, ' +
+                          'one special character, and be at least ' +
+                          '8 characters long';
+                    }
+                    return null;
+                  },
                   obscureText: !_passwordVisible,
                 ),
               ),
@@ -236,14 +251,14 @@ class _EditProfile extends State<EditProfile> {
                               break;
                             case "wrong-password":
                               setState(() {
-                                _fail = "Wrong password, try again";
+                                _fail = newPassController.text.isEmpty
+                                    ? "Current password cannot be empty"
+                                    : "Wrong password, try again";
                               });
                               break;
                             default:
                               setState(() {
-                                _fail = newPassController.text.isEmpty
-                                    ? "Current password cannot be empty"
-                                    : "Unforeseen error has occurred";
+                                _fail = "Unforeseen error has occurred";
                               });
                               break;
                           }

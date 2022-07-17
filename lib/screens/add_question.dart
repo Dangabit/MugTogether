@@ -74,8 +74,14 @@ class _AddQuestion extends State<AddQuestion> {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: questionController.text.isEmpty
+                            ? Colors.grey[100]
+                            : Colors.grey[300],
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color.fromARGB(255, 100, 100, 100),
+                        ),
                       ),
                       child: Padding(
                           padding: const EdgeInsets.only(left: 5),
@@ -114,8 +120,12 @@ class _AddQuestion extends State<AddQuestion> {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color.fromARGB(255, 100, 100, 100),
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
@@ -146,8 +156,12 @@ class _AddQuestion extends State<AddQuestion> {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[100],
                         borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color.fromARGB(255, 100, 100, 100),
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
@@ -178,40 +192,63 @@ class _AddQuestion extends State<AddQuestion> {
                       Flexible(
                         child: module.text == null
                             ? ModuleList.createListing(module)
-                            : DropdownSearch(
-                                enabled: false,
-                                selectedItem: module.text,
-                                dropdownSearchDecoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxWidth: 180.0,
+                            : Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                child: DropdownSearch(
+                                  popupBackgroundColor: Colors.grey[300],
+                                  enabled: false,
+                                  selectedItem: module.text,
+                                  dropdownSearchDecoration:
+                                      const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    constraints: BoxConstraints(
+                                      maxWidth: 180.0,
+                                    ),
                                   ),
                                 ),
                               ),
                       ),
                       const SizedBox(
-                        width: 5.0,
+                        width: 40.0,
                       ),
                       fromComm
                           ? const SizedBox(
                               width: 10.0,
                             )
-                          : Tooltip(
-                              message: "Check to privatise your question",
-                              child: Checkbox(
-                                  activeColor: Colors.deepPurple,
-                                  splashRadius: 20.0,
-                                  value: privacy,
-                                  onChanged: (newValue) => setState(() {
-                                        privacy = newValue!;
-                                      })),
+                          : Row(
+                              children: [
+                                const Text(
+                                  "Privatise question? ",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Checkbox(
+                                    activeColor: Colors.deepPurple,
+                                    splashRadius: 20.0,
+                                    value: privacy,
+                                    onChanged: (newValue) => setState(() {
+                                          privacy = newValue!;
+                                        })),
+                              ],
                             ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30.0,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
                       const SizedBox(
-                        width: 40.0,
+                        width: 20.0,
                       ),
                       Tooltip(
                         message: "Click to save",
@@ -274,11 +311,8 @@ class _AddQuestion extends State<AddQuestion> {
                           child: const Icon(Icons.save),
                         ),
                       ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
