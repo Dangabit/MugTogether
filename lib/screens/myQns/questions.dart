@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
-import 'package:mug_together/screens/view_question.dart';
+import 'package:mug_together/screens/myQns/view_question.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 

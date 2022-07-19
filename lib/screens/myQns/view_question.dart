@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
-import 'package:mug_together/screens/edit_question.dart';
+import 'package:mug_together/screens/myQns/edit_question.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in question info

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/profile_edit.dart';
+import 'package:mug_together/screens/userAuth/profile_edit.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 
 class ProfilePage extends StatefulWidget {
