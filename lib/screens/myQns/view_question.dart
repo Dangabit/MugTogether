@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/myQns/edit_question.dart';
+import 'package:mug_together/utilities/pdf.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in question info
@@ -14,6 +15,20 @@ class ViewQuestion extends StatefulWidget {
 }
 
 class _ViewQuestion extends State<ViewQuestion> {
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -274,30 +289,77 @@ class _ViewQuestion extends State<ViewQuestion> {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(
-                      width: 100.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.deepPurple,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditQuestion(
-                                        question: widget.question,
-                                      ))).then((_) => setState(() {}));
-                        },
-                        child: const Text(
-                          "Edit",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 100.0,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EditQuestion(
+                                            question: widget.question,
+                                          ))).then((_) => setState(() {}));
+                            },
+                            child: const Text(
+                              "Edit",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        SizedBox(
+                          width: 100.0,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple,
+                            ),
+                            onPressed: _genAndSaveURL,
+                            child: const Text(
+                              "Get URL",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        SizedBox(
+                          width: 100.0,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple,
+                            ),
+                            onPressed: () async {
+                              final name = await openDialog();
+                              if (name == null || name.isEmpty) {
+                                return;
+                              }
+                              PDFcreator.createPDF(widget.question, name);
+                            },
+                            child: const Text(
+                              "PDF",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
-                      height: 20.0,
+                      height: 40.0,
                     ),
                   ],
                 ),
@@ -336,5 +398,29 @@ class _ViewQuestion extends State<ViewQuestion> {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("URL is saved into your clipboard!")));
     });
+  }
+
+  Future<String?> openDialog() => showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Name your PDF"),
+          content: TextField(
+            autofocus: true,
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Name your PDF"),
+            onSubmitted: (_) => submit(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: submit,
+              child: const Text("ENTER"),
+            )
+          ],
+        ),
+      );
+
+  void submit() {
+    Navigator.of(context).pop(controller.text);
+    controller.clear();
   }
 }
