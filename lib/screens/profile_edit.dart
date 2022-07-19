@@ -165,9 +165,9 @@ class _EditProfile extends State<EditProfile> {
                       return null;
                     }
                     if (!regex.hasMatch(value)) {
-                      return 'Password should contain at least one ' +
-                          'upper case, one lower case, one digit, ' +
-                          'one special character, and be at least ' +
+                      return 'Password should contain at least one '
+                          'upper case, one lower case, one digit, '
+                          'one special character, and be at least '
                           '8 characters long';
                     }
                     return null;

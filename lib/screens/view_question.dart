@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/edit_question.dart';
 
 class ViewQuestion extends StatefulWidget {
-  // Passing in document info
-  const ViewQuestion({Key? key, required this.document, required this.user})
+  // Passing in question info
+  const ViewQuestion({Key? key, required this.question})
       : super(key: key);
-  final DocumentReference document;
-  final User user;
+  final Question question;
 
   @override
   State<ViewQuestion> createState() => _ViewQuestion();
@@ -17,10 +15,6 @@ class ViewQuestion extends StatefulWidget {
 class _ViewQuestion extends State<ViewQuestion> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: widget.document.get(),
-      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasData) {
           return Scaffold(
               backgroundColor: const Color.fromARGB(255, 242, 233, 248),
               appBar: AppBar(
@@ -86,7 +80,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                   spacing: 5.0,
                                   children: [
                                     Text(
-                                      snapshot.data!.get("Question"),
+                                      widget.question.data["Question"],
                                       style: const TextStyle(
                                         fontSize: 17,
                                       ),
@@ -143,7 +137,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                     spacing: 5.0,
                                     children: [
                                       Text(
-                                        snapshot.data!.get("Notes"),
+                                        widget.question.data["Notes"],
                                         style: const TextStyle(
                                           fontSize: 17,
                                         ),
@@ -182,7 +176,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      snapshot.data!.get("Module"),
+                                      widget.question.data["Module"],
                                       style: const TextStyle(
                                         fontSize: 17,
                                       ),
@@ -234,7 +228,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                               child: Wrap(
                                 runSpacing: 5.0,
                                 spacing: 5.0,
-                                children: _tagList(snapshot.data!),
+                                children: _tagList(widget.question.data["Tags"] as List),
                               ),
                             ),
                           ),
@@ -257,9 +251,9 @@ class _ViewQuestion extends State<ViewQuestion> {
                                       ),
                                     ),
                                     Text(
-                                      snapshot.data!.get("FromCommunity")
+                                      widget.question.data["FromCommunity"]
                                           ? "This question is taken from the Community"
-                                          : snapshot.data!.get("Privacy")
+                                          : widget.question.data["Privacy"]
                                               ? "This question is private"
                                               : "This question can be seen in Question Bank",
                                     ),
@@ -277,7 +271,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Text(snapshot.data!.get("LastUpdate")),
+                                    Text(widget.question.data["LastUpdate"]),
                                   ],
                                 ),
                               ],
@@ -295,8 +289,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => EditQuestion(
-                                                document: snapshot.data!,
-                                                user: widget.user)))
+                                                question: widget.question,)))
                                     .then((_) => setState(() {}));
                               },
                               child: const Text(
@@ -316,25 +309,10 @@ class _ViewQuestion extends State<ViewQuestion> {
                   ),
                 );
               }));
-        } else {
-          return Scaffold(
-              backgroundColor: const Color.fromARGB(255, 242, 233, 248),
-              appBar: AppBar(
-                backgroundColor: Colors.deepPurple,
-                title: const Text("View Question"),
-                leading: BackButton(onPressed: () {
-                  Navigator.pop(context);
-                }),
-              ),
-              body: const CircularProgressIndicator());
-        }
-      },
-    );
   }
 
   /// Makes a List of tags in containers
-  List<Widget> _tagList(DocumentSnapshot currentDoc) {
-    List<dynamic> tags = currentDoc.get("Tags");
+  List<Widget> _tagList(List tags) {
     return tags.map((tag) {
       return Container(
         padding: const EdgeInsets.symmetric(

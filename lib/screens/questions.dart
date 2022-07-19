@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/view_question.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -60,6 +61,9 @@ class _QuestionsPage extends State<QuestionsPage> {
         // Future builder to check if everything is initialised completely
         future: checkInit,
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+          }
           if (snapshot.hasData) {
             return StreamBuilder(
               stream: FirebaseFirestore.instance
@@ -302,12 +306,9 @@ class _QuestionsPage extends State<QuestionsPage> {
     final currentScreenWidth = MediaQuery.of(context).size.width;
     // Convert documents from database into cards
     return res.map((doc) {
-      bool emptyNotes = doc.get("Notes") == "";
-      DocumentReference currentDoc = FirebaseFirestore.instance
-          .collection(widget.user.uid)
-          .doc(doc.get("Module"))
-          .collection("questions")
-          .doc(doc.id);
+      Question question = Question.getFromDatabase(
+          doc as QueryDocumentSnapshot<Map<String, dynamic>>);
+      bool emptyNotes = question.data["Notes"] == "";
       return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Container(
@@ -389,29 +390,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                         ),
                       ),
                       onPressed: () async {
-                        Future updateTags = currentDoc
-                            .get()
-                            .then((doc) => doc.get("Tags") as List)
-                            .then((List taglist) {
-                          FirebaseFirestore.instance
-                              .collection(widget.user.uid)
-                              .doc("Tags")
-                              .update(Map.fromIterable(
-                                taglist,
-                                value: (element) => FieldValue.increment(-1),
-                              ));
-                        });
-                        Future updateMod = currentDoc.get().then<String>((doc) {
-                          return doc.get("Module");
-                        }).then((mod) {
-                          FirebaseFirestore.instance
-                              .collection(widget.user.uid)
-                              .doc(mod)
-                              .update({"isEmpty": FieldValue.increment(-1)});
-                        });
-                        Future.wait([updateMod, updateTags]).then(
-                          (_) => currentDoc.delete(),
-                        );
+                        question.removeFromDatabase();
                       },
                     ),
                     const Spacer(),
@@ -429,8 +408,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewQuestion(
-                                      document: currentDoc,
-                                      user: widget.user,
+                                      question: question,
                                     )));
                       },
                     ),
