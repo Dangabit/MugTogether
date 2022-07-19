@@ -48,154 +48,158 @@ class _EditProfile extends State<EditProfile> {
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Center(
-          child: currentScreenWidth > 650
-              ? SizedBox(
-                  width: SizeConfig.widthSize(context, 60),
-                  child: _buildEditProfile(context),
-                )
-              : _buildEditProfile(context),
+          child: _buildEditProfile(context),
         ),
       ),
     );
   }
 
   Widget _buildEditProfile(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 30.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Username",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 15),
-                    border: InputBorder.none,
-                    labelText: 'Username',
-                    prefixIcon: Icon(
-                      Icons.account_circle_outlined,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Username cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+    return SizedBox(
+      width: currentScreenWidth < 500
+          ? currentScreenWidth
+          : currentScreenWidth < 1000
+              ? currentScreenWidth * 0.8
+              : currentScreenWidth * 0.6,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: currentScreenHeight * 0.05,
             ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Update Password",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Username",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: TextFormField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
-                    border: InputBorder.none,
-                    labelText: 'Password',
-                    prefixIcon: const Icon(
-                      Icons.lock_outline,
-                      color: Colors.deepPurple,
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Username',
+                      prefixIcon: Icon(
+                        Icons.account_circle_outlined,
                         color: Colors.deepPurple,
                       ),
                     ),
-                    errorMaxLines: 3,
-                  ),
-                  validator: (String? value) {
-                    RegExp regex = RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                    if (value == null || value.isEmpty) {
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username cannot be empty';
+                      }
                       return null;
-                    }
-                    if (!regex.hasMatch(value)) {
-                      return 'Password should contain at least one ' +
-                          'upper case, one lower case, one digit, ' +
-                          'one special character, and be at least ' +
-                          '8 characters long';
-                    }
-                    return null;
-                  },
-                  obscureText: !_passwordVisible,
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          ElevatedButton(
-            // Button to re-verify the widget.user before committing the change
-            style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple,
+            SizedBox(
+              height: currentScreenHeight * 0.05,
             ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                showDialog(
-                        context: context,
-                        builder: (context) => _reverify(context))
-                    .then((_) => setState(() {}));
-              }
-            },
-            child: const Icon(Icons.save),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Update Password",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Password',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                        color: Colors.deepPurple,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      errorMaxLines: 3,
+                    ),
+                    validator: (String? value) {
+                      RegExp regex = RegExp(
+                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                      if (value == null || value.isEmpty) {
+                        return null;
+                      }
+                      if (!regex.hasMatch(value)) {
+                        return 'Password should contain at least one ' +
+                            'upper case, one lower case, one digit, ' +
+                            'one special character, and be at least ' +
+                            '8 characters long';
+                      }
+                      return null;
+                    },
+                    obscureText: !_passwordVisible,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            ElevatedButton(
+              // Button to re-verify the widget.user before committing the change
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  showDialog(
+                          context: context,
+                          builder: (context) => _reverify(context))
+                      .then((_) => setState(() {}));
+                }
+              },
+              child: const Icon(Icons.save),
+            ),
+          ],
+        ),
       ),
     );
   }
