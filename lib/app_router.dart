@@ -30,12 +30,7 @@ class AppRouter {
       case '/questions':
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
-        if (args != null) {
-          return _checkUser(
-              (user) => AddQuestion(data: args as Map, user: user), settings);
-        } else {
-          return _checkUser((user) => AddQuestion(user: user), settings);
-        }
+        return _checkUser((user) => AddQuestion(user: user), settings);
       case '/profile/me':
         return _checkUser((user) => ProfilePage(user: user), settings);
       case '/bank':

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/view_question.dart';
@@ -61,7 +62,8 @@ class _QuestionsPage extends State<QuestionsPage> {
         // Future builder to check if everything is initialised completely
         future: checkInit,
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
+          if (kDebugMode && snapshot.hasError) {
+            // ignore: avoid_print
             print(snapshot.error);
           }
           if (snapshot.hasData) {

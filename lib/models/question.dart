@@ -85,5 +85,11 @@ class Question {
   }
 
   /// Pull current question into user collection
-  void pullToUser() {}
+  Future<void> pullToUser(String newUID) {
+    Map<String, dynamic> dupeQn = Map.of(data);
+    dupeQn.update("FromCommunity", (value) => true);
+    dupeQn.update("Owner", (value) => newUID);
+    dupeQn.update("Privacy", (value) => true);
+    return Question(dupeQn, newUID, _module).addToDatabase();
+  }
 }

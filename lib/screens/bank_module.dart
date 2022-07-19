@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/question.dart';
 
 class BankModulePage extends StatefulWidget {
   const BankModulePage({Key? key, required this.module, required this.user})
@@ -80,7 +81,8 @@ class _BankModulePage extends State<BankModulePage> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: docslist.length,
                   itemBuilder: (context, index) {
-                    String question = docslist[index].get("Question");
+                    Question question = Question.getFromDatabase(docslist[index]
+                        as QueryDocumentSnapshot<Map<String, dynamic>>);
                     return Column(
                       children: [
                         const SizedBox(
@@ -125,7 +127,7 @@ class _BankModulePage extends State<BankModulePage> {
                                   Flexible(
                                     child: Center(
                                       child: Text(
-                                        question,
+                                        question.data["Question"],
                                         style: const TextStyle(
                                           fontSize: 17,
                                         ),
@@ -147,20 +149,15 @@ class _BankModulePage extends State<BankModulePage> {
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message:
-                                          "Click to view and add this question",
+                                      message: "Click to add this question",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
                                             padding: EdgeInsets.zero,
                                           ),
                                           onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, "/questions/add",
-                                                arguments: {
-                                                  "module": widget.module,
-                                                  "question": question,
-                                                });
+                                            question
+                                                .pullToUser(widget.user.uid);
                                           },
                                           child: const Icon(Icons.download)),
                                     ),

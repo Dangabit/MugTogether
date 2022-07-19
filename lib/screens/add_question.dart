@@ -7,9 +7,7 @@ import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class AddQuestion extends StatefulWidget {
-  const AddQuestion({Key? key, this.data, required this.user})
-      : super(key: key);
-  final Map? data;
+  const AddQuestion({Key? key, required this.user}) : super(key: key);
   final User user;
 
   @override
@@ -26,18 +24,6 @@ class _AddQuestion extends State<AddQuestion> {
   final Data module = Data();
   bool privacy = false;
   int importance = 0;
-  bool fromComm = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.data != null) {
-      module.text = widget.data!["module"];
-      questionController.text = widget.data!["question"];
-      fromComm = true;
-      privacy = true;
-    }
-  }
 
   // Prevent memory leak
   @override
@@ -218,28 +204,24 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 40.0,
                       ),
-                      fromComm
-                          ? const SizedBox(
-                              width: 10.0,
-                            )
-                          : Row(
-                              children: [
-                                const Text(
-                                  "Privatise question? ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Checkbox(
-                                    activeColor: Colors.deepPurple,
-                                    splashRadius: 20.0,
-                                    value: privacy,
-                                    onChanged: (newValue) => setState(() {
-                                          privacy = newValue!;
-                                        })),
-                              ],
+                      Row(
+                        children: [
+                          const Text(
+                            "Privatise question? ",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          Checkbox(
+                              activeColor: Colors.deepPurple,
+                              splashRadius: 20.0,
+                              value: privacy,
+                              onChanged: (newValue) => setState(() {
+                                    privacy = newValue!;
+                                  })),
+                        ],
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -275,7 +257,7 @@ class _AddQuestion extends State<AddQuestion> {
                                 "Importance": importance,
                                 "Privacy": privacy,
                                 "Owner": widget.user.uid,
-                                "FromCommunity": fromComm,
+                                "FromCommunity": false,
                               }, widget.user.uid, module.text!);
                               question.addToDatabase().then((_) =>
                                   Navigator.pushReplacementNamed(
