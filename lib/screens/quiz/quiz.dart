@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/quiz_attempt.dart';
+import 'package:mug_together/screens/quiz/quiz_attempt.dart';
 import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:mug_together/widgets/module_list.dart';

@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/extended_profile.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -220,9 +220,9 @@ class _SignUpPage extends State<SignUpPage> {
                               return 'Please input your password';
                             }
                             if (!regex.hasMatch(value)) {
-                              return 'Password should contain at least one ' +
-                                  'upper case, one lower case, one digit, ' +
-                                  'one special character, and be at least ' +
+                              return 'Password should contain at least one '
+                                  'upper case, one lower case, one digit, '
+                                  'one special character, and be at least '
                                   '8 characters long';
                             }
                             return null;
@@ -369,14 +369,7 @@ class _SignUpPage extends State<SignUpPage> {
             )
             .then((credential) {
               credential.user!.updateDisplayName(usernameController.text);
-              FirebaseFirestore.instance
-                  .collection(credential.user!.uid)
-                  .doc("Tags")
-                  .set({});
-              FirebaseFirestore.instance
-                  .collection(credential.user!.uid)
-                  .doc("Quiz Attempts")
-                  .set({"AttemptList": List.empty()});
+              ExtendedProfile.initUser(credential.user!);
               return credential;
             })
             .then((credential) => credential.user?.sendEmailVerification())

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/individual_attempt.dart';
+import 'package:mug_together/screens/quiz/individual_attempt.dart';
 
 class PastAttempts extends StatelessWidget {
   const PastAttempts({Key? key, required this.user}) : super(key: key);

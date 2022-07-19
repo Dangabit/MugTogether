@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/extended_profile.dart';
 import 'package:mug_together/widgets/size_config.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key, required this.user}) : super(key: key);
-  final User user;
+  const EditProfile({Key? key, required this.profile}) : super(key: key);
+  final ExtendedProfile profile;
 
   @override
   State<EditProfile> createState() => _EditProfile();
@@ -21,7 +22,7 @@ class _EditProfile extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.user.displayName!;
+    nameController.text = widget.profile.user.displayName!;
   }
 
   // Prevent memory leak
@@ -231,43 +232,31 @@ class _EditProfile extends State<EditProfile> {
                     primary: Colors.deepPurple,
                   ),
                   onPressed: () async {
-                    widget.user
-                        .reauthenticateWithCredential(
-                            EmailAuthProvider.credential(
-                                email: widget.user.email!,
-                                password: newPassController.text))
-                        .then((credential) async {
-                          await widget.user
-                              .updateDisplayName(nameController.text);
-                          if (passwordController.text.isNotEmpty) {
-                            await widget.user
-                                .updatePassword(passwordController.text);
-                          }
-                        })
-                        .then((_) => Navigator.pushNamedAndRemoveUntil(
-                            context, "/profile/me", ModalRoute.withName("/")))
+                    widget.profile
+                        .reverify(passwordController.text, nameController.text,
+                            "", newPassController.text)
                         .onError<FirebaseAuthException>((error, stackTrace) {
-                          switch (error.code) {
-                            case "weak-password":
-                              setState(() {
-                                _fail = "New password is too weak";
-                              });
-                              break;
-                            case "wrong-password":
-                              setState(() {
-                                _fail = newPassController.text.isEmpty
-                                    ? "Current password cannot be empty"
-                                    : "Wrong password, try again";
-                              });
-                              break;
-                            default:
-                              setState(() {
-                                _fail = "Unforeseen error has occurred";
-                              });
-                              break;
-                          }
-                          return null;
-                        });
+                      switch (error.code) {
+                        case "weak-password":
+                          setState(() {
+                            _fail = "New password is too weak";
+                          });
+                          break;
+                        case "wrong-password":
+                          setState(() {
+                            _fail = newPassController.text.isEmpty
+                                ? "Current password cannot be empty"
+                                : "Wrong password, try again";
+                          });
+                          break;
+                        default:
+                          setState(() {
+                            _fail = "Unforeseen error has occurred";
+                          });
+                          break;
+                      }
+                      return null;
+                    });
                   },
                   child: const Text(
                     "Confirm",
