@@ -363,7 +363,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                           child: SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
                             child: Text(
-                              doc.get("Question"),
+                              question.data["Question"],
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,

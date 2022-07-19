@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/myQns/edit_question.dart';
@@ -321,5 +322,19 @@ class _ViewQuestion extends State<ViewQuestion> {
         child: Text(tag),
       );
     }).toList();
+  }
+
+  /// Generate URL and save into clipboard
+  void _genAndSaveURL() {
+    Clipboard.setData(ClipboardData(
+            text: Uri.https('mugtogether.web.app', '/shareable', {
+      'uid': widget.question.data["Owner"],
+      'qid': widget.question.docId,
+      'module': widget.question.data["Module"]
+    }).toString()))
+        .then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("URL is saved into your clipboard!")));
+    });
   }
 }
