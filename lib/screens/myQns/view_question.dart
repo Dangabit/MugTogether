@@ -135,7 +135,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                               spacing: 5.0,
                               children: [
                                 // Using markdown
-                                Markdown(
+                                MarkdownBody(
                                   data: widget.question.data["Notes"],
                                   selectable: true,
                                 ),
