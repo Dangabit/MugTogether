@@ -92,4 +92,27 @@ class Question {
     dupeQn.update("Privacy", (value) => true);
     return Question(dupeQn, newUID, _module).addToDatabase();
   }
+
+  /// Flag the question for bank
+  Future<void> flagQuestion() {
+    return FirebaseFirestore.instance
+        .collection(_uid)
+        .doc(_module)
+        .collection("questions")
+        .doc(_docId)
+        .set({"Flag": FieldValue.increment(1)}, SetOptions(merge: true));
+  }
+
+  /// Rate the question
+  Future<void> rateQuestion(int rating) {
+    return FirebaseFirestore.instance
+        .collection(_uid)
+        .doc(_module)
+        .collection("questions")
+        .doc(_docId)
+        .set({
+      "Difficulty": FieldValue.increment(rating),
+      "No of Ratings": FieldValue.increment(1),
+    }, SetOptions(merge: true));
+  }
 }
