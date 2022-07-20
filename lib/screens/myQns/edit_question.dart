@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/question.dart';
 
 class EditQuestion extends StatefulWidget {
-  const EditQuestion({Key? key, required this.document, required this.user})
+  const EditQuestion({Key? key, required this.question})
       : super(key: key);
-  final DocumentSnapshot document;
-  final User user;
+  final Question question;
 
   @override
   State<EditQuestion> createState() => _EditQuestion();
@@ -24,13 +22,13 @@ class _EditQuestion extends State<EditQuestion> {
   @override
   void initState() {
     super.initState();
-    questionController.text = widget.document.get("Question");
-    notesController.text = widget.document.get("Notes");
-    oldtags = widget.document.get("Tags").cast<String>();
+    questionController.text = widget.question.data["Question"];
+    notesController.text = widget.question.data["Notes"];
+    oldtags = widget.question.data["Tags"].cast<String>();
     String tags = oldtags.toString();
     tagsController.text = tags.substring(1, tags.length - 1);
-    privacy = widget.document.get("Privacy");
-    fromComm = widget.document.get("FromCommunity");
+    privacy = widget.question.data["Privacy"];
+    fromComm = widget.question.data["FromCommunity"];
   }
 
   // Prevent memory leak
@@ -235,7 +233,7 @@ class _EditQuestion extends State<EditQuestion> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.document.get("Module"),
+                        widget.question.data["Module"],
                         style: const TextStyle(
                           fontSize: 17,
                         ),
@@ -287,36 +285,17 @@ class _EditQuestion extends State<EditQuestion> {
     );
   }
 
-  /// Submit changes to the document to Firebase
+  /// Submit changes to the question to Firebase
   Future<void> _submitChange() async {
     List tags = tagsController.text.isEmpty
         ? List.empty()
         : tagsController.text.split(", ").toSet().toList();
-    Future updateQnChange = FirebaseFirestore.instance
-        .collection(widget.user.uid)
-        .doc(widget.document.get("Module"))
-        .collection("questions")
-        .doc(widget.document.id)
-        .update({
+    widget.question.updateDatabase({
       "Question": questionController.text,
       "Notes": notesController.text,
       "Tags": tags,
       "Privacy": privacy,
       "LastUpdate": DateTime.now().toString()
-    });
-    Future updateTags = FirebaseFirestore.instance
-        .collection(widget.user.uid)
-        .doc("Tags")
-        .update(Map.fromIterable(tags,
-            value: (element) => FieldValue.increment(1)));
-    Future reduceTags = FirebaseFirestore.instance
-        .collection(widget.user.uid)
-        .doc("Tags")
-        .update(Map.fromIterable(
-          oldtags,
-          value: (element) => FieldValue.increment(-1),
-        ));
-    Future.wait([updateQnChange, updateTags, reduceTags])
-        .then((_) => Navigator.pushReplacementNamed(context, "/questions"));
+    }).then((_) => Navigator.pushReplacementNamed(context, "/questions"));
   }
 }

@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mug_together/models/question.dart';
 
 class IndividualAttempt extends StatefulWidget {
   const IndividualAttempt(
@@ -95,15 +95,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                             primary: Colors.deepPurple,
                           ),
                           onPressed: () {
-                            FirebaseFirestore.instance
-                                .collection(widget.user.uid)
-                                .doc(widget.attempt["Module"])
-                                .update({"isEmpty": FieldValue.increment(1)});
-                            FirebaseFirestore.instance
-                                .collection(widget.user.uid)
-                                .doc(widget.attempt["Module"])
-                                .collection("questions")
-                                .add({
+                            Question(<String, dynamic>{
                               "Question": widget.attempt["Questions"]
                                   [currentIndex],
                               "Notes": widget.attempt["Attempts"][currentIndex],
@@ -114,7 +106,9 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                               "Privacy": true,
                               "Owner": widget.user.uid,
                               "FromCommunity": true,
-                            }).then((_) => setState(() {
+                            }, widget.user.uid, widget.attempt["Module"])
+                                .pullToUser(widget.user.uid)
+                                .then((_) => setState(() {
                                       added[currentIndex] = true;
                                     }));
                           },

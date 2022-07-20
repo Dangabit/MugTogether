@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/add_question.dart';
-import 'package:mug_together/screens/bank_module.dart';
-import 'package:mug_together/screens/past_attempts.dart';
-import 'package:mug_together/screens/profile.dart';
-import 'package:mug_together/screens/questionbank.dart';
-import 'package:mug_together/screens/questions.dart';
-import 'package:mug_together/screens/login.dart';
-import 'package:mug_together/screens/quiz.dart';
-import 'package:mug_together/screens/signup.dart';
-import 'package:mug_together/screens/qna.dart';
-import 'package:mug_together/screens/qna_post.dart';
+import 'package:mug_together/screens/myQns/add_question.dart';
+import 'package:mug_together/screens/bank/bank_module.dart';
+import 'package:mug_together/screens/quiz/past_attempts.dart';
+import 'package:mug_together/screens/userAuth/profile.dart';
+import 'package:mug_together/screens/bank/questionbank.dart';
+import 'package:mug_together/screens/myQns/questions.dart';
+import 'package:mug_together/screens/userAuth/login.dart';
+import 'package:mug_together/screens/quiz/quiz.dart';
+import 'package:mug_together/screens/userAuth/signup.dart';
+import 'package:mug_together/screens/qna/qna.dart';
+import 'package:mug_together/screens/qna/qna_post.dart';
 
 class AppRouter {
   /// Generate the route given the RouteSettings.
@@ -32,12 +32,7 @@ class AppRouter {
       case '/questions':
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
-        if (args != null) {
-          return _checkUser(
-              (user) => AddQuestion(data: args as Map, user: user), settings);
-        } else {
-          return _checkUser((user) => AddQuestion(user: user), settings);
-        }
+        return _checkUser((user) => AddQuestion(user: user), settings);
       case '/profile/me':
         return _checkUser((user) => ProfilePage(user: user), settings);
       case '/bank':
