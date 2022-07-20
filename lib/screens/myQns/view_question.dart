@@ -153,6 +153,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                                 MarkdownBody(
                                   data: widget.question.data["Notes"],
                                   selectable: true,
+                                  softLineBreak: true,
                                 ),
                               ],
                             ),
