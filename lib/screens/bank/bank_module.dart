@@ -155,8 +155,11 @@ class _BankModulePage extends State<BankModulePage> {
                                             padding: EdgeInsets.zero,
                                           ),
                                           onPressed: () {
-                                            question
-                                                .pullToUser(widget.user.uid);
+                                            Navigator.pushNamed(
+                                                context, "/questions/add",
+                                                arguments: <String, dynamic>{
+                                                  "Question": question
+                                                });
                                           },
                                           child: const Icon(Icons.download)),
                                     ),
