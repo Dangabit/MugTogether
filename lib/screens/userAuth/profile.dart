@@ -18,7 +18,7 @@ class _ProfilePage extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    profileFuture = ExtendedProfile.getInfo(widget.user);
+    profileFuture = ExtendedProfile.getInfo(widget.user.uid);
   }
 
   @override
@@ -26,6 +26,9 @@ class _ProfilePage extends State<ProfilePage> {
     return FutureBuilder(
         future: profileFuture,
         builder: (context, AsyncSnapshot<ExtendedProfile> snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+          }
           if (snapshot.hasData) {
             return Scaffold(
               backgroundColor: const Color.fromARGB(255, 242, 233, 248),
@@ -85,8 +88,10 @@ class _ProfilePage extends State<ProfilePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditProfile(profile: snapshot.data!)));
+                                  builder: (context) => EditProfile(
+                                        profile: snapshot.data!,
+                                        user: widget.user,
+                                      )));
                         },
                         child: const Text(
                           'Edit Details',

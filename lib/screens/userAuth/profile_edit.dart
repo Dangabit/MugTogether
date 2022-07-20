@@ -4,8 +4,10 @@ import 'package:mug_together/models/extended_profile.dart';
 import 'package:mug_together/widgets/size_config.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key, required this.profile}) : super(key: key);
+  const EditProfile({Key? key, required this.profile, required this.user})
+      : super(key: key);
   final ExtendedProfile profile;
+  final User user;
 
   @override
   State<EditProfile> createState() => _EditProfile();
@@ -22,7 +24,7 @@ class _EditProfile extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.profile.user.displayName!;
+    nameController.text = widget.profile.extraData["Username"];
   }
 
   // Prevent memory leak
@@ -232,10 +234,16 @@ class _EditProfile extends State<EditProfile> {
                     primary: Colors.deepPurple,
                   ),
                   onPressed: () async {
-                    widget.profile
-                        .reverify(passwordController.text, nameController.text,
-                            "", newPassController.text)
-                        .onError<FirebaseAuthException>((error, stackTrace) {
+                    widget.profile.reverify({
+                      "Password": passwordController.text,
+                      "NewPassword": newPassController.text
+                    }, {
+                      "Bio": "",
+                      "Achievements": List.empty(),
+                      "Username": nameController.text,
+                      "PicURL": "",
+                    }, widget.user).onError<FirebaseAuthException>(
+                        (error, stackTrace) {
                       switch (error.code) {
                         case "weak-password":
                           setState(() {
@@ -256,6 +264,10 @@ class _EditProfile extends State<EditProfile> {
                           break;
                       }
                       return null;
+                    }).onError((error, stackTrace) {
+                      setState(() {
+                        _fail = "Invalid permission";
+                      });
                     });
                   },
                   child: const Text(
