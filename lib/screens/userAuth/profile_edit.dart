@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/extended_profile.dart';
-import 'package:mug_together/widgets/size_config.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key, required this.profile, required this.user})
@@ -15,7 +14,9 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfile extends State<EditProfile> {
   // Variables initialisation
+  final picController = TextEditingController();
   final nameController = TextEditingController();
+  final bioController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
@@ -37,7 +38,6 @@ class _EditProfile extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
@@ -73,6 +73,48 @@ class _EditProfile extends State<EditProfile> {
             SizedBox(
               height: currentScreenHeight * 0.05,
             ),
+            // Profile pic url field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Profile Picture URL",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: picController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Profile Pic URL',
+                      prefixIcon: Icon(
+                        Icons.account_circle_outlined,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    validator: null,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: currentScreenHeight * 0.05,
+            ),
+            // Username field
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
@@ -101,7 +143,7 @@ class _EditProfile extends State<EditProfile> {
                       border: InputBorder.none,
                       labelText: 'Username',
                       prefixIcon: Icon(
-                        Icons.account_circle_outlined,
+                        Icons.person_outlined,
                         color: Colors.deepPurple,
                       ),
                     ),
@@ -118,6 +160,47 @@ class _EditProfile extends State<EditProfile> {
             SizedBox(
               height: currentScreenHeight * 0.05,
             ),
+            // Bio field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Bio",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                      controller: bioController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                        border: InputBorder.none,
+                        labelText: 'Bio',
+                        prefixIcon: Icon(
+                          Icons.badge_outlined,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      validator: null),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: currentScreenHeight * 0.05,
+            ),
+            // Update Password field
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
@@ -238,10 +321,10 @@ class _EditProfile extends State<EditProfile> {
                       "Password": passwordController.text,
                       "NewPassword": newPassController.text
                     }, {
-                      "Bio": "",
+                      "Bio": bioController.text,
                       "Achievements": List.empty(),
                       "Username": nameController.text,
-                      "PicURL": "",
+                      "PicURL": picController.text,
                     }, widget.user).onError<FirebaseAuthException>(
                         (error, stackTrace) {
                       switch (error.code) {

@@ -28,6 +28,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenHeight = MediaQuery.of(context).size.height;
     return FutureBuilder(
         future: profileFuture,
         builder: (context, AsyncSnapshot<ExtendedProfile> snapshot) {
@@ -40,78 +41,164 @@ class _ProfilePage extends State<ProfilePage> {
                 title: Text("${profile.extraData["Username"]}'s Profile"),
               ),
               drawer: InAppDrawer.gibDrawer(context, widget.user),
-              body: Column(
-                children: [
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Center(
-                    child: Stack(children: [
-                      _buildImage(),
-                      Positioned(
-                        bottom: 0,
-                        right: 4,
-                        child: _buildEditIcon(
-                          Colors.deepPurple,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Center(
+                      child: Stack(children: [
+                        _buildImage(),
+                        Positioned(
+                          bottom: 0,
+                          right: 4,
+                          child: _buildEditIcon(
+                            Colors.deepPurple,
+                          ),
+                        )
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.user.displayName!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                          ),
                         ),
-                      )
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        profile.extraData["Username"],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
+                        const SizedBox(
+                          height: 4.0,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                        isUser ? widget.user.email! : "",
-                        style: const TextStyle(
-                          color: Colors.grey,
+                        Text(
+                          isUser ? widget.user.email! : "",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
                         ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: currentScreenHeight * 0.05,
+                    ),
+                    SizedBox(
+                      width: 400,
+                      child: Column(
+                        children: [
+                          const Divider(),
+                          SizedBox(
+                            height: currentScreenHeight * 0.05,
+                          ),
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Bio",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            // Insert bio here
+                            child: Text(
+                              profile.extraData["Bio"],
+                              style: const TextStyle(
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: currentScreenHeight * 0.05,
+                          ),
+                          const Divider(),
+                        ],
                       ),
-                    ],
-                  ),
-                  const Spacer(),
-                  isUser
-                      ? Center(
-                          child: SizedBox(
-                            width: 160.0,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.deepPurple),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditProfile(
-                                              profile: profile,
-                                              user: widget.user,
-                                            )));
-                              },
-                              child: const Text(
-                                'Edit Details',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: currentScreenHeight * 0.05,
+                    ),
+                    SizedBox(
+                      width: 400,
+                      child: Column(
+                        children: [
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Achievements",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // Generate icons here
+                                children: List.generate(
+                                  60,
+                                  (index) => Column(
+                                    children: const [
+                                      Icon(Icons.badge),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        )
-                      : const Text(""),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                ],
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: currentScreenHeight * 0.15,
+                    ),
+                    isUser ? Center(
+                      child: SizedBox(
+                        width: 160.0,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.deepPurple),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfile(
+                                          profile: profile,
+                                          user: widget.user,
+                                        )));
+                          },
+                          child: const Text(
+                            'Edit Details',
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ) : const Text(""),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
