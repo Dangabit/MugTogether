@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/myQns/edit_question.dart';
 import 'package:mug_together/utilities/pdf.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in question info
@@ -145,6 +147,9 @@ class _ViewQuestion extends State<ViewQuestion> {
                     textScaleFactor: 1.1,
                     blockSpacing: 5,
                   ),
+                  onTapLink: (text, url, title) {
+                    launchUrlString(url!);
+                  },
                 ),
               ),
             ),
