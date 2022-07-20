@@ -18,9 +18,10 @@ class AppRouter {
   /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+    final Uri uri = Uri.parse(settings.name ?? '');
 
     // Sign up and Log in
-    switch (settings.name) {
+    switch (uri.path) {
       case '/':
         return MaterialPageRoute(
             settings: settings, builder: (context) => const LoginPage());
@@ -31,8 +32,8 @@ class AppRouter {
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
         return _checkUser((user) => AddQuestion(user: user), settings);
-      case '/profile/me':
-        return _checkUser((user) => ProfilePage(user: user), settings);
+      case '/profile':
+        return _checkUser((user) => ProfilePage(user: user, profile: uri.queryParameters["user"]!), settings);
       case '/bank':
         return _checkUser((_) => const QuestionBankPage(), settings);
       case '/bank/module':

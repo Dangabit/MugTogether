@@ -21,7 +21,7 @@ class InAppDrawer {
                 _createDrawerItem(
                   Icons.account_circle_sharp,
                   'My Profile',
-                  () => Navigator.popAndPushNamed(context, '/profile/me'),
+                  () => Navigator.popAndPushNamed(context, '/profile?user=me'),
                 ),
                 _createDrawerItem(
                   Icons.assignment_sharp,

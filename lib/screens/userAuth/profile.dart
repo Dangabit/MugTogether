@@ -5,8 +5,10 @@ import 'package:mug_together/screens/userAuth/profile_edit.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key, required this.user}) : super(key: key);
+  const ProfilePage({Key? key, required this.user, required this.profile})
+      : super(key: key);
   final User user;
+  final String profile;
 
   @override
   State<ProfilePage> createState() => _ProfilePage();
@@ -14,11 +16,14 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePage extends State<ProfilePage> {
   late Future<ExtendedProfile> profileFuture;
+  late bool isUser;
 
   @override
   void initState() {
     super.initState();
-    profileFuture = ExtendedProfile.getInfo(widget.user.uid);
+    isUser = widget.user.uid == "me";
+    profileFuture =
+        ExtendedProfile.getInfo(isUser ? widget.user.uid : widget.profile);
   }
 
   @override
@@ -26,15 +31,13 @@ class _ProfilePage extends State<ProfilePage> {
     return FutureBuilder(
         future: profileFuture,
         builder: (context, AsyncSnapshot<ExtendedProfile> snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-          }
           if (snapshot.hasData) {
+            ExtendedProfile profile = snapshot.data!;
             return Scaffold(
               backgroundColor: const Color.fromARGB(255, 242, 233, 248),
               appBar: AppBar(
                 backgroundColor: Colors.deepPurple,
-                title: Text("${widget.user.displayName}'s Profile"),
+                title: Text("${profile.extraData["Username"]}'s Profile"),
               ),
               drawer: InAppDrawer.gibDrawer(context, widget.user),
               body: Column(
@@ -60,7 +63,7 @@ class _ProfilePage extends State<ProfilePage> {
                   Column(
                     children: [
                       Text(
-                        widget.user.displayName!,
+                        profile.extraData["Username"],
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 24,
@@ -70,7 +73,7 @@ class _ProfilePage extends State<ProfilePage> {
                         height: 4.0,
                       ),
                       Text(
-                        widget.user.email!,
+                        isUser ? widget.user.email! : "",
                         style: const TextStyle(
                           color: Colors.grey,
                         ),
@@ -78,31 +81,33 @@ class _ProfilePage extends State<ProfilePage> {
                     ],
                   ),
                   const Spacer(),
-                  Center(
-                    child: SizedBox(
-                      width: 160.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.deepPurple),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile(
-                                        profile: snapshot.data!,
-                                        user: widget.user,
-                                      )));
-                        },
-                        child: const Text(
-                          'Edit Details',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
+                  isUser
+                      ? Center(
+                          child: SizedBox(
+                            width: 160.0,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.deepPurple),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditProfile(
+                                              profile: profile,
+                                              user: widget.user,
+                                            )));
+                              },
+                              child: const Text(
+                                'Edit Details',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        )
+                      : const Text(""),
                   const SizedBox(
                     height: 20.0,
                   ),
