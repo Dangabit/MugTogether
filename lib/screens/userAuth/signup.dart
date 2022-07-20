@@ -369,7 +369,7 @@ class _SignUpPage extends State<SignUpPage> {
             )
             .then((credential) {
               credential.user!.updateDisplayName(usernameController.text);
-              ExtendedProfile.initUser(credential.user!);
+              ExtendedProfile.initUser(credential.user!, usernameController.text);
               return credential;
             })
             .then((credential) => credential.user?.sendEmailVerification())

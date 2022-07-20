@@ -18,20 +18,23 @@ class ExtendedProfile {
   }
 
   /// Initialising a complete user upon sign up
-  static Future<void> initUser(User user) async {
+  static Future<void> initUser(User user, String username) async {
     final db = FirebaseFirestore.instance;
     return db.runTransaction((transaction) async {
       // Setting up Tags document
-      transaction.set(db.collection(user.uid).doc("Tags"), {});
+      transaction
+          .set<Map<String, dynamic>>(db.collection(user.uid).doc("Tags"), {});
       // Setting up Quiz Attempts document
-      transaction.set(db.collection(user.uid).doc("Quiz Attempts"),
+      transaction.set<Map<String, dynamic>>(
+          db.collection(user.uid).doc("Quiz Attempts"),
           {"AttemptList": List.empty()});
       // Setting up extended info
-      transaction.set(db.collection(user.uid).doc("Extended Info"), {
+      transaction.set<Map<String, dynamic>>(
+          db.collection(user.uid).doc("Extended Info"), {
         "Bio": "",
         "Achievements": List.empty(),
-        "Username": user.displayName,
-        "PicURL": user.photoURL ?? "",
+        "Username": username,
+        "PicURL": "",
       });
     });
   }
