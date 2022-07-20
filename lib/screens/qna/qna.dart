@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/screens/qna/qna_post.dart';
 import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:mug_together/widgets/module_list.dart';
@@ -13,8 +14,6 @@ class QnAPage extends StatefulWidget {
 }
 
 class _QnAPage extends State<QnAPage> {
-  // User? user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     final Data module = Data();
@@ -33,7 +32,15 @@ class _QnAPage extends State<QnAPage> {
             children: [
               ModuleList.createListing(module),
               ElevatedButton.icon(
-                onPressed: () => Navigator.pushNamed(context, '/qna/post'),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => QnaPost(
+                      user: widget.user,
+                      module: module.text!,
+                    ),
+                  ),
+                ),
                 icon: const Icon(
                   Icons.edit_note_outlined,
                 ),

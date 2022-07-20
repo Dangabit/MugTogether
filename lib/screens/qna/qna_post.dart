@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/question.dart';
 
 class QnaPost extends StatefulWidget {
-  const QnaPost({Key? key, required this.user}) : super(key: key);
+  const QnaPost({Key? key, required this.user, required this.module})
+      : super(key: key);
   final User user;
+  final String module;
 
   @override
   State<QnaPost> createState() => _QnaPost();
@@ -29,7 +32,11 @@ class _QnaPost extends State<QnaPost> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // TODO: implement form initial message and question
+              Question.pushToQnA("Initial message to kickstart the discussion",
+                  widget.user.displayName!, widget.module, "Question here");
+            },
             child: const Text(
               "Create Post",
               style: TextStyle(

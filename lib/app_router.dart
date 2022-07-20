@@ -52,8 +52,6 @@ class AppRouter {
         return _checkUser((user) => PastAttempts(user: user), settings);
       case '/qna':
         return _checkUser((user) => QnAPage(user: user), settings);
-      case '/qna/post':
-        return _checkUser((user) => QnaPost(user: user), settings);
       default:
         return _pageNotFound();
     }

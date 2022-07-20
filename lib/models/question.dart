@@ -92,4 +92,20 @@ class Question {
     dupeQn.update("Privacy", (value) => true);
     return Question(dupeQn, newUID, _module).addToDatabase();
   }
+
+  /// Push current question to QnA
+  static Future<void> pushToQnA(
+      String initMessage, String name, String module, String question) {
+    return FirebaseFirestore.instance
+        .collection("QnA")
+        .doc("Lounges")
+        .collection(module)
+        .doc()
+        .set({
+      "Question": question,
+      "Discussion": <String>[initMessage],
+      "Users": <String>[name],
+      "Closure": DateTime.now().add(const Duration(days: 2))
+    });
+  }
 }
