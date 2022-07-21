@@ -137,18 +137,20 @@ class _ViewQuestion extends State<ViewQuestion> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
-                child: MarkdownBody(
-                  data: widget.question.data["Notes"],
-                  selectable: true,
-                  shrinkWrap: true,
-                  softLineBreak: true,
-                  styleSheet: MarkdownStyleSheet(
-                    textScaleFactor: 1.1,
-                    blockSpacing: 5,
+                child: Center(
+                  child: MarkdownBody(
+                    data: widget.question.data["Notes"],
+                    selectable: true,
+                    shrinkWrap: true,
+                    softLineBreak: true,
+                    styleSheet: MarkdownStyleSheet(
+                      textScaleFactor: 1.1,
+                      blockSpacing: 5,
+                    ),
+                    onTapLink: (text, url, title) {
+                      launchUrlString(url!);
+                    },
                   ),
-                  onTapLink: (text, url, title) {
-                    launchUrlString(url!);
-                  },
                 ),
               ),
             ),
