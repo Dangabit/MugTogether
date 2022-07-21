@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:rating_dialog/rating_dialog.dart';
+import 'package:confirm_dialog/confirm_dialog.dart';
 
 class BankModulePage extends StatefulWidget {
   const BankModulePage({Key? key, required this.module, required this.user})
@@ -206,14 +207,23 @@ class _BankModulePage extends State<BankModulePage> {
                                             primary: Colors.deepPurple,
                                             padding: EdgeInsets.zero,
                                           ),
-                                          onPressed: () {
-                                            if (_flagged) {
-                                              return;
-                                            } else {
-                                              question.flagQuestion();
-                                              setState(() {
-                                                _flagged = true;
-                                              });
+                                          onPressed: () async {
+                                            if (await confirm(
+                                              context,
+                                              title: const Text("Confirm"),
+                                              content: const Text(
+                                                  "Would you like to flag this question?"),
+                                              textOK: const Text("Yes"),
+                                              textCancel: const Text("No"),
+                                            )) {
+                                              if (_flagged) {
+                                                return;
+                                              } else {
+                                                question.flagQuestion();
+                                                setState(() {
+                                                  _flagged = true;
+                                                });
+                                              }
                                             }
                                           },
                                           child: const Icon(Icons.flag)),

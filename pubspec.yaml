@@ -46,6 +46,7 @@ dependencies:
   dropdown_search: ^3.0.1
   audioplayers: ^1.0.1
   rating_dialog: ^2.0.4
+  confirm_dialog: ^1.0.1
 
 dev_dependencies:
   integration_test:
