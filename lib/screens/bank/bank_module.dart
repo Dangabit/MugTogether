@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 class BankModulePage extends StatefulWidget {
   const BankModulePage({Key? key, required this.module, required this.user})
@@ -15,6 +16,8 @@ class BankModulePage extends StatefulWidget {
 
 class _BankModulePage extends State<BankModulePage> {
   late Future<QuerySnapshot<Map>> allQuestions;
+  late bool _flagged;
+  late bool _rated;
 
   @override
   void initState() {
@@ -25,6 +28,8 @@ class _BankModulePage extends State<BankModulePage> {
         .where("Owner", isNotEqualTo: widget.user.uid)
         .where("Privacy", isEqualTo: false)
         .get();
+    _flagged = false;
+    _rated = false;
   }
 
   @override
@@ -82,6 +87,30 @@ class _BankModulePage extends State<BankModulePage> {
                   itemBuilder: (context, index) {
                     Question question = Question.getFromDatabase(docslist[index]
                         as QueryDocumentSnapshot<Map<String, dynamic>>);
+                    final _dialog = RatingDialog(
+                      title: const Text(
+                        "Difficulty Rating",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      message: const Text(
+                        "Select a number of stars as your difficulty rating of the question.\n(You can only submit once)",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      enableComment: false,
+                      submitButtonText: "Submit",
+                      onSubmitted: (response) {
+                        question.rateQuestion(response.rating);
+                        setState(() {
+                          _rated = true;
+                        });
+                      },
+                    );
+
                     return Column(
                       children: [
                         const SizedBox(
@@ -148,7 +177,7 @@ class _BankModulePage extends State<BankModulePage> {
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message: "Click to add this question",
+                                      message: "Add question",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
@@ -162,6 +191,58 @@ class _BankModulePage extends State<BankModulePage> {
                                                 });
                                           },
                                           child: const Icon(Icons.download)),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  SizedBox(
+                                    height: 30.0,
+                                    width: 40.0,
+                                    child: Tooltip(
+                                      message: "Flag question",
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.deepPurple,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          onPressed: () {
+                                            if (_flagged) {
+                                              return;
+                                            } else {
+                                              question.flagQuestion();
+                                              setState(() {
+                                                _flagged = true;
+                                              });
+                                            }
+                                          },
+                                          child: const Icon(Icons.flag)),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  SizedBox(
+                                    height: 30.0,
+                                    width: 40.0,
+                                    child: Tooltip(
+                                      message: "Rate difficulty",
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.deepPurple,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          onPressed: () {
+                                            _rated
+                                                ? null
+                                                : showDialog(
+                                                    context: context,
+                                                    barrierDismissible: true,
+                                                    builder: (context) =>
+                                                        _dialog,
+                                                  );
+                                          },
+                                          child: const Icon(Icons.star)),
                                     ),
                                   ),
                                   const SizedBox(

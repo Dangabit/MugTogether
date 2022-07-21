@@ -45,6 +45,7 @@ dependencies:
   http: ^0.13.4
   dropdown_search: ^3.0.1
   audioplayers: ^1.0.1
+  rating_dialog: ^2.0.4
 
 dev_dependencies:
   integration_test:
