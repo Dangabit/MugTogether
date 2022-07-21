@@ -210,6 +210,9 @@ class _BankModulePage extends State<BankModulePage> {
                                             padding: EdgeInsets.zero,
                                           ),
                                           onPressed: () async {
+                                            if (_flagged) {
+                                              return;
+                                            }
                                             if (await confirm(
                                               context,
                                               title: const Text("Confirm"),
@@ -218,14 +221,10 @@ class _BankModulePage extends State<BankModulePage> {
                                               textOK: const Text("Yes"),
                                               textCancel: const Text("No"),
                                             )) {
-                                              if (_flagged) {
-                                                return;
-                                              } else {
-                                                question.flagQuestion();
-                                                setState(() {
-                                                  _flagged = true;
-                                                });
-                                              }
+                                              question.flagQuestion();
+                                              setState(() {
+                                                _flagged = true;
+                                              });
                                             }
                                           },
                                           child: const Icon(Icons.flag)),
