@@ -215,26 +215,26 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 40.0,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Privatise question? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          widget.question == null
-                              ? Checkbox(
-                                  activeColor: Colors.deepPurple,
-                                  splashRadius: 20.0,
-                                  value: privacy,
-                                  onChanged: (newValue) => setState(() {
-                                        privacy = newValue!;
-                                      }))
-                              : const Text(""),
-                        ],
-                      ),
+                      widget.question == null
+                          ? Row(
+                              children: [
+                                const Text(
+                                  "Privatise question? ",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Checkbox(
+                                    activeColor: Colors.deepPurple,
+                                    splashRadius: 20.0,
+                                    value: privacy,
+                                    onChanged: (newValue) => setState(() {
+                                          privacy = newValue!;
+                                        })),
+                              ],
+                            )
+                          : const Text(""),
                     ],
                   ),
                   const SizedBox(
