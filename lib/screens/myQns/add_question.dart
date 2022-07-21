@@ -71,30 +71,30 @@ class _AddQuestion extends State<AddQuestion> {
                         ),
                       ),
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: TextFormField(
-                              enabled: questionController.text.isEmpty
-                                  ? true
-                                  : false,
-                              controller: questionController,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 20),
-                                border: InputBorder.none,
-                                hintText: 'Input your question',
-                                prefixIcon: Icon(
-                                  Icons.question_mark_outlined,
-                                  color: Colors.deepPurple,
-                                ),
-                              ),
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Question cannot be empty';
-                                }
-                                return null;
-                              })),
+                        padding: const EdgeInsets.only(left: 5),
+                        child: TextFormField(
+                          key: const Key("questionTextField"),
+                          enabled: questionController.text.isEmpty,
+                          controller: questionController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20),
+                            border: InputBorder.none,
+                            hintText: 'Input your question',
+                            prefixIcon: Icon(
+                              Icons.question_mark_outlined,
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Question cannot be empty';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -117,6 +117,7 @@ class _AddQuestion extends State<AddQuestion> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: TextFormField(
+                          key: const Key("notesTextField"),
                           controller: pointersController,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
@@ -153,6 +154,7 @@ class _AddQuestion extends State<AddQuestion> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: TextFormField(
+                          key: const Key("tagsTextField"),
                           controller: tagsController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20),
@@ -184,6 +186,7 @@ class _AddQuestion extends State<AddQuestion> {
                                   color: Colors.grey[300],
                                 ),
                                 child: DropdownSearch(
+                                  key: const Key("moduleDropdown"),
                                   popupBackgroundColor: Colors.grey[300],
                                   enabled: false,
                                   selectedItem: module.text,
@@ -214,12 +217,16 @@ class _AddQuestion extends State<AddQuestion> {
                             ),
                           ),
                           Checkbox(
-                              activeColor: Colors.deepPurple,
-                              splashRadius: 20.0,
-                              value: privacy,
-                              onChanged: (newValue) => setState(() {
-                                    privacy = newValue!;
-                                  })),
+                            key: const Key("privacyCheckbox"),
+                            activeColor: Colors.deepPurple,
+                            splashRadius: 20.0,
+                            value: privacy,
+                            onChanged: (newValue) => setState(
+                              () {
+                                privacy = newValue!;
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -236,6 +243,7 @@ class _AddQuestion extends State<AddQuestion> {
                       Tooltip(
                         message: "Click to save",
                         child: ElevatedButton(
+                          key: const Key("saveButton"),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.deepPurple,
                           ),

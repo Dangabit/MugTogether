@@ -204,6 +204,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                                 Tooltip(
                                   message: "Add new question entry",
                                   child: ElevatedButton(
+                                    key: const Key("addQnButton"),
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.deepPurple,
                                         side: const BorderSide(

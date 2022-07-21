@@ -78,6 +78,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - integration_test/credentials.json
     - assets/images/
     - assets/audio/
 
