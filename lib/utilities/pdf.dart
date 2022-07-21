@@ -1,5 +1,8 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:html';
+import 'dart:io' as io;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:path_provider/path_provider.dart';
@@ -7,15 +10,16 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class PDFcreator {
-  static Future<File> createPDF(Question question, String name) async {
+  static Future<void> createPDF(Question question, String name) async {
     final pdf = pw.Document();
     final image =
-        (await rootBundle.load("assets/images/logo3.png")).buffer.asUint8List();
+        (await rootBundle.load("assets/images/logo-nobg.png")).buffer.asUint8List();
     pdf.addPage(pw.Page(
         build: (context) {
           return pw.Column(children: [
             pw.Center(child: pw.Image(pw.MemoryImage(image))),
             pw.Center(child: pw.Text("MugTogether")),
+            pw.SizedBox(height: 1.0),
             pw.Text(question.data["Question"], textScaleFactor: 2.0),
             pw.Container(
                 child: pw.Text(question.data["Notes"]),
@@ -25,8 +29,18 @@ class PDFcreator {
         },
         pageFormat: PdfPageFormat.a4));
     return pdf.save().then((byte) async {
-      final output = await getTemporaryDirectory();
-      return File('${output.path}/$name.pdf').writeAsBytes(byte);
+      if (kIsWeb) {
+        AnchorElement(
+            href:
+                "data:application/octet-stream;charset=utf-16le;base64,${base64Encode(byte)}")
+          ..setAttribute("download", "$name.pdf")
+          ..click();
+      } else if (defaultTargetPlatform == TargetPlatform.android) {
+        final output = (await getExternalStorageDirectory())!;
+        io.File('${output.path}/$name.pdf').writeAsBytes(byte);
+      } else {
+        throw Exception("Platform is unsupported");
+      }
     });
   }
 }
