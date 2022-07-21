@@ -38,32 +38,35 @@ class _SharedQuestion extends State<SharedQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: questionFuture,
-      builder: (context, AsyncSnapshot<Question> snapshot) {
-        if (snapshot.hasData) {
-          MarkdownBody markdown = MarkdownBody(
-            data: snapshot.data?.data["Notes"],
-            selectable: true,
-            shrinkWrap: true,
-            softLineBreak: true,
-            styleSheet: MarkdownStyleSheet(
-              textScaleFactor: 1.1,
-              blockSpacing: 5,
-            ),
-            onTapLink: (text, url, title) {
-              launchUrlString(url!);
-            },
-          );
-          notesController.text = markdown.data;
-          return Scaffold(
-              backgroundColor: const Color.fromARGB(255, 242, 233, 248),
-              appBar: AppBar(
-                backgroundColor: Colors.deepPurple,
-                title: const Text("Add Question"),
-                automaticallyImplyLeading: false,
-              ),
-              body: SingleChildScrollView(
+    return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 242, 233, 248),
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurple,
+          title: const Text("Add Question"),
+          automaticallyImplyLeading: false,
+        ),
+        body: FutureBuilder(
+          future: questionFuture,
+          builder: (context, AsyncSnapshot<Question> snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+            }
+            if (snapshot.hasData) {
+              MarkdownBody markdown = MarkdownBody(
+                data: snapshot.data?.data["Notes"],
+                selectable: true,
+                shrinkWrap: true,
+                softLineBreak: true,
+                styleSheet: MarkdownStyleSheet(
+                  textScaleFactor: 1.1,
+                  blockSpacing: 5,
+                ),
+                onTapLink: (text, url, title) {
+                  launchUrlString(url!);
+                },
+              );
+              notesController.text = markdown.data;
+              return SingleChildScrollView(
                   child: Column(
                 children: [
                   const SizedBox(
@@ -239,19 +242,9 @@ class _SharedQuestion extends State<SharedQuestion> {
                         primary: Colors.deepPurple,
                       ),
                       onPressed: () {
-                        Question question = Question(<String, dynamic>{
-                          "Question": snapshot.data?.data["Question"],
-                          "Notes": snapshot.data?.data["Notes"],
-                          "Module": snapshot.data?.data["Module"],
-                          "LastUpdate": DateTime.now().toString(),
-                          "Tags": List.empty(),
-                          "Importance": importance,
-                          "Privacy": false,
-                          "Owner": widget.user.uid,
-                          "FromCommunity": true,
-                        }, widget.user.uid, snapshot.data?.data["Module"]);
-                        question.addToDatabase().then((_) =>
-                            Navigator.pushReplacementNamed(
+                        snapshot.data!
+                            .pullToUser(widget.user.uid, notesController.text)
+                            .then((_) => Navigator.pushReplacementNamed(
                                 context, "/questions"));
                       },
                       child: const Text(
@@ -264,11 +257,15 @@ class _SharedQuestion extends State<SharedQuestion> {
                     ),
                   ),
                 ],
-              )));
-        } else {
-          return const CircularProgressIndicator();
-        }
-      },
-    );
+              ));
+            } else {
+              if (snapshot.connectionState == ConnectionState.done) {
+                // TODO: Format this abit, thank you
+                return const Text("This question has been deleted");
+              }
+              return const CircularProgressIndicator();
+            }
+          },
+        ));
   }
 }
