@@ -178,7 +178,7 @@ class _BankModulePage extends State<BankModulePage> {
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message: "Add question",
+                                      message: "View & add question",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
@@ -201,7 +201,9 @@ class _BankModulePage extends State<BankModulePage> {
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message: "Flag question",
+                                      message: !_flagged
+                                          ? "Flag question"
+                                          : "Already flagged",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
@@ -236,7 +238,9 @@ class _BankModulePage extends State<BankModulePage> {
                                     height: 30.0,
                                     width: 40.0,
                                     child: Tooltip(
-                                      message: "Rate difficulty",
+                                      message: !_rated
+                                          ? "Rate difficulty"
+                                          : "Already rated",
                                       child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             primary: Colors.deepPurple,
