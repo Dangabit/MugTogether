@@ -124,7 +124,8 @@ class _AddQuestion extends State<AddQuestion> {
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 30),
                             border: InputBorder.none,
-                            hintText: 'Input any notes (Multiline) (Optional)',
+                            hintText:
+                                'Input any notes (Multiline) (Markdown supported) (Optional)',
                             prefixIcon: Icon(
                               Icons.notes_outlined,
                               color: Colors.deepPurple,
