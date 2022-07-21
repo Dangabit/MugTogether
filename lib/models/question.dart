@@ -106,7 +106,7 @@ class Question {
   }
 
   /// Rate the question
-  Future<void> rateQuestion(int rating) {
+  Future<void> rateQuestion(double rating) {
     return FirebaseFirestore.instance
         .collection(_uid)
         .doc(_module)
