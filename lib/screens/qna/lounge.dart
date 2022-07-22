@@ -36,18 +36,26 @@ class _Lounge extends State<Lounge> {
         backgroundColor: Colors.deepPurple,
         title: Text("QnA Lounge (" + widget.module + ")"),
         leading: BackButton(onPressed: () {
-          Navigator.pop(context);
+          Navigator.pushReplacementNamed(
+            context,
+            "/qna",
+          );
         }),
       ),
       body: FutureBuilder(
         future: allDiscussions,
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data!.size != 0) {
-              return Column(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    height: 40,
+                    padding: const EdgeInsets.only(left: 10.0),
                     child: ElevatedButton.icon(
                       onPressed: () => Navigator.push(
                         context,
@@ -67,18 +75,22 @@ class _Lounge extends State<Lounge> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 200,
-                      child: _generateListView(snapshot.data!.docs
-                          as List<QueryDocumentSnapshot<Map<String, dynamic>>>),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return const Text("No discussions yet...");
-            }
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Divider(
+                  color: Colors.grey,
+                ),
+                snapshot.data!.size != 0
+                    ? Expanded(
+                        child: _generateListView(snapshot.data!.docs as List<
+                            QueryDocumentSnapshot<Map<String, dynamic>>>),
+                      )
+                    : const Expanded(
+                        child: Center(child: Text("No discussions yet..."))),
+              ],
+            );
           } else {
             return const CircularProgressIndicator();
           }
@@ -89,17 +101,24 @@ class _Lounge extends State<Lounge> {
 
   ListView _generateListView(
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docsList) {
-    return ListView.builder(
+    return ListView.separated(
       itemBuilder: ((context, index) {
-        return _discussionTile(Discussion.getFromDatabase(docsList[index]));
+        return _discussionTile(
+            Discussion.getFromDatabase(docsList[index]), index);
       }),
       itemCount: docsList.length,
+      separatorBuilder: (context, index) {
+        return const Divider(
+          color: Colors.grey,
+        );
+      },
     );
   }
 
-  ListTile _discussionTile(Discussion discussion) {
+  ListTile _discussionTile(Discussion discussion, int index) {
     return ListTile(
-      title: Text(discussion.data["Question"]),
+      title: Text("Room " + (index + 1).toString()),
+      subtitle: Text(discussion.data["Question"]),
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute<void>(
