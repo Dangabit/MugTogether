@@ -50,8 +50,15 @@ class _DiscussionRoom extends State<DiscussionRoom> {
     return ListView.builder(
         itemBuilder: ((context, index) {
           return ListTile(
-            title: discussion.data["Discussion"][index],
-            subtitle: discussion.data["Users"][index],
+            title: Text(discussion.data["Discussion"][index]),
+            subtitle: TextButton(
+              // To be tested when merged with F4
+              onPressed: () {
+                Navigator.pushNamed(context, "/profile",
+                    arguments: discussion.data["UserID"][index]);
+              },
+              child: Text(discussion.data["Users"][index]),
+            ),
           );
         }),
         itemCount: (discussion.data["Users"] as List).length);

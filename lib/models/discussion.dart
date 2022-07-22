@@ -13,7 +13,7 @@ class Discussion {
     return Discussion(doc.data()!, doc.id);
   }
 
-  static Future<void> create(String initMessage, String name, String module, String question) {
+  static Future<void> create(String initMessage, String name, String uid, String module, String question) {
     return FirebaseFirestore.instance
         .collection("QnA")
         .doc("Lounges")
@@ -23,6 +23,7 @@ class Discussion {
       "Question": question,
       "Discussion": <String>[initMessage],
       "Users": <String>[name],
+      "UserID": <String>[uid],
       "Created": DateTime.now()
     });
   }

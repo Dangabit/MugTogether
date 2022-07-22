@@ -95,8 +95,8 @@ class Question {
   }
 
   /// Push current question to QnA
-  Future<void> pushToQnA(String initMessage) {
+  Future<void> pushToQnA(String initMessage, String name) {
     return Discussion.create(
-        initMessage, data["Owner"], data["Module"], data["Question"]);
+        initMessage, name, data["Owner"], data["Module"], data["Question"]);
   }
 }
