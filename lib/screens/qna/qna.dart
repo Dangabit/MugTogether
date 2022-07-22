@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/screens/qna/qna_post.dart';
+import 'package:mug_together/screens/qna/lounge.dart';
 import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:mug_together/widgets/module_list.dart';
@@ -14,10 +14,10 @@ class QnAPage extends StatefulWidget {
 }
 
 class _QnAPage extends State<QnAPage> {
+  final Data module = Data();
+
   @override
   Widget build(BuildContext context) {
-    final Data module = Data();
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -25,35 +25,64 @@ class _QnAPage extends State<QnAPage> {
         backgroundColor: Colors.deepPurple,
       ),
       drawer: InAppDrawer.gibDrawer(context, widget.user),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ModuleList.createListing(module),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => QnaPost(
-                      user: widget.user,
-                      module: module.text!,
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 20.0,
+            ),
+            Wrap(
+              children: const [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text(
+                    "Begin by choosing your desired module! 😃",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                icon: const Icon(
-                  Icons.edit_note_outlined,
-                ),
-                label: const Text("Start a post"),
+              ],
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30.0,
+                vertical: 10.0,
+              ),
+              child: ModuleList.createListing(module),
+            ),
+            Tooltip(
+              message: "Next!",
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.deepPurple,
                 ),
+                onPressed: _submit,
+                child: const Icon(Icons.arrow_right),
               ),
-            ],
-          ),
-          const Text("To be implemented"),
-        ],
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _submit() {
+    if (module.text != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => Lounge(
+            user: widget.user,
+            module: module.text!,
+          ),
+        ),
+      );
+    }
   }
 }

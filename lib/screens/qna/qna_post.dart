@@ -48,6 +48,7 @@ class _QnaPost extends State<QnaPost> {
         ],
       ),
       body: const Center(child: Text("To be implemented")),
+      //TODO: Implement posting field and details
     );
   }
 }
