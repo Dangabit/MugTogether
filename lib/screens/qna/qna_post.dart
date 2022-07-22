@@ -33,7 +33,7 @@ class _QnaPost extends State<QnaPost> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              // TODO: implement form initial message and question
+              // TODO: Update initmsg & qn, check form too
               Discussion.create("initial message", widget.user.displayName!, widget.user.uid,
                   widget.module, "Qn");
             },

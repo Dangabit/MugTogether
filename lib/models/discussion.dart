@@ -13,7 +13,9 @@ class Discussion {
     return Discussion(doc.data()!, doc.id);
   }
 
-  static Future<void> create(String initMessage, String name, String uid, String module, String question) {
+  /// Create a discussion
+  static Future<void> create(String initMessage, String name, String uid,
+      String module, String question) {
     return FirebaseFirestore.instance
         .collection("QnA")
         .doc("Lounges")
@@ -36,5 +38,18 @@ class Discussion {
         .collection(data["Module"])
         .doc(_id)
         .snapshots();
+  }
+
+  /// Add a message
+  Future<void> update(String message, String name, String uid) {
+    (data["Users"] as List).add(name);
+    (data["Discussion"] as List).add(message);
+    (data["UserID"] as List).add(uid);
+    return FirebaseFirestore.instance
+        .collection("QnA")
+        .doc("Lounges")
+        .collection(data["Module"])
+        .doc(_id)
+        .update(data);
   }
 }

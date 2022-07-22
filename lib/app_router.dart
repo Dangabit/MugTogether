@@ -11,7 +11,6 @@ import 'package:mug_together/screens/userAuth/login.dart';
 import 'package:mug_together/screens/quiz/quiz.dart';
 import 'package:mug_together/screens/userAuth/signup.dart';
 import 'package:mug_together/screens/qna/qna.dart';
-import 'package:mug_together/screens/qna/qna_post.dart';
 
 class AppRouter {
   /// Generate the route given the RouteSettings.
