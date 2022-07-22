@@ -26,7 +26,8 @@ class Discussion {
       "Discussion": <String>[initMessage],
       "Users": <String>[name],
       "UserID": <String>[uid],
-      "Created": DateTime.now()
+      "Created": DateTime.now(),
+      "Module": module
     };
     return docref.set(data).then((_) => Discussion(data, docref.id));
   }

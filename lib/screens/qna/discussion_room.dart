@@ -14,6 +14,14 @@ class DiscussionRoom extends StatefulWidget {
 }
 
 class _DiscussionRoom extends State<DiscussionRoom> {
+  late Stream<DocumentSnapshot<Map<String, dynamic>>> discussionStream;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.discussion.dataStream();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +37,7 @@ class _DiscussionRoom extends State<DiscussionRoom> {
         children: [
           Text(widget.discussion.data["Question"]),
           StreamBuilder(
-            stream: widget.discussion.dataStream(),
+            stream: discussionStream,
             builder: (context,
                 AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
                     snapshot) {
