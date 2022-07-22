@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mug_together/models/question.dart';
 
 class EditQuestion extends StatefulWidget {
-  const EditQuestion({Key? key, required this.question})
-      : super(key: key);
+  const EditQuestion({Key? key, required this.question}) : super(key: key);
   final Question question;
 
   @override
@@ -86,7 +85,7 @@ class _EditQuestion extends State<EditQuestion> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
+                  color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(),
                 ),
@@ -94,6 +93,7 @@ class _EditQuestion extends State<EditQuestion> {
                   padding: const EdgeInsets.only(left: 10.0),
                   child: TextField(
                     key: const Key("editQnTF"),
+                    enabled: false,
                     controller: questionController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -151,7 +151,8 @@ class _EditQuestion extends State<EditQuestion> {
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.symmetric(vertical: 30),
                       border: InputBorder.none,
-                      hintText: 'Input any notes (Multiline) (Optional)',
+                      hintText:
+                          'Input any notes (Multiline) (Markdown supported) (Optional)',
                     ),
                   ),
                 ),

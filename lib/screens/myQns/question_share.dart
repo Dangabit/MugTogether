@@ -259,9 +259,42 @@ class _SharedQuestion extends State<SharedQuestion> {
                 ],
               ));
             } else {
+              // Question is deleted
               if (snapshot.connectionState == ConnectionState.done) {
-                // TODO: Format this abit, thank you
-                return const Text("This question has been deleted");
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "This question has been deleted",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.purple, width: 2),
+                          color: Colors.deepPurple,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          tooltip: "Back to MyQuestions",
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, "/questions");
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                          ),
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                );
               }
               return const CircularProgressIndicator();
             }
