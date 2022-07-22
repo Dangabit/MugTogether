@@ -54,7 +54,7 @@ void main() {
       // Check for validation
       await tester.tap(sb);
       await tester.pumpAndSettle();
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 2));
       expect(find.text("Question cannot be empty"), findsOneWidget);
 
       // Create a generic question
@@ -70,9 +70,8 @@ void main() {
       await tester.enterText(ttf, "secret, get rich");
       await tester.ensureVisible(md);
       await tester.tap(md);
-      await Future.delayed(const Duration(seconds: 5));
-      Finder mod = find.text("BPM1705");
-      await tester.ensureVisible(mod);
+      await Future.delayed(const Duration(seconds: 2));
+      Finder mod = find.text("AC5001");
       await tester.tap(mod);
       await tester.ensureVisible(pcb);
       await tester.tap(pcb);
@@ -82,6 +81,38 @@ void main() {
       await Future.delayed(const Duration(seconds: 1));
       expect(find.text("How do I become a millionaire in 5 steps?"),
           findsOneWidget);
+
+      // View the question
+      Finder vb = find.text("View");
+      await tester.tap(vb);
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 3));
+      expect(find.text("secret"), findsOneWidget);
+      expect(find.text("This question is private"), findsOneWidget);
+
+      // Edit the question
+      Finder eb = find.byKey(const Key("editButton"));
+      await tester.tap(eb);
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 3));
+      expect(find.text("Edit Question"), findsOneWidget);
+
+      // Test for changes
+      TextField editQ = find
+          .byKey(const Key("editQnTF"))
+          .evaluate()
+          .first
+          .widget as TextField;
+      editQ.controller!.text = "How do I lose friends in 5 steps?";
+      await tester.tap(find.byKey(const Key("editQnTF")));
+      await tester.pumpAndSettle();
+      expect(find.text("How do I lose friends in 5 steps?"), findsOneWidget);
+
+      // Delete the question
+      await tester.tap(find.text("Delete"));
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 3));
+      expect(find.text("Question cannot be empty"), findsOneWidget);
     });
   });
 }
