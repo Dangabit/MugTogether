@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/myQns/add_question.dart';
 import 'package:mug_together/screens/bank/bank_module.dart';
+import 'package:mug_together/screens/qna/lounge.dart';
 import 'package:mug_together/screens/quiz/past_attempts.dart';
 import 'package:mug_together/screens/userAuth/profile.dart';
 import 'package:mug_together/screens/bank/questionbank.dart';
@@ -52,6 +53,15 @@ class AppRouter {
         return _checkUser((user) => PastAttempts(user: user), settings);
       case '/qna':
         return _checkUser((user) => QnAPage(user: user), settings);
+      case '/qna/module':
+      if (args != null) {
+        return _checkUser(
+            (user) => Lounge(user: user, module: args as String),
+            settings);
+      } else {
+        return _checkUser((user) => QnAPage(user: user),
+            const RouteSettings(name: '/qna'));
+      }
       default:
         return _pageNotFound();
     }

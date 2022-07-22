@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mug_together/models/discussion.dart';
 
 class Question {
   late Map<String, dynamic> data;
@@ -94,18 +95,8 @@ class Question {
   }
 
   /// Push current question to QnA
-  static Future<void> pushToQnA(
-      String initMessage, String name, String module, String question) {
-    return FirebaseFirestore.instance
-        .collection("QnA")
-        .doc("Lounges")
-        .collection(module)
-        .doc()
-        .set({
-      "Question": question,
-      "Discussion": <String>[initMessage],
-      "Users": <String>[name],
-      "Closure": DateTime.now().add(const Duration(days: 2))
-    });
+  Future<void> pushToQnA(String initMessage) {
+    return Discussion.create(
+        initMessage, data["Owner"], data["Module"], data["Question"]);
   }
 }

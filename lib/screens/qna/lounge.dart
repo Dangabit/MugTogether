@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mug_together/models/discussion.dart';
 import 'package:mug_together/screens/qna/qna_post.dart';
 import 'package:mug_together/screens/qna/discussion_room.dart';
 
@@ -14,11 +16,16 @@ class Lounge extends StatefulWidget {
 }
 
 class _Lounge extends State<Lounge> {
-  Widget qnsTile(String qns) {
-    return ListTile(
-      title: Text(qns),
-      onTap: null,
-    );
+  late Future<QuerySnapshot<Map>> allDiscussions;
+
+  @override
+  void initState() {
+    super.initState();
+    allDiscussions = FirebaseFirestore.instance
+        .collection("QnA")
+        .doc("Lounges")
+        .collection(widget.module)
+        .get();
   }
 
   @override
@@ -32,42 +39,70 @@ class _Lounge extends State<Lounge> {
           Navigator.pop(context);
         }),
       ),
-      body: Column(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton.icon(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => QnaPost(
-                    user: widget.user,
-                    module: widget.module,
-                  ),
-                ),
-              ),
-              icon: const Icon(
-                Icons.edit_note_outlined,
-              ),
-              label: const Text("Start a post"),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.deepPurple,
-              ),
-            ),
-          ),
-          //TODO: Implement display of discussion lounges
-          ElevatedButton(
-              onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => DiscussionRoom(
-                        user: widget.user,
-                        module: widget.module,
+      body: FutureBuilder(
+        future: allDiscussions,
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.size != 0) {
+              return Column(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton.icon(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) => QnaPost(
+                            user: widget.user,
+                            module: widget.module,
+                          ),
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.edit_note_outlined,
+                      ),
+                      label: const Text("Start a post"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.deepPurple,
                       ),
                     ),
                   ),
-              child: const Text("Temp button to discussion room"))
-        ],
+                  _generateListView(snapshot.data!.docs
+                      as List<QueryDocumentSnapshot<Map<String, dynamic>>>),
+                ],
+              );
+            } else {
+              return const Text("No discussions yet...");
+            }
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
+    );
+  }
+
+  ListView _generateListView(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docsList) {
+    return ListView.builder(
+      itemBuilder: ((context, index) {
+        return _discussionTile(Discussion.getFromDatabase(docsList[index]));
+      }),
+      itemCount: docsList.length,
+    );
+  }
+
+  ListTile _discussionTile(Discussion discussion) {
+    return ListTile(
+      title: discussion.data["Question"],
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => DiscussionRoom(
+            user: widget.user,
+            discussion: discussion,
+          ),
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/models/question.dart';
+import 'package:mug_together/models/discussion.dart';
 
 class QnaPost extends StatefulWidget {
   const QnaPost({Key? key, required this.user, required this.module})
@@ -34,8 +34,8 @@ class _QnaPost extends State<QnaPost> {
           TextButton(
             onPressed: () {
               // TODO: implement form initial message and question
-              Question.pushToQnA("Initial message to kickstart the discussion",
-                  widget.user.displayName!, widget.module, "Question here");
+              Discussion.create("initial message", widget.user.displayName!,
+                  widget.module, "Qn");
             },
             child: const Text(
               "Create Post",
@@ -48,7 +48,8 @@ class _QnaPost extends State<QnaPost> {
         ],
       ),
       body: const Center(child: Text("To be implemented")),
-      //TODO: Implement posting field and details
+      // TODO: Implement posting field and details
+      // Need a field for question and initial message
     );
   }
 }
