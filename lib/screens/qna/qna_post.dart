@@ -36,13 +36,15 @@ class _QnaPost extends State<QnaPost> {
             onPressed: () {
               // TODO: Update initmsg & qn, check form too
               Discussion.create("initial message", widget.user.displayName!,
-                  widget.user.uid, widget.module, "Qn");
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => QnaPost(
-                  user: widget.user,
-                  module: widget.module,
-                ),
-              );
+                      widget.user.uid, widget.module, "Qn")
+                  .then((discussion) => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => DiscussionRoom(
+                          user: widget.user,
+                          discussion: discussion,
+                        ),
+                      )));
             },
             child: const Text(
               "Create Post",

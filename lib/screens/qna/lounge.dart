@@ -43,12 +43,12 @@ class _Lounge extends State<Lounge> {
         future: allDiscussions,
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton.icon(
+            if (snapshot.data!.size != 0) {
+              return Column(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton.icon(
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute<void>(
@@ -66,18 +66,19 @@ class _Lounge extends State<Lounge> {
                         primary: Colors.deepPurple,
                       ),
                     ),
-                  ],
-                ),
-                snapshot.data!.size != 0
-                    ? _generateListView(snapshot.data!.docs
-                        as List<QueryDocumentSnapshot<Map<String, dynamic>>>)
-                    : const Expanded(
-                        child: Center(
-                          child: Text("No discussions yet..."),
-                        ),
-                      ),
-              ],
-            );
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 200,
+                      child: _generateListView(snapshot.data!.docs
+                          as List<QueryDocumentSnapshot<Map<String, dynamic>>>),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return const Text("No discussions yet...");
+            }
           } else {
             return const CircularProgressIndicator();
           }
@@ -98,7 +99,7 @@ class _Lounge extends State<Lounge> {
 
   ListTile _discussionTile(Discussion discussion) {
     return ListTile(
-      title: discussion.data["Question"],
+      title: Text(discussion.data["Question"]),
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute<void>(

@@ -76,7 +76,7 @@ class _QnAPage extends State<QnAPage> {
       Navigator.pushNamed(
         context,
         "/qna/module",
-        arguments : module.text
+        arguments: module.text,
       );
     }
   }
