@@ -43,12 +43,12 @@ class _Lounge extends State<Lounge> {
         future: allDiscussions,
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data!.size != 0) {
-              return Column(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton.icon(
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute<void>(
@@ -66,14 +66,18 @@ class _Lounge extends State<Lounge> {
                         primary: Colors.deepPurple,
                       ),
                     ),
-                  ),
-                  _generateListView(snapshot.data!.docs
-                      as List<QueryDocumentSnapshot<Map<String, dynamic>>>),
-                ],
-              );
-            } else {
-              return const Text("No discussions yet...");
-            }
+                  ],
+                ),
+                snapshot.data!.size != 0
+                    ? _generateListView(snapshot.data!.docs
+                        as List<QueryDocumentSnapshot<Map<String, dynamic>>>)
+                    : const Expanded(
+                        child: Center(
+                          child: Text("No discussions yet..."),
+                        ),
+                      ),
+              ],
+            );
           } else {
             return const CircularProgressIndicator();
           }
