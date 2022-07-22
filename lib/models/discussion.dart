@@ -14,20 +14,21 @@ class Discussion {
   }
 
   /// Create a discussion
-  static Future<void> create(String initMessage, String name, String uid,
+  static Future<Discussion> create(String initMessage, String name, String uid,
       String module, String question) {
-    return FirebaseFirestore.instance
+    DocumentReference docref = FirebaseFirestore.instance
         .collection("QnA")
         .doc("Lounges")
         .collection(module)
-        .doc()
-        .set({
+        .doc();
+    Map<String, dynamic> data = {
       "Question": question,
       "Discussion": <String>[initMessage],
       "Users": <String>[name],
       "UserID": <String>[uid],
       "Created": DateTime.now()
-    });
+    };
+    return docref.set(data).then((_) => Discussion(data, docref.id));
   }
 
   /// Retrieve a stream for realtime updates
