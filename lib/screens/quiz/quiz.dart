@@ -20,6 +20,21 @@ class _QuizPage extends State<QuizPage> {
   double _noOfQns = 1;
   bool _timerCheck = false;
   double _countdown = 10;
+  late final TextEditingController codeController;
+  late bool _validate;
+
+  @override
+  void initState() {
+    super.initState();
+    codeController = TextEditingController();
+    _validate = false;
+  }
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,14 +184,62 @@ class _QuizPage extends State<QuizPage> {
   /// Push the information needed into the next screen
   void _submit() {
     if (_currentMod.text != null) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizAttempt(
-                  totalQns: _noOfQns.toInt(),
-                  modName: _currentMod.text!,
-                  timerCheck: _timerCheck,
-                  countdown: _countdown.toInt())));
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              insetPadding: const EdgeInsets.symmetric(),
+              scrollable: true,
+              content: Column(children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 1),
+                  ),
+                  child: TextField(
+                    controller: codeController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Input code (if any)",
+                      errorText: _validate ? "Code cannot be empty" : null,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      child: const Text("Continue without code"),
+                      onTap: (() => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QuizAttempt(
+                                  totalQns: _noOfQns.toInt(),
+                                  modName: _currentMod.text!,
+                                  timerCheck: _timerCheck,
+                                  countdown: _countdown.toInt())))),
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    InkWell(
+                      child: const Text("Continue with code"),
+                      onTap: (() {
+                        setState(() {
+                          _validate = codeController.text.trim().isEmpty;
+                        });
+                        // TODO: To implement routing to coded quiz
+                      }),
+                    ),
+                  ],
+                )
+              ]),
+            );
+          });
     }
   }
 }
