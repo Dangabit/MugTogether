@@ -318,8 +318,8 @@ class _EditProfile extends State<EditProfile> {
                   ),
                   onPressed: () async {
                     widget.profile.reverify({
-                      "Password": passwordController.text,
-                      "NewPassword": newPassController.text
+                      "Password": newPassController.text,
+                      "NewPassword": passwordController.text
                     }, {
                       "Bio": bioController.text,
                       "Achievements": List.empty(),
