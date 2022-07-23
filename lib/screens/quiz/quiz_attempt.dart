@@ -91,7 +91,8 @@ class _QuizAttempt extends State<QuizAttempt> {
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
+        leading: BackButton(
+            onPressed: () => Navigator.popAndPushNamed(context, '/quiz')),
         centerTitle: false,
         title: Text("Quiz Attempt  (" + widget.modName + ")"),
         actions: [
@@ -305,7 +306,7 @@ class _QuizAttempt extends State<QuizAttempt> {
             .collection(user!.uid)
             .doc("Quiz Attempts")
             .update({"AttemptList": attempts});
-      }).then((_) => Navigator.pop(context));
+      }).then((_) => Navigator.popAndPushNamed(context, '/quiz'));
     });
   }
 }
