@@ -376,6 +376,8 @@ packages:
     version: "1.0.0"
   path_provider:
     dependency: "direct main"
+  path_provider:
+    dependency: transitive
     description:
       name: path_provider
       url: "https://pub.dartlang.org"

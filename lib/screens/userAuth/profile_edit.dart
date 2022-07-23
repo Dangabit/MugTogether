@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mug_together/widgets/size_config.dart';
+import 'package:mug_together/models/extended_profile.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key, required this.user}) : super(key: key);
+  const EditProfile({Key? key, required this.profile, required this.user})
+      : super(key: key);
+  final ExtendedProfile profile;
   final User user;
 
   @override
@@ -12,7 +14,9 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfile extends State<EditProfile> {
   // Variables initialisation
+  final picController = TextEditingController();
   final nameController = TextEditingController();
+  final bioController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
@@ -21,7 +25,7 @@ class _EditProfile extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController.text = widget.user.displayName!;
+    nameController.text = widget.profile.extraData["Username"];
   }
 
   // Prevent memory leak
@@ -34,7 +38,6 @@ class _EditProfile extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
@@ -48,154 +51,241 @@ class _EditProfile extends State<EditProfile> {
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Center(
-          child: currentScreenWidth > 650
-              ? SizedBox(
-                  width: SizeConfig.widthSize(context, 60),
-                  child: _buildEditProfile(context),
-                )
-              : _buildEditProfile(context),
+          child: _buildEditProfile(context),
         ),
       ),
     );
   }
 
   Widget _buildEditProfile(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 30.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Username",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 15),
-                    border: InputBorder.none,
-                    labelText: 'Username',
-                    prefixIcon: Icon(
-                      Icons.account_circle_outlined,
-                      color: Colors.deepPurple,
-                    ),
-                  ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Username cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+    return SizedBox(
+      width: currentScreenWidth < 500
+          ? currentScreenWidth
+          : currentScreenWidth < 1000
+              ? currentScreenWidth * 0.8
+              : currentScreenWidth * 0.6,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: currentScreenHeight * 0.05,
             ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                "Update Password",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
+            // Profile pic url field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Profile Picture URL",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: TextFormField(
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
-                    border: InputBorder.none,
-                    labelText: 'Password',
-                    prefixIcon: const Icon(
-                      Icons.lock_outline,
-                      color: Colors.deepPurple,
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: picController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Profile Pic URL',
+                      prefixIcon: Icon(
+                        Icons.account_circle_outlined,
                         color: Colors.deepPurple,
                       ),
                     ),
-                    errorMaxLines: 3,
+                    validator: null,
                   ),
-                  validator: (String? value) {
-                    RegExp regex = RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                    if (value == null || value.isEmpty) {
-                      return null;
-                    }
-                    if (!regex.hasMatch(value)) {
-                      return 'Password should contain at least one '
-                          'upper case, one lower case, one digit, '
-                          'one special character, and be at least '
-                          '8 characters long';
-                    }
-                    return null;
-                  },
-                  obscureText: !_passwordVisible,
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 30.0,
-          ),
-          ElevatedButton(
-            // Button to re-verify the widget.user before committing the change
-            style: ElevatedButton.styleFrom(
-              primary: Colors.deepPurple,
+            SizedBox(
+              height: currentScreenHeight * 0.05,
             ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                showDialog(
-                        context: context,
-                        builder: (context) => _reverify(context))
-                    .then((_) => setState(() {}));
-              }
-            },
-            child: const Icon(Icons.save),
-          ),
-        ],
+            // Username field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Username",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Username',
+                      prefixIcon: Icon(
+                        Icons.person_outlined,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: currentScreenHeight * 0.05,
+            ),
+            // Bio field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Bio",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                      controller: bioController,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 15),
+                        border: InputBorder.none,
+                        labelText: 'Bio',
+                        prefixIcon: Icon(
+                          Icons.badge_outlined,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      validator: null),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: currentScreenHeight * 0.05,
+            ),
+            // Update Password field
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  "Update Password",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: TextFormField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                      border: InputBorder.none,
+                      labelText: 'Password',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                        color: Colors.deepPurple,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          _passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      errorMaxLines: 3,
+                    ),
+                    validator: (String? value) {
+                      RegExp regex = RegExp(
+                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                      if (value == null || value.isEmpty) {
+                        return null;
+                      }
+                      if (!regex.hasMatch(value)) {
+                        return 'Password should contain at least one ' +
+                            'upper case, one lower case, one digit, ' +
+                            'one special character, and be at least ' +
+                            '8 characters long';
+                      }
+                      return null;
+                    },
+                    obscureText: !_passwordVisible,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ),
+            ElevatedButton(
+              // Button to re-verify the widget.user before committing the change
+              style: ElevatedButton.styleFrom(
+                primary: Colors.deepPurple,
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  showDialog(
+                          context: context,
+                          builder: (context) => _reverify(context))
+                      .then((_) => setState(() {}));
+                }
+              },
+              child: const Icon(Icons.save),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -227,43 +317,41 @@ class _EditProfile extends State<EditProfile> {
                     primary: Colors.deepPurple,
                   ),
                   onPressed: () async {
-                    widget.user
-                        .reauthenticateWithCredential(
-                            EmailAuthProvider.credential(
-                                email: widget.user.email!,
-                                password: newPassController.text))
-                        .then((credential) async {
-                          await widget.user
-                              .updateDisplayName(nameController.text);
-                          if (passwordController.text.isNotEmpty) {
-                            await widget.user
-                                .updatePassword(passwordController.text);
-                          }
-                        })
-                        .then((_) => Navigator.pushNamedAndRemoveUntil(
-                            context, "/profile/me", ModalRoute.withName("/")))
-                        .onError<FirebaseAuthException>((error, stackTrace) {
-                          switch (error.code) {
-                            case "weak-password":
-                              setState(() {
-                                _fail = "New password is too weak";
-                              });
-                              break;
-                            case "wrong-password":
-                              setState(() {
-                                _fail = newPassController.text.isEmpty
-                                    ? "Current password cannot be empty"
-                                    : "Wrong password, try again";
-                              });
-                              break;
-                            default:
-                              setState(() {
-                                _fail = "Unforeseen error has occurred";
-                              });
-                              break;
-                          }
-                          return null;
-                        });
+                    widget.profile.reverify({
+                      "Password": passwordController.text,
+                      "NewPassword": newPassController.text
+                    }, {
+                      "Bio": bioController.text,
+                      "Achievements": List.empty(),
+                      "Username": nameController.text,
+                      "PicURL": picController.text,
+                    }, widget.user).onError<FirebaseAuthException>(
+                        (error, stackTrace) {
+                      switch (error.code) {
+                        case "weak-password":
+                          setState(() {
+                            _fail = "New password is too weak";
+                          });
+                          break;
+                        case "wrong-password":
+                          setState(() {
+                            _fail = newPassController.text.isEmpty
+                                ? "Current password cannot be empty"
+                                : "Wrong password, try again";
+                          });
+                          break;
+                        default:
+                          setState(() {
+                            _fail = "Unforeseen error has occurred";
+                          });
+                          break;
+                      }
+                      return null;
+                    }).onError((error, stackTrace) {
+                      setState(() {
+                        _fail = "Invalid permission";
+                      });
+                    });
                   },
                   child: const Text(
                     "Confirm",
