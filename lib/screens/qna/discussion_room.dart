@@ -160,7 +160,7 @@ class _DiscussionRoom extends State<DiscussionRoom> {
               const EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
           child: Column(
             crossAxisAlignment:
-                discussion.data["Users"][index] == widget.user.displayName
+                discussion.data["UserID"][index] == widget.user.uid
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
             children: [
@@ -168,16 +168,19 @@ class _DiscussionRoom extends State<DiscussionRoom> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color:
-                      discussion.data["Users"][index] == widget.user.displayName
-                          ? Colors.blue[200]
-                          : Colors.grey[200],
+                  color: discussion.data["UserID"][index] == widget.user.uid
+                      ? Colors.blue[200]
+                      : Colors.grey[200],
                 ),
                 child: Text(discussion.data["Discussion"][index]),
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, "/profile",
+                  Navigator.pushNamed(
+                      context,
+                      discussion.data["UserID"][index] == widget.user.uid
+                          ? "/profile?user=me"
+                          : "/profile?user=" + discussion.data["UserID"][index],
                       arguments: discussion.data["UserID"][index]);
                 },
                 child: Padding(

@@ -49,9 +49,11 @@ class _ProfilePage extends State<ProfilePage> {
                     ),
                     Center(
                       child: Stack(children: [
-                        _buildImage(widget.user.photoURL == null
-                            ? ''
-                            : widget.user.photoURL!),
+                        _buildImage(isUser
+                            ? (widget.user.photoURL == null
+                                ? ''
+                                : widget.user.photoURL!)
+                            : (profile.extraData["PicURL"] ?? '')),
                         Positioned(
                           bottom: 0,
                           right: 4,
@@ -67,7 +69,7 @@ class _ProfilePage extends State<ProfilePage> {
                     Column(
                       children: [
                         Text(
-                          widget.user.displayName!,
+                          profile.extraData["Username"],
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 24,
