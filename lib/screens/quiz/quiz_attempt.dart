@@ -9,13 +9,15 @@ class QuizAttempt extends StatefulWidget {
       required this.totalQns,
       required this.modName,
       required this.timerCheck,
-      required this.countdown})
+      required this.countdown,
+      this.qnsList})
       : super(key: key);
 
   final int totalQns;
   final String modName;
   final bool timerCheck;
   final int countdown;
+  final List? qnsList;
 
   @override
   State<QuizAttempt> createState() => _QuizAttempt();
@@ -64,7 +66,11 @@ class _QuizAttempt extends State<QuizAttempt> {
       ),
     );
     // Create a one-time future
-    _future = _grabQns();
+    if (widget.qnsList != null) {
+      _future = Future(() => widget.qnsList!);
+    } else {
+      _future = _grabQns();
+    }
   }
 
   @override

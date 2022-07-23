@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/quiz/quiz_attempt.dart';
@@ -22,12 +23,14 @@ class _QuizPage extends State<QuizPage> {
   double _countdown = 10;
   late final TextEditingController codeController;
   late bool _validate;
+  late bool _fail;
 
   @override
   void initState() {
     super.initState();
     codeController = TextEditingController();
     _validate = false;
+    _fail = false;
   }
 
   @override
@@ -203,7 +206,11 @@ class _QuizPage extends State<QuizPage> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Input code (if any)",
-                      errorText: _validate ? "Code cannot be empty" : null,
+                      errorText: _validate
+                          ? "Code cannot be empty"
+                          : _fail
+                              ? "Invalid code"
+                              : null,
                     ),
                   ),
                 ),
@@ -232,7 +239,37 @@ class _QuizPage extends State<QuizPage> {
                         setState(() {
                           _validate = codeController.text.trim().isEmpty;
                         });
-                        // TODO: To implement routing to coded quiz
+                        if (!_validate) {
+                          final data = codeController.text.split(":");
+                          FirebaseFirestore.instance
+                              .collection(data.first)
+                              .doc("Quiz Attempts")
+                              .get()
+                              .then((doc) {
+                                return (doc.get("AttemptList")
+                                    as List)[int.parse(data.last)];
+                              })
+                              .then(
+                                (attemptData) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => QuizAttempt(
+                                        totalQns:
+                                            attemptData["Questions"].length,
+                                        modName: attemptData["Module"],
+                                        timerCheck: _timerCheck,
+                                        countdown: _countdown.toInt(),
+                                        qnsList: attemptData["Questions"]),
+                                  ),
+                                ),
+                              )
+                              .onError((error, stackTrace) {
+                                print(error);
+                                setState(() {
+                                  _fail = true;
+                                });
+                              });
+                        }
                       }),
                     ),
                   ],
