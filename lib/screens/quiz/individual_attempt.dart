@@ -50,9 +50,20 @@ class _IndividualAttempt extends State<IndividualAttempt> {
               tooltip: "Share code",
               onSelected: _onSelected,
               itemBuilder: (context) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 0,
-                      child: Text("Copy code"),
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.copy,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text("Copy code"),
+                        ],
+                      ),
                     ),
                   ]),
         ],
