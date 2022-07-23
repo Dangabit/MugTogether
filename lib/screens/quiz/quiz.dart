@@ -217,13 +217,13 @@ class _QuizPage extends State<QuizPage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20.0,
+                  height: 30.0,
                 ),
                 Row(
                   children: [
-                    InkWell(
+                    ElevatedButton(
                       child: const Text("Continue without code"),
-                      onTap: (() => Navigator.push(
+                      onPressed: (() => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => QuizAttempt(
@@ -233,11 +233,11 @@ class _QuizPage extends State<QuizPage> {
                                   countdown: _countdown.toInt())))),
                     ),
                     const SizedBox(
-                      width: 20.0,
+                      width: 30.0,
                     ),
-                    InkWell(
+                    ElevatedButton(
                       child: const Text("Continue with code"),
-                      onTap: (() {
+                      onPressed: (() {
                         setState(() {
                           _validate = codeController.text.trim().isEmpty;
                         });
