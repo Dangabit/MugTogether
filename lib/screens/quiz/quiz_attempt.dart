@@ -151,6 +151,7 @@ class _QuizAttempt extends State<QuizAttempt> {
                           _questionBody(snapshot.data!),
                           const Spacer(),
                           ElevatedButton(
+                            key: const Key("finishQuizButton"),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.deepPurple,
                             ),

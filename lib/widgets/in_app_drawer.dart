@@ -106,6 +106,7 @@ class InAppDrawer {
   static Widget _createDrawerItem(
       IconData icon, String text, GestureTapCallback onTap) {
     return ListTile(
+      key: Key(text),
       title: Row(
         children: <Widget>[
           Icon(

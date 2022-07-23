@@ -146,6 +146,7 @@ class _QuizPage extends State<QuizPage> {
           children: [
             // View past quiz attempts
             ElevatedButton(
+              key: const Key("pastquizButton"),
               style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,
               ),
@@ -163,6 +164,7 @@ class _QuizPage extends State<QuizPage> {
             ),
             // Start the quiz
             ElevatedButton(
+              key: const Key("startQuizButton"),
               style: ElevatedButton.styleFrom(
                 primary: Colors.deepPurple,
               ),
