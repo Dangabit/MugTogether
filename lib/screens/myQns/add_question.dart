@@ -36,6 +36,9 @@ class _AddQuestion extends State<AddQuestion> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -44,15 +47,19 @@ class _AddQuestion extends State<AddQuestion> {
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: Flex(
-          direction: Axis.vertical,
-          children: [
-            Form(
-              key: _formKey,
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: SizedBox(
+              width: currentScreenWidth < 500
+                  ? currentScreenWidth
+                  : currentScreenWidth < 1000
+                      ? currentScreenWidth * 0.8
+                      : currentScreenWidth * 0.6,
               child: Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Question field
                   Padding(
@@ -97,8 +104,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Pointers field, can be empty
                   Padding(
@@ -135,8 +142,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Tags field, can be empty
                   Padding(
@@ -170,8 +177,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   Row(
                     children: <Widget>[
@@ -232,8 +239,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 30.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -281,7 +288,7 @@ class _AddQuestion extends State<AddQuestion> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
