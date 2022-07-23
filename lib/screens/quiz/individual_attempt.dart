@@ -45,10 +45,16 @@ class _IndividualAttempt extends State<IndividualAttempt> {
             widget.attempt["Module"] +
             ")"),
         actions: [
-          ElevatedButton(
-            onPressed: _genCode,
-            child: const Text("share code"),
-          )
+          PopupMenuButton<int>(
+              icon: const Icon(Icons.share),
+              tooltip: "Share code",
+              onSelected: _onSelected,
+              itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text("Copy code"),
+                    ),
+                  ]),
         ],
       ),
       body: LayoutBuilder(builder: (context, constraint) {
@@ -295,6 +301,13 @@ class _IndividualAttempt extends State<IndividualAttempt> {
         ),
       ],
     );
+  }
+
+  void _onSelected(int item) {
+    switch (item) {
+      case 0:
+        _genCode();
+    }
   }
 
   void _genCode() {
