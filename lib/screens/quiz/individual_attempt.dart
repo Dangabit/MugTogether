@@ -107,7 +107,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
                               "Owner": widget.user.uid,
                               "FromCommunity": true,
                             }, widget.user.uid, widget.attempt["Module"])
-                                .pullToUser(widget.user.uid)
+                                .addToDatabase()
                                 .then((_) => setState(() {
                                       added[currentIndex] = true;
                                     }));
