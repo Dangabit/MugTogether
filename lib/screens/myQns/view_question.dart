@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mug_together/models/discussion.dart';
+import 'package:mug_together/screens/qna/discussion_room.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:mug_together/models/question.dart';
 import 'package:mug_together/screens/myQns/edit_question.dart';
@@ -8,7 +11,9 @@ import 'package:mug_together/utilities/pdf.dart';
 
 class ViewQuestion extends StatefulWidget {
   // Passing in question info
-  const ViewQuestion({Key? key, required this.question}) : super(key: key);
+  const ViewQuestion({Key? key, required this.user, required this.question})
+      : super(key: key);
+  final User user;
   final Question question;
 
   @override
@@ -16,17 +21,22 @@ class ViewQuestion extends StatefulWidget {
 }
 
 class _ViewQuestion extends State<ViewQuestion> {
-  late TextEditingController controller;
+  late TextEditingController pdfController;
+  late TextEditingController initTextController;
+  late bool _validate;
 
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController();
+    pdfController = TextEditingController();
+    initTextController = TextEditingController();
+    _validate = false;
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    pdfController.dispose();
+    initTextController.dispose();
     super.dispose();
   }
 
@@ -36,10 +46,68 @@ class _ViewQuestion extends State<ViewQuestion> {
       backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: const Text("View Question"),
+        title: const Text(
+          "View Question",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
         leading: BackButton(onPressed: () {
           Navigator.pop(context);
         }),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                        child: TextFormField(
+                          controller: initTextController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 40),
+                            border: InputBorder.none,
+                            hintText: 'Input your initial message',
+                            prefixIcon: const Icon(
+                              Icons.chat,
+                              color: Colors.deepPurple,
+                            ),
+                            suffixIcon: IconButton(
+                              key: const Key("submit"),
+                              icon: const Icon(
+                                Icons.send,
+                                color: Colors.deepPurple,
+                              ),
+                              onPressed: _initTextSubmit,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Text(
+              "Push to QnA",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Flex(
@@ -400,21 +468,43 @@ class _ViewQuestion extends State<ViewQuestion> {
           title: const Text("Name your PDF"),
           content: TextField(
             autofocus: true,
-            controller: controller,
+            controller: pdfController,
             decoration: const InputDecoration(hintText: "Name your PDF"),
-            onSubmitted: (_) => submit(),
+            onSubmitted: (_) => _pdfSubmit(),
           ),
           actions: [
             TextButton(
-              onPressed: submit,
+              onPressed: _pdfSubmit,
               child: const Text("ENTER"),
             )
           ],
         ),
       );
 
-  void submit() {
-    Navigator.of(context).pop(controller.text);
-    controller.clear();
+  void _pdfSubmit() {
+    Navigator.of(context).pop(pdfController.text);
+    pdfController.clear();
+  }
+
+  void _initTextSubmit() {
+    setState(() {
+      _validate = initTextController.text.trim().isEmpty;
+    });
+    _validate
+        ? null
+        : Discussion.create(
+                initTextController.text,
+                widget.user.displayName!,
+                widget.user.uid,
+                widget.question.data["Module"],
+                widget.question.data["Question"])
+            .then((discussion) => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => DiscussionRoom(
+                    user: widget.user,
+                    discussion: discussion,
+                  ),
+                )));
   }
 }
