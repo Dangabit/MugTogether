@@ -89,55 +89,44 @@ class _DiscussionRoom extends State<DiscussionRoom> {
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
-                        vertical: 20.0,
-                      ),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: messageController,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                    labelText: "Write Message",
-                                    errorText: _validate
-                                        ? "Cannot send an empty text"
-                                        : null,
-                                    labelStyle: const TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                    border: const OutlineInputBorder(),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(
-                                        Icons.send,
-                                        color: Colors.deepPurple,
-                                      ),
-                                      iconSize: 20.0,
-                                      onPressed: () {
-                                        if (messageController.text
-                                            .trim()
-                                            .isEmpty) {
-                                          setState(() {
-                                            _validate = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _validate = false;
-                                          });
-                                          widget.discussion.update(
-                                              messageController.text,
-                                              widget.user.displayName!,
-                                              widget.user.uid);
-                                          messageController.clear();
-                                        }
-                                      },
-                                    )),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 20.0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            key: const Key("mtff"),
+                            controller: messageController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              labelText: "Write Message",
+                              errorText: _validate
+                                  ? "Cannot send an empty text"
+                                  : null,
+                              labelStyle: const TextStyle(
+                                fontSize: 18,
+                              ),
+                              border: const OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                                key: const Key("enter"),
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: Colors.deepPurple,
+                                ),
+                                iconSize: 20.0,
+                                onPressed: _submit,
                               ),
                             ),
-                          ])),
+                            onFieldSubmitted: (_) => _submit(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             );
@@ -147,6 +136,21 @@ class _DiscussionRoom extends State<DiscussionRoom> {
         },
       ),
     );
+  }
+
+  void _submit() {
+    if (messageController.text.trim().isEmpty) {
+      setState(() {
+        _validate = true;
+      });
+    } else {
+      setState(() {
+        _validate = false;
+      });
+      widget.discussion.update(
+          messageController.text, widget.user.displayName!, widget.user.uid);
+      messageController.clear();
+    }
   }
 
   ListView _generateConvo(Discussion discussion) {

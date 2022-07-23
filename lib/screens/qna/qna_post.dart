@@ -53,8 +53,8 @@ class _QnaPost extends State<QnaPost> {
         ),
         actions: <Widget>[
           ElevatedButton(
+            key: const Key("post"),
             onPressed: () {
-              // TODO: Update initmsg & qn, check form too
               setState(() {
                 _validateQn = questionController.text.isEmpty;
               });
@@ -73,6 +73,7 @@ class _QnaPost extends State<QnaPost> {
                               padding: const EdgeInsets.fromLTRB(
                                   10.0, 10.0, 10.0, 0.0),
                               child: TextFormField(
+                                key: const Key("initMessagetff"),
                                 controller: initTextController,
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
@@ -88,6 +89,7 @@ class _QnaPost extends State<QnaPost> {
                                     color: Colors.deepPurple,
                                   ),
                                   suffixIcon: IconButton(
+                                    key: const Key("submit"),
                                     icon: const Icon(
                                       Icons.send,
                                       color: Colors.deepPurple,
@@ -151,6 +153,7 @@ class _QnaPost extends State<QnaPost> {
               child: Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: TextFormField(
+                    key: const Key("questiontff"),
                     controller: questionController,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -169,8 +172,6 @@ class _QnaPost extends State<QnaPost> {
           ),
         ],
       ),
-      // TODO: Implement posting field and details
-      // Need a field for question and initial message
     );
   }
 

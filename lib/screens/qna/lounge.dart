@@ -34,7 +34,7 @@ class _Lounge extends State<Lounge> {
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: Text("QnA Lounge (" + widget.module + ")"),
+        title: Text("QnA Lounge (${widget.module})"),
         leading: BackButton(onPressed: () {
           Navigator.pushReplacementNamed(
             context,
@@ -57,6 +57,7 @@ class _Lounge extends State<Lounge> {
                     height: 40,
                     padding: const EdgeInsets.only(left: 10.0),
                     child: ElevatedButton.icon(
+                      key: const Key("startPost"),
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute<void>(
