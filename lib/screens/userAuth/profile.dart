@@ -21,7 +21,7 @@ class _ProfilePage extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    isUser = widget.user.uid == "me";
+    isUser = widget.profile == "me";
     profileFuture =
         ExtendedProfile.getInfo(isUser ? widget.user.uid : widget.profile);
   }
@@ -169,31 +169,33 @@ class _ProfilePage extends State<ProfilePage> {
                     SizedBox(
                       height: currentScreenHeight * 0.15,
                     ),
-                    isUser ? Center(
-                      child: SizedBox(
-                        width: 160.0,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurple),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfile(
-                                          profile: profile,
-                                          user: widget.user,
-                                        )));
-                          },
-                          child: const Text(
-                            'Edit Details',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                    isUser
+                        ? Center(
+                            child: SizedBox(
+                              width: 160.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.deepPurple),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditProfile(
+                                                profile: profile,
+                                                user: widget.user,
+                                              )));
+                                },
+                                child: const Text(
+                                  'Edit Details',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ) : const Text(""),
+                          )
+                        : const Text(""),
                     const SizedBox(
                       height: 20.0,
                     ),
