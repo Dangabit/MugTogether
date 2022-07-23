@@ -58,6 +58,9 @@ class ExtendedProfile {
       if (cred["NewPassword"].isNotEmpty) {
         await credential.user!.updatePassword(cred["NewPassword"]);
       }
+      if (cred["PicURL"].isNotEmpty) {
+        await credential.user!.updatePhotoURL(cred["PicURL"]);
+      }
     }).then((_) async {
       await updateProfile(data);
     });

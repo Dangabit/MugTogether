@@ -319,12 +319,12 @@ class _EditProfile extends State<EditProfile> {
                   onPressed: () async {
                     widget.profile.reverify({
                       "Password": newPassController.text,
-                      "NewPassword": passwordController.text
+                      "NewPassword": passwordController.text,
+                      "PicURL": picController.text
                     }, {
                       "Bio": bioController.text,
                       "Achievements": List.empty(),
                       "Username": nameController.text,
-                      "PicURL": picController.text,
                     }, widget.user).onError<FirebaseAuthException>(
                         (error, stackTrace) {
                       switch (error.code) {
