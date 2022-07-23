@@ -91,14 +91,30 @@ class InAppDrawer {
         Positioned(
           top: 17.0,
           left: 9.0,
-          child: ClipOval(
-            child: Material(
-              color: Colors.transparent,
-              child: Image.asset(
-                'assets/images/user-profile.png',
-                fit: BoxFit.cover,
-                width: 55,
-                height: 55,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
+            ),
+            child: ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: user.photoURL == null
+                    ? Image.asset(
+                        'assets/images/user-profile.png',
+                        fit: BoxFit.cover,
+                        width: 55,
+                        height: 55,
+                      )
+                    : Image.network(
+                        user.photoURL!,
+                        fit: BoxFit.cover,
+                        width: 55,
+                        height: 55,
+                      ),
               ),
             ),
           ),

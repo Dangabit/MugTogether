@@ -21,7 +21,7 @@ class _ProfilePage extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    isUser = widget.user.uid == "me";
+    isUser = widget.profile == "me";
     profileFuture =
         ExtendedProfile.getInfo(isUser ? widget.user.uid : widget.profile);
   }
@@ -49,7 +49,9 @@ class _ProfilePage extends State<ProfilePage> {
                     ),
                     Center(
                       child: Stack(children: [
-                        _buildImage(),
+                        _buildImage(widget.user.photoURL == null
+                            ? ''
+                            : widget.user.photoURL!),
                         Positioned(
                           bottom: 0,
                           right: 4,
@@ -169,31 +171,33 @@ class _ProfilePage extends State<ProfilePage> {
                     SizedBox(
                       height: currentScreenHeight * 0.15,
                     ),
-                    isUser ? Center(
-                      child: SizedBox(
-                        width: 160.0,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurple),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfile(
-                                          profile: profile,
-                                          user: widget.user,
-                                        )));
-                          },
-                          child: const Text(
-                            'Edit Details',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                    isUser
+                        ? Center(
+                            child: SizedBox(
+                              width: 160.0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.deepPurple),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditProfile(
+                                                profile: profile,
+                                                user: widget.user,
+                                              )));
+                                },
+                                child: const Text(
+                                  'Edit Details',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ) : const Text(""),
+                          )
+                        : const Text(""),
                     const SizedBox(
                       height: 20.0,
                     ),
@@ -207,15 +211,31 @@ class _ProfilePage extends State<ProfilePage> {
         });
   }
 
-  Widget _buildImage() {
-    return ClipOval(
-      child: Material(
-        color: Colors.transparent,
-        child: Image.asset(
-          'assets/images/user-profile.png',
-          fit: BoxFit.cover,
-          width: 128,
-          height: 128,
+  Widget _buildImage(String url) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.black,
+          width: 3,
+        ),
+      ),
+      child: ClipOval(
+        child: Material(
+          color: Colors.transparent,
+          child: url == ''
+              ? Image.asset(
+                  'assets/images/user-profile.png',
+                  fit: BoxFit.cover,
+                  width: 128,
+                  height: 128,
+                )
+              : Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                  width: 128,
+                  height: 128,
+                ),
         ),
       ),
     );

@@ -25,7 +25,10 @@ class _EditProfile extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
+    picController.text =
+        widget.user.photoURL == null ? "" : widget.user.photoURL!;
     nameController.text = widget.profile.extraData["Username"];
+    bioController.text = widget.profile.extraData["Bio"];
   }
 
   // Prevent memory leak
@@ -44,8 +47,7 @@ class _EditProfile extends State<EditProfile> {
         backgroundColor: Colors.deepPurple,
         title: const Text("Edit Profile Details"),
         leading: BackButton(onPressed: () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, "/profile/me", ModalRoute.withName("/questions"));
+          Navigator.pop(context);
         }),
       ),
       body: SingleChildScrollView(
@@ -184,6 +186,8 @@ class _EditProfile extends State<EditProfile> {
                   padding: const EdgeInsets.only(left: 5),
                   child: TextFormField(
                       controller: bioController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 15),
                         border: InputBorder.none,
@@ -317,41 +321,45 @@ class _EditProfile extends State<EditProfile> {
                     primary: Colors.deepPurple,
                   ),
                   onPressed: () async {
-                    widget.profile.reverify({
-                      "Password": passwordController.text,
-                      "NewPassword": newPassController.text
-                    }, {
-                      "Bio": bioController.text,
-                      "Achievements": List.empty(),
-                      "Username": nameController.text,
-                      "PicURL": picController.text,
-                    }, widget.user).onError<FirebaseAuthException>(
-                        (error, stackTrace) {
-                      switch (error.code) {
-                        case "weak-password":
+                    widget.profile
+                        .reverify({
+                          "Password": newPassController.text,
+                          "NewPassword": passwordController.text,
+                          "PicURL": picController.text
+                        }, {
+                          "Bio": bioController.text,
+                          "Achievements": List.empty(),
+                          "Username": nameController.text,
+                        }, widget.user)
+                        .then((_) => Navigator.pushNamedAndRemoveUntil(context,
+                            '/profile?user=me', ModalRoute.withName("/")))
+                        .onError<FirebaseAuthException>((error, stackTrace) {
+                          switch (error.code) {
+                            case "weak-password":
+                              setState(() {
+                                _fail = "New password is too weak";
+                              });
+                              break;
+                            case "wrong-password":
+                              setState(() {
+                                _fail = newPassController.text.isEmpty
+                                    ? "Current password cannot be empty"
+                                    : "Wrong password, try again";
+                              });
+                              break;
+                            default:
+                              setState(() {
+                                _fail = "Unforeseen error has occurred";
+                              });
+                              break;
+                          }
+                          return null;
+                        })
+                        .onError((error, stackTrace) {
                           setState(() {
-                            _fail = "New password is too weak";
+                            _fail = "Invalid permission";
                           });
-                          break;
-                        case "wrong-password":
-                          setState(() {
-                            _fail = newPassController.text.isEmpty
-                                ? "Current password cannot be empty"
-                                : "Wrong password, try again";
-                          });
-                          break;
-                        default:
-                          setState(() {
-                            _fail = "Unforeseen error has occurred";
-                          });
-                          break;
-                      }
-                      return null;
-                    }).onError((error, stackTrace) {
-                      setState(() {
-                        _fail = "Invalid permission";
-                      });
-                    });
+                        });
                   },
                   child: const Text(
                     "Confirm",
