@@ -290,7 +290,7 @@ class _EditQuestion extends State<EditQuestion> {
 
   /// Submit changes to the question to Firebase
   Future<void> _submitChange() async {
-    List tags = tagsController.text.isEmpty
+    List tags = tagsController.text.trim().isEmpty
         ? List.empty()
         : tagsController.text.split(", ").toSet().toList();
     widget.question.updateDatabase({
