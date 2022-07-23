@@ -411,6 +411,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewQuestion(
+                                      user: widget.user,
                                       question: question,
                                     )));
                       },
