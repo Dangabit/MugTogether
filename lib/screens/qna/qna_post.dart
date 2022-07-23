@@ -56,7 +56,7 @@ class _QnaPost extends State<QnaPost> {
             key: const Key("post"),
             onPressed: () {
               setState(() {
-                _validateQn = questionController.text.isEmpty;
+                _validateQn = questionController.text.trim().isEmpty;
               });
               _validateQn
                   ? null
@@ -177,7 +177,7 @@ class _QnaPost extends State<QnaPost> {
 
   void _submit() {
     setState(() {
-      _validateText = initTextController.text.isEmpty;
+      _validateText = initTextController.text.trim().isEmpty;
     });
     _validateText
         ? null
