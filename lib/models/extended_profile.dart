@@ -54,7 +54,7 @@ class ExtendedProfile {
         .reauthenticateWithCredential(EmailAuthProvider.credential(
             email: currentUser.email!, password: cred["Password"]))
         .then((credential) async {
-      await credential.user!.updateDisplayName(data["Name"]);
+      await credential.user!.updateDisplayName(data["Username"]);
       if (cred["NewPassword"].isNotEmpty) {
         await credential.user!.updatePassword(cred["NewPassword"]);
       }
