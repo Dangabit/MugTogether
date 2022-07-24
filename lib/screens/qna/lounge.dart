@@ -30,6 +30,7 @@ class _Lounge extends State<Lounge> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -48,8 +49,8 @@ class _Lounge extends State<Lounge> {
           if (snapshot.hasData) {
             return Column(
               children: [
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -77,8 +78,8 @@ class _Lounge extends State<Lounge> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
                 ),
                 const Divider(
                   color: Colors.grey,

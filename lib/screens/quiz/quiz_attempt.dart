@@ -97,7 +97,14 @@ class _QuizAttempt extends State<QuizAttempt> {
         leading: BackButton(
             onPressed: () => Navigator.popAndPushNamed(context, '/quiz')),
         centerTitle: false,
-        title: Text("Quiz Attempt  (" + widget.modName + ")"),
+        titleSpacing: 0,
+        title: currentScreenWidth < 400
+            ? Text(
+                widget.modName,
+              )
+            : Text(
+                "Quiz Attempt  (" + widget.modName + ")",
+              ),
         actions: [
           widget.timerCheck ? _timer.display() : const Text(""),
         ],

@@ -97,7 +97,7 @@ class _QuizPage extends State<QuizPage> {
               ],
             ),
             SizedBox(
-              height: currentScreenHeight * 0.03,
+              height: currentScreenHeight * 0.05,
             ),
             Wrap(
               children: const [

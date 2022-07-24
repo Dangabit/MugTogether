@@ -34,6 +34,9 @@ class _IndividualAttempt extends State<IndividualAttempt> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -45,27 +48,30 @@ class _IndividualAttempt extends State<IndividualAttempt> {
             widget.attempt["Module"] +
             ")"),
         actions: [
-          PopupMenuButton<int>(
-              icon: const Icon(Icons.share),
-              tooltip: "Share code",
-              onSelected: _onSelected,
-              itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 0,
-                      child: Row(
-                        children: const [
-                          Icon(
-                            Icons.copy,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 5.0,
-                          ),
-                          Text("Copy code"),
-                        ],
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: PopupMenuButton<int>(
+                icon: const Icon(Icons.share),
+                tooltip: "Share code",
+                onSelected: _onSelected,
+                itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 0,
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.copy,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Text("Copy code"),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
+                    ]),
+          ),
         ],
       ),
       body: LayoutBuilder(builder: (context, constraint) {
@@ -73,85 +79,96 @@ class _IndividualAttempt extends State<IndividualAttempt> {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraint.maxHeight),
             child: IntrinsicHeight(
-              child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 15.0,
+              child: Center(
+                child: SizedBox(
+                  width: currentScreenWidth < 500
+                      ? currentScreenWidth
+                      : currentScreenWidth < 1000
+                          ? currentScreenWidth * 0.8
+                          : currentScreenWidth * 0.6,
+                  child:
+                      Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                    SizedBox(
+                      height: currentScreenHeight * 0.03,
                     ),
-                    const Text(
-                      "Question Number:  ",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    _qnNum(),
-                  ],
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                _questionBody(),
-                const Spacer(),
-                const SizedBox(
-                  height: 40.0,
-                ),
-
-                /// Add to MyQuestions
-                added[currentIndex]
-                    ? const Text(
-                        "Qn added!",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 15.0,
                         ),
-                      )
-                    : SizedBox(
-                        height: 50,
-                        child: ElevatedButton(
-                          // Pulling of questions into the user collection
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.deepPurple,
+                        const Text(
+                          "Question Number:  ",
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
                           ),
-                          onPressed: () {
-                            Question(<String, dynamic>{
-                              "Question": widget.attempt["Questions"]
-                                  [currentIndex],
-                              "Notes": widget.attempt["Attempts"][currentIndex],
-                              "Module": widget.attempt["Module"],
-                              "LastUpdate": widget.attempt["Date"],
-                              "Tags": List.empty(),
-                              "Importance": 0,
-                              "Privacy": true,
-                              "Owner": widget.user.uid,
-                              "FromCommunity": true,
-                            }, widget.user.uid, widget.attempt["Module"])
-                                .pullToUser(widget.user.uid, "")
-                                .then((_) => setState(() {
-                                      added[currentIndex] = true;
-                                    }));
-                          },
-                          child: const Text(
-                            "Add to MyQuestions",
+                        ),
+                        _qnNum(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: currentScreenHeight * 0.03,
+                    ),
+                    _questionBody(currentScreenHeight),
+                    const Spacer(),
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+
+                    /// Add to MyQuestions
+                    added[currentIndex]
+                        ? const Text(
+                            "Qn added!",
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : SizedBox(
+                            height: 50,
+                            child: ElevatedButton(
+                              // Pulling of questions into the user collection
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.deepPurple,
+                              ),
+                              onPressed: () {
+                                Question(<String, dynamic>{
+                                  "Question": widget.attempt["Questions"]
+                                      [currentIndex],
+                                  "Notes": widget.attempt["Attempts"]
+                                      [currentIndex],
+                                  "Module": widget.attempt["Module"],
+                                  "LastUpdate": widget.attempt["Date"],
+                                  "Tags": List.empty(),
+                                  "Importance": 0,
+                                  "Privacy": true,
+                                  "Owner": widget.user.uid,
+                                  "FromCommunity": true,
+                                }, widget.user.uid, widget.attempt["Module"])
+                                    .pullToUser(widget.user.uid, "")
+                                    .then((_) => setState(() {
+                                          added[currentIndex] = true;
+                                        }));
+                              },
+                              child: const Text(
+                                "Add to MyQuestions",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                const SizedBox(
-                  height: 30.0,
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    timerInfo ? _timerInfo() : const Text(""),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                  ]),
                 ),
-                timerInfo ? _timerInfo() : const Text(""),
-                const SizedBox(
-                  height: 20.0,
-                ),
-              ]),
+              ),
             ),
           ),
         );
@@ -222,7 +239,7 @@ class _IndividualAttempt extends State<IndividualAttempt> {
   }
 
   /// Show the individual question
-  Widget _questionBody() {
+  Widget _questionBody(double height) {
     return Column(
       children: <Widget>[
         const Align(
@@ -266,8 +283,8 @@ class _IndividualAttempt extends State<IndividualAttempt> {
             ),
           ),
         ),
-        const SizedBox(
-          height: 30.0,
+        SizedBox(
+          height: height * 0.05,
         ),
         const Align(
           alignment: Alignment.topCenter,

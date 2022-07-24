@@ -36,6 +36,9 @@ class _QnaPost extends State<QnaPost> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -114,63 +117,75 @@ class _QnaPost extends State<QnaPost> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 50.0,
-          ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: 25.0,
-              ),
-              child: Text(
-                "Enter the question you want to discuss about",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Center(
+          child: SizedBox(
+            width: currentScreenWidth < 500
+                ? currentScreenWidth
+                : currentScreenWidth < 1000
+                    ? currentScreenWidth * 0.8
+                    : currentScreenWidth * 0.6,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: currentScreenHeight * 0.1,
                 ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  width: 1,
-                  color: const Color.fromARGB(255, 100, 100, 100),
-                ),
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: TextFormField(
-                    key: const Key("questiontff"),
-                    controller: questionController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 40),
-                      border: InputBorder.none,
-                      hintText: 'Input your question',
-                      errorText: _validateQn ? "Field required" : null,
-                      prefixIcon: const Icon(
-                        Icons.question_mark_outlined,
-                        color: Colors.deepPurple,
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 25.0,
+                    ),
+                    child: Text(
+                      "Enter the question you want to discuss about",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color.fromARGB(255, 100, 100, 100),
+                      ),
+                    ),
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: TextFormField(
+                          key: const Key("questiontff"),
+                          controller: questionController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 40),
+                            border: InputBorder.none,
+                            hintText: 'Input your question',
+                            errorText: _validateQn ? "Field required" : null,
+                            prefixIcon: const Icon(
+                              Icons.question_mark_outlined,
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

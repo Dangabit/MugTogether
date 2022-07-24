@@ -17,6 +17,8 @@ class _QuestionBankPage extends State<QuestionBankPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 241, 222, 255),
         appBar: AppBar(
@@ -24,48 +26,50 @@ class _QuestionBankPage extends State<QuestionBankPage> {
           backgroundColor: Colors.deepPurple,
         ),
         drawer: InAppDrawer.gibDrawer(context, widget.user),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(
-                height: 20.0,
-              ),
-              Wrap(
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      "Begin by choosing your desired module! 😃",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
+                ),
+                Wrap(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        "Begin by choosing your desired module! 😃",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                  vertical: 10.0,
+                  ],
                 ),
-                child: ModuleList.createListing(currentValue),
-              ),
-              Tooltip(
-                message: "Next!",
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
-                  ),
-                  onPressed: _submit,
-                  child: const Icon(Icons.arrow_right),
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
                 ),
-              )
-            ],
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                  child: ModuleList.createListing(currentValue),
+                ),
+                Tooltip(
+                  message: "Next!",
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.deepPurple,
+                    ),
+                    onPressed: _submit,
+                    child: const Icon(Icons.arrow_right),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
