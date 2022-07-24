@@ -34,12 +34,21 @@ class AppRouter {
       case '/questions':
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
-        args as Map<String, dynamic>;
-        return _checkUser(
-            (user) => AddQuestion(user: user, question: args["Question"]),
-            settings);
+        return args != null
+            ? _checkUser(
+                (user) => AddQuestion(
+                    user: user,
+                    question: (args as Map<String, dynamic>)["Question"]),
+                settings)
+            : _checkUser(
+                (user) => AddQuestion(
+                      user: user,
+                    ),
+                settings);
       case '/profile':
-        return _checkUser((user) => ProfilePage(user: user, profile: args as String), settings);
+        return _checkUser(
+            (user) => ProfilePage(user: user, profile: args as String),
+            settings);
       case '/bank':
         return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':

@@ -332,7 +332,7 @@ class _EditProfile extends State<EditProfile> {
                           "PicURL": picController.text
                         }, widget.user)
                         .then((_) => Navigator.pushNamedAndRemoveUntil(context,
-                            '/profile?user=me', ModalRoute.withName("/")))
+                            '/profile', ModalRoute.withName("/"), arguments: "me"))
                         .onError<FirebaseAuthException>((error, stackTrace) {
                           switch (error.code) {
                             case "weak-password":
