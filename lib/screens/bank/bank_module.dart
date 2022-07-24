@@ -58,260 +58,286 @@ class _BankModulePage extends State<BankModulePage> {
 
   Widget _generateListView(
       List<QueryDocumentSnapshot<Map>> docslist, BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return docslist.isNotEmpty
         ? SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            child: Center(
+              child: SizedBox(
+                width: currentScreenWidth < 1000
+                    ? currentScreenWidth
+                    : currentScreenWidth * 0.8,
+                child: Column(
                   children: [
                     const SizedBox(
-                      width: 15.0,
+                      height: 20.0,
                     ),
-                    Text(
-                      widget.module + " Questions",
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: docslist.length,
-                  itemBuilder: (context, index) {
-                    Question question = Question.getFromDatabase(docslist[index]
-                        as QueryDocumentSnapshot<Map<String, dynamic>>);
-                    final _dialog = RatingDialog(
-                      title: const Text(
-                        "Difficulty Rating",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      message: const Text(
-                        "Select a number of stars as your difficulty rating of the question.\n(You can only submit once)",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                      enableComment: false,
-                      submitButtonText: "Submit",
-                      onSubmitted: (response) {
-                        question.rateQuestion(response.rating);
-                        setState(() {
-                          _rated = true;
-                        });
-                      },
-                    );
-
-                    return Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         const SizedBox(
-                          height: 10.0,
+                          width: 15.0,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 10.0,
+                        Text(
+                          widget.module + " Questions",
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
                           ),
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 10.0,
+                        ),
+                      ],
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: docslist.length,
+                      itemBuilder: (context, index) {
+                        Question question = Question.getFromDatabase(
+                            docslist[index]
+                                as QueryDocumentSnapshot<Map<String, dynamic>>);
+                        final _dialog = RatingDialog(
+                          title: const Text(
+                            "Difficulty Rating",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          decoration: BoxDecoration(
-                            border: Border.all(),
+                          message: const Text(
+                            "Select a number of stars as your difficulty rating of the question.\n(You can only submit once)",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           ),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: <Widget>[
-                                  const SizedBox(
-                                    width: 30.0,
-                                  ),
-                                  Text(
-                                    "Q" + (index + 1).toString(),
-                                    style: const TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  const SizedBox(
-                                    width: 30.0,
-                                  ),
-                                  const VerticalDivider(
-                                    thickness: 1,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(
-                                    width: 30.0,
-                                  ),
-                                  Flexible(
-                                    child: Center(
-                                      child: Text(
-                                        question.data["Question"],
-                                        style: const TextStyle(
-                                          fontSize: 17,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
+                          enableComment: false,
+                          submitButtonText: "Submit",
+                          onSubmitted: (response) {
+                            question.rateQuestion(response.rating);
+                            setState(() {
+                              _rated = true;
+                            });
+                          },
+                        );
+
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height: currentScreenHeight * 0.005,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 10.0,
+                              ),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 10.0,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: IntrinsicHeight(
+                                  child: Row(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: currentScreenWidth * 0.01,
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 30.0,
-                                  ),
-                                  const VerticalDivider(
-                                    thickness: 1,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(
-                                    width: 30.0,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
+                                      Text(
+                                        "Q" + (index + 1).toString(),
+                                        style: const TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        width: currentScreenWidth * 0.01,
+                                      ),
+                                      const VerticalDivider(
+                                        thickness: 1,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: currentScreenWidth * 0.01,
+                                      ),
+                                      Flexible(
+                                        child: Center(
+                                          child: Text(
+                                            question.data["Question"],
+                                            style: const TextStyle(
+                                              fontSize: 17,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: currentScreenWidth * 0.01,
+                                      ),
+                                      const VerticalDivider(
+                                        thickness: 1,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(
+                                        width: currentScreenWidth * 0.01,
+                                      ),
+                                      Column(
                                         children: [
-                                          SizedBox(
-                                            height: 30.0,
-                                            width: 40.0,
-                                            child: Tooltip(
-                                              message: "View & add question",
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors.deepPurple,
-                                                    padding: EdgeInsets.zero,
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.pushNamed(context,
-                                                        "/questions/add",
-                                                        arguments: <String,
-                                                            dynamic>{
-                                                          "Question": question
-                                                        });
-                                                  },
-                                                  child: const Icon(
-                                                      Icons.download)),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                height: 30.0,
+                                                width: 40.0,
+                                                child: Tooltip(
+                                                  message:
+                                                      "View & add question",
+                                                  child: ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary:
+                                                            Colors.deepPurple,
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            "/questions/add",
+                                                            arguments: <String,
+                                                                dynamic>{
+                                                              "Question":
+                                                                  question
+                                                            });
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.download)),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              SizedBox(
+                                                height: 30.0,
+                                                width: 40.0,
+                                                child: Tooltip(
+                                                  message: !_flagged
+                                                      ? "Flag question"
+                                                      : "Already flagged",
+                                                  child: ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary:
+                                                            Colors.deepPurple,
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                      ),
+                                                      onPressed: () async {
+                                                        if (_flagged) {
+                                                          return;
+                                                        }
+                                                        if (await confirm(
+                                                          context,
+                                                          title: const Text(
+                                                              "Confirm"),
+                                                          content: const Text(
+                                                              "Would you like to flag this question?"),
+                                                          textOK:
+                                                              const Text("Yes"),
+                                                          textCancel:
+                                                              const Text("No"),
+                                                        )) {
+                                                          question
+                                                              .flagQuestion();
+                                                          setState(() {
+                                                            _flagged = true;
+                                                          });
+                                                        }
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.flag)),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              SizedBox(
+                                                height: 30.0,
+                                                width: 40.0,
+                                                child: Tooltip(
+                                                  message: !_rated
+                                                      ? "Rate difficulty"
+                                                      : "Already rated",
+                                                  child: ElevatedButton(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary:
+                                                            Colors.deepPurple,
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                      ),
+                                                      onPressed: () {
+                                                        _rated
+                                                            ? null
+                                                            : showDialog(
+                                                                context:
+                                                                    context,
+                                                                barrierDismissible:
+                                                                    true,
+                                                                builder:
+                                                                    (context) =>
+                                                                        _dialog,
+                                                              );
+                                                      },
+                                                      child: const Icon(
+                                                          Icons.star)),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width:
+                                                    currentScreenWidth * 0.01,
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 5.0,
+                                              right: currentScreenWidth * 0.01,
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          SizedBox(
-                                            height: 30.0,
-                                            width: 40.0,
-                                            child: Tooltip(
-                                              message: !_flagged
-                                                  ? "Flag question"
-                                                  : "Already flagged",
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors.deepPurple,
-                                                    padding: EdgeInsets.zero,
-                                                  ),
-                                                  onPressed: () async {
-                                                    if (_flagged) {
-                                                      return;
-                                                    }
-                                                    if (await confirm(
-                                                      context,
-                                                      title:
-                                                          const Text("Confirm"),
-                                                      content: const Text(
-                                                          "Would you like to flag this question?"),
-                                                      textOK: const Text("Yes"),
-                                                      textCancel:
-                                                          const Text("No"),
-                                                    )) {
-                                                      question.flagQuestion();
-                                                      setState(() {
-                                                        _flagged = true;
-                                                      });
-                                                    }
-                                                  },
-                                                  child:
-                                                      const Icon(Icons.flag)),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          SizedBox(
-                                            height: 30.0,
-                                            width: 40.0,
-                                            child: Tooltip(
-                                              message: !_rated
-                                                  ? "Rate difficulty"
-                                                  : "Already rated",
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    primary: Colors.deepPurple,
-                                                    padding: EdgeInsets.zero,
-                                                  ),
-                                                  onPressed: () {
-                                                    _rated
-                                                        ? null
-                                                        : showDialog(
-                                                            context: context,
-                                                            barrierDismissible:
-                                                                true,
-                                                            builder:
-                                                                (context) =>
-                                                                    _dialog,
-                                                          );
-                                                  },
-                                                  child:
-                                                      const Icon(Icons.star)),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 30.0,
+                                            child: question.data[
+                                                            "Difficulty"] ==
+                                                        null ||
+                                                    question.data[
+                                                            "No of Ratings"] ==
+                                                        null
+                                                ? const Text(
+                                                    "No difficulty rating yet")
+                                                : Text("Difficulty rating: " +
+                                                    (question.data[
+                                                                "Difficulty"] /
+                                                            question.data[
+                                                                "No of Ratings"])
+                                                        .toString() +
+                                                    " / 5"),
                                           ),
                                         ],
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          top: 5.0,
-                                          right: 28.0,
-                                        ),
-                                        child: question.data["Difficulty"] ==
-                                                    null ||
-                                                question.data[
-                                                        "No of Ratings"] ==
-                                                    null
-                                            ? const Text(
-                                                "No difficulty rating yet")
-                                            : Text("Difficulty rating: " +
-                                                (question.data["Difficulty"] /
-                                                        question.data[
-                                                            "No of Ratings"])
-                                                    .toString() +
-                                                " / 5"),
-                                      ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                      ],
-                    );
-                  },
+                            SizedBox(
+                              height: currentScreenHeight * 0.005,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           )
         : const Center(

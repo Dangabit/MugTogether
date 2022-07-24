@@ -87,6 +87,9 @@ class _QuizAttempt extends State<QuizAttempt> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -133,41 +136,50 @@ class _QuizAttempt extends State<QuizAttempt> {
                     constraints:
                         BoxConstraints(minHeight: constraint.maxHeight),
                     child: IntrinsicHeight(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            physics: const ClampingScrollPhysics(),
-                            child: Row(
-                              children: _buttonsArray,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          _questionBody(snapshot.data!),
-                          const Spacer(),
-                          ElevatedButton(
-                            key: const Key("finishQuizButton"),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.deepPurple,
-                            ),
-                            onPressed: _submit,
-                            child: const Text(
-                              "Finish Quiz",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                      child: Center(
+                        child: SizedBox(
+                          width: currentScreenWidth < 500
+                              ? currentScreenWidth
+                              : currentScreenWidth < 1000
+                                  ? currentScreenWidth * 0.8
+                                  : currentScreenWidth * 0.6,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              SizedBox(
+                                height: currentScreenHeight * 0.03,
                               ),
-                            ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                physics: const ClampingScrollPhysics(),
+                                child: Row(
+                                  children: _buttonsArray,
+                                ),
+                              ),
+                              SizedBox(
+                                height: currentScreenHeight * 0.03,
+                              ),
+                              _questionBody(snapshot.data!),
+                              const Spacer(),
+                              ElevatedButton(
+                                key: const Key("finishQuizButton"),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.deepPurple,
+                                ),
+                                onPressed: _submit,
+                                child: const Text(
+                                  "Finish Quiz",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

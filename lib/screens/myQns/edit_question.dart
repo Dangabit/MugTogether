@@ -40,6 +40,9 @@ class _EditQuestion extends State<EditQuestion> {
 
   @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 233, 248),
       appBar: AppBar(
@@ -51,238 +54,247 @@ class _EditQuestion extends State<EditQuestion> {
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.question_mark_outlined,
-                  color: Colors.deepPurple,
-                  size: 18.0,
-                ),
-                SizedBox(
-                  width: 5.0,
-                ),
-                Text(
-                  "Question",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: TextField(
-                    key: const Key("editQnTF"),
-                    enabled: false,
-                    controller: questionController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 30),
-                      border: InputBorder.none,
-                      hintText: 'Input your question',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.notes_outlined,
-                  color: Colors.deepPurple,
-                  size: 18.0,
-                ),
-                SizedBox(
-                  width: 5.0,
-                ),
-                Text(
-                  "Notes",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: TextField(
-                    controller: notesController,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 30),
-                      border: InputBorder.none,
-                      hintText:
-                          'Input any notes (Multiline) (Markdown supported) (Optional)',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.sell_outlined,
-                  color: Colors.deepPurple,
-                  size: 18.0,
-                ),
-                SizedBox(
-                  width: 5.0,
-                ),
-                Text(
-                  "Tags",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: TextField(
-                    controller: tagsController,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 20),
-                      border: InputBorder.none,
-                      hintText: 'Tags, separated by commas (Optional)',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Center(
+          child: SizedBox(
+            width: currentScreenWidth < 500
+                ? currentScreenWidth
+                : currentScreenWidth < 1000
+                    ? currentScreenWidth * 0.8
+                    : currentScreenWidth * 0.6,
+            child: Column(
               children: [
-                const Text(
-                  "Module ->",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.question_mark_outlined,
+                      color: Colors.deepPurple,
+                      size: 18.0,
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      "Question",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
-                  width: 5.0,
+                  height: 5.0,
                 ),
-                Container(
-                  height: 30.0,
-                  width: 100.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.question.data["Module"],
-                        style: const TextStyle(
-                          fontSize: 17,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: TextField(
+                        key: const Key("editQnTF"),
+                        enabled: false,
+                        controller: questionController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 30),
+                          border: InputBorder.none,
+                          hintText: 'Input your question',
                         ),
                       ),
-                    ],
+                    ),
                   ),
+                ),
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.notes_outlined,
+                      color: Colors.deepPurple,
+                      size: 18.0,
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      "Notes",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: TextField(
+                        controller: notesController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 30),
+                          border: InputBorder.none,
+                          hintText:
+                              'Input any notes (Multiline) (Markdown supported) (Optional)',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.sell_outlined,
+                      color: Colors.deepPurple,
+                      size: 18.0,
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      "Tags",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: TextField(
+                        controller: tagsController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 20),
+                          border: InputBorder.none,
+                          hintText: 'Tags, separated by commas (Optional)',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: currentScreenHeight * 0.03,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Module ->",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    Container(
+                      height: 30.0,
+                      width: 100.0,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.question.data["Module"],
+                            style: const TextStyle(
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                fromComm
+                    ? const Text("")
+                    : Column(
+                        children: [
+                          SizedBox(
+                            height: currentScreenHeight * 0.03,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Privatise question? ",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Checkbox(
+                                  value: privacy,
+                                  onChanged: (newValue) => setState(() {
+                                        privacy = newValue!;
+                                      })),
+                            ],
+                          ),
+                        ],
+                      ),
+                SizedBox(
+                  height: currentScreenHeight * 0.1,
+                ),
+                ElevatedButton(
+                  key: const Key("saveButton"),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurple,
+                  ),
+                  onPressed: _submitChange,
+                  child: const Icon(Icons.save),
                 ),
               ],
             ),
-            fromComm
-                ? const Text("")
-                : Column(
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Privatise question? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Checkbox(
-                              value: privacy,
-                              onChanged: (newValue) => setState(() {
-                                    privacy = newValue!;
-                                  })),
-                        ],
-                      ),
-                    ],
-                  ),
-            const SizedBox(
-              height: 50.0,
-            ),
-            ElevatedButton(
-              key: const Key("saveButton"),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.deepPurple,
-              ),
-              onPressed: _submitChange,
-              child: const Icon(Icons.save),
-            ),
-          ],
+          ),
         ),
       ),
     );

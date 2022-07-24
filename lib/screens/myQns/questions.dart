@@ -212,7 +212,9 @@ class _QuestionsPage extends State<QuestionsPage> {
                                           color: Colors.black,
                                         )),
                                     onPressed: () => Navigator.pushNamed(
-                                        context, '/questions/add',),
+                                      context,
+                                      '/questions/add',
+                                    ),
                                     child: const Icon(Icons.add_outlined),
                                   ),
                                 ),
