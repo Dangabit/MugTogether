@@ -204,6 +204,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                                 Tooltip(
                                   message: "Add new question entry",
                                   child: ElevatedButton(
+                                    key: const Key("addQnButton"),
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.deepPurple,
                                         side: const BorderSide(
@@ -363,7 +364,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                           child: SingleChildScrollView(
                             physics: const ClampingScrollPhysics(),
                             child: Text(
-                              doc.get("Question"),
+                              question.data["Question"],
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -410,6 +411,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ViewQuestion(
+                                      user: widget.user,
                                       question: question,
                                     )));
                       },

@@ -5,7 +5,8 @@ import 'package:mug_together/widgets/in_app_drawer.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class QuestionBankPage extends StatefulWidget {
-  const QuestionBankPage({Key? key}) : super(key: key);
+  const QuestionBankPage({Key? key, required this.user}) : super(key: key);
+  final User user;
 
   @override
   State<QuestionBankPage> createState() => _QuestionBankPage();
@@ -13,7 +14,6 @@ class QuestionBankPage extends StatefulWidget {
 
 class _QuestionBankPage extends State<QuestionBankPage> {
   Data currentValue = Data();
-  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _QuestionBankPage extends State<QuestionBankPage> {
           title: const Text("Question Bank"),
           backgroundColor: Colors.deepPurple,
         ),
-        drawer: InAppDrawer.gibDrawer(context, user!),
+        drawer: InAppDrawer.gibDrawer(context, widget.user),
         body: Center(
           child: Column(
             children: <Widget>[
