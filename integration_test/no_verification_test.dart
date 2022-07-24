@@ -9,6 +9,8 @@ import 'package:mug_together/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  // THIS TEST REQUIRES AN UNUSED TEST EMAIL
   group('end-to-end test', () {
     testWidgets('Login test', (tester) async {
       app.main();
@@ -71,10 +73,10 @@ void main() {
       expect(find.text("Please input a username"), findsOneWidget);
       expect(find.text("Please confirm your password"), findsOneWidget);
 
-      // Test password unmatch
-      await tester.enterText(pf, "password1");
+      // Test password mismatch
+      await tester.enterText(pf, "P@ssword1");
       await tester.ensureVisible(cpf);
-      await tester.enterText(cpf, "password2");
+      await tester.enterText(cpf, "P@ssword2");
       await tester.ensureVisible(cb);
       await tester.tap(cb);
       await tester.pumpAndSettle();

@@ -156,8 +156,8 @@ class _BankModulePage extends State<BankModulePage> {
                                             padding: EdgeInsets.zero,
                                           ),
                                           onPressed: () {
-                                            question
-                                                .pullToUser(widget.user.uid);
+                                            question.pullToUser(
+                                                widget.user.uid, "");
                                           },
                                           child: const Icon(Icons.download)),
                                     ),

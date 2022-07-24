@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/myQns/add_question.dart';
 import 'package:mug_together/screens/bank/bank_module.dart';
+import 'package:mug_together/screens/myQns/question_share.dart';
 import 'package:mug_together/screens/quiz/past_attempts.dart';
 import 'package:mug_together/screens/userAuth/profile.dart';
 import 'package:mug_together/screens/bank/questionbank.dart';
@@ -18,9 +19,10 @@ class AppRouter {
   /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+    final Uri uri = Uri.parse(settings.name ?? '');
 
     // Sign up and Log in
-    switch (settings.name) {
+    switch (uri.path) {
       case '/':
         return MaterialPageRoute(
             settings: settings, builder: (context) => const LoginPage());
@@ -48,6 +50,10 @@ class AppRouter {
         return _checkUser((user) => QuizPage(user: user), settings);
       case '/quiz/past':
         return _checkUser((user) => PastAttempts(user: user), settings);
+      case '/shareable':
+        return _checkUser(
+            (user) => SharedQuestion(data: uri.queryParameters, user: user),
+            settings);
       default:
         return _pageNotFound();
     }
