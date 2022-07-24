@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/services.dart';
 import 'package:mug_together/models/question.dart';
 
 class IndividualAttempt extends StatefulWidget {
@@ -43,6 +44,29 @@ class _IndividualAttempt extends State<IndividualAttempt> {
             "  (" +
             widget.attempt["Module"] +
             ")"),
+        actions: [
+          PopupMenuButton<int>(
+              icon: const Icon(Icons.share),
+              tooltip: "Share code",
+              onSelected: _onSelected,
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 0,
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.copy,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          Text("Copy code"),
+                        ],
+                      ),
+                    ),
+                  ]),
+        ],
       ),
       body: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
@@ -288,5 +312,21 @@ class _IndividualAttempt extends State<IndividualAttempt> {
         ),
       ],
     );
+  }
+
+  void _onSelected(int item) {
+    switch (item) {
+      case 0:
+        _genCode();
+    }
+  }
+
+  void _genCode() {
+    Clipboard.setData(ClipboardData(
+            text: widget.user.uid + ":" + (widget.attemptNum - 1).toString()))
+        .then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Code is saved into your clipboard!")));
+    });
   }
 }

@@ -9,13 +9,15 @@ class QuizAttempt extends StatefulWidget {
       required this.totalQns,
       required this.modName,
       required this.timerCheck,
-      required this.countdown})
+      required this.countdown,
+      this.qnsList})
       : super(key: key);
 
   final int totalQns;
   final String modName;
   final bool timerCheck;
   final int countdown;
+  final List? qnsList;
 
   @override
   State<QuizAttempt> createState() => _QuizAttempt();
@@ -64,7 +66,11 @@ class _QuizAttempt extends State<QuizAttempt> {
       ),
     );
     // Create a one-time future
-    _future = _grabQns();
+    if (widget.qnsList != null) {
+      _future = Future(() => widget.qnsList!);
+    } else {
+      _future = _grabQns();
+    }
   }
 
   @override
@@ -85,7 +91,8 @@ class _QuizAttempt extends State<QuizAttempt> {
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
+        leading: BackButton(
+            onPressed: () => Navigator.popAndPushNamed(context, '/quiz')),
         centerTitle: false,
         title: Text("Quiz Attempt  (" + widget.modName + ")"),
         actions: [
@@ -145,6 +152,7 @@ class _QuizAttempt extends State<QuizAttempt> {
                           _questionBody(snapshot.data!),
                           const Spacer(),
                           ElevatedButton(
+                            key: const Key("finishQuizButton"),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.deepPurple,
                             ),
@@ -298,7 +306,7 @@ class _QuizAttempt extends State<QuizAttempt> {
             .collection(user!.uid)
             .doc("Quiz Attempts")
             .update({"AttemptList": attempts});
-      }).then((_) => Navigator.pop(context));
+      }).then((_) => Navigator.popAndPushNamed(context, '/quiz'));
     });
   }
 }
