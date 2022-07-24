@@ -7,8 +7,10 @@ import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class AddQuestion extends StatefulWidget {
-  const AddQuestion({Key? key, required this.user}) : super(key: key);
+  const AddQuestion({Key? key, required this.user, this.question})
+      : super(key: key);
   final User user;
+  final Question? question;
 
   @override
   State<AddQuestion> createState() => _AddQuestion();
@@ -35,7 +37,19 @@ class _AddQuestion extends State<AddQuestion> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.question != null) {
+      questionController.text = widget.question!.data["Question"];
+      module.text = widget.question!.data["Module"];
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       appBar: AppBar(
@@ -44,15 +58,19 @@ class _AddQuestion extends State<AddQuestion> {
       ),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
-        child: Flex(
-          direction: Axis.vertical,
-          children: [
-            Form(
-              key: _formKey,
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: SizedBox(
+              width: currentScreenWidth < 500
+                  ? currentScreenWidth
+                  : currentScreenWidth < 1000
+                      ? currentScreenWidth * 0.8
+                      : currentScreenWidth * 0.6,
               child: Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Question field
                   Padding(
@@ -71,34 +89,34 @@ class _AddQuestion extends State<AddQuestion> {
                         ),
                       ),
                       child: Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: TextFormField(
-                              enabled: questionController.text.isEmpty
-                                  ? true
-                                  : false,
-                              controller: questionController,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 20),
-                                border: InputBorder.none,
-                                hintText: 'Input your question',
-                                prefixIcon: Icon(
-                                  Icons.question_mark_outlined,
-                                  color: Colors.deepPurple,
-                                ),
-                              ),
-                              validator: (String? value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Question cannot be empty';
-                                }
-                                return null;
-                              })),
+                        padding: const EdgeInsets.only(left: 5),
+                        child: TextFormField(
+                          key: const Key("questionTextField"),
+                          enabled: questionController.text.isEmpty,
+                          controller: questionController,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 20),
+                            border: InputBorder.none,
+                            hintText: 'Input your question',
+                            prefixIcon: Icon(
+                              Icons.question_mark_outlined,
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          validator: (String? value) {
+                            if (value!.trim().isEmpty) {
+                              return 'Question cannot be empty';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Pointers field, can be empty
                   Padding(
@@ -117,13 +135,15 @@ class _AddQuestion extends State<AddQuestion> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: TextFormField(
+                          key: const Key("notesTextField"),
                           controller: pointersController,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 30),
                             border: InputBorder.none,
-                            hintText: 'Input any notes (Multiline) (Optional)',
+                            hintText:
+                                'Input any notes (Multiline) (Markdown supported) (Optional)',
                             prefixIcon: Icon(
                               Icons.notes_outlined,
                               color: Colors.deepPurple,
@@ -133,8 +153,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   // Tags field, can be empty
                   Padding(
@@ -153,6 +173,7 @@ class _AddQuestion extends State<AddQuestion> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: TextFormField(
+                          key: const Key("tagsTextField"),
                           controller: tagsController,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 20),
@@ -167,8 +188,8 @@ class _AddQuestion extends State<AddQuestion> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   Row(
                     children: <Widget>[
@@ -184,6 +205,7 @@ class _AddQuestion extends State<AddQuestion> {
                                   color: Colors.grey[300],
                                 ),
                                 child: DropdownSearch(
+                                  key: const Key("moduleDropdown"),
                                   popupBackgroundColor: Colors.grey[300],
                                   enabled: false,
                                   selectedItem: module.text,
@@ -204,28 +226,30 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 40.0,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Privatise question? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Checkbox(
-                              activeColor: Colors.deepPurple,
-                              splashRadius: 20.0,
-                              value: privacy,
-                              onChanged: (newValue) => setState(() {
-                                    privacy = newValue!;
-                                  })),
-                        ],
-                      ),
+                      widget.question == null
+                          ? Row(
+                              children: [
+                                const Text(
+                                  "Privatise question? ",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Checkbox(
+                                    activeColor: Colors.deepPurple,
+                                    splashRadius: 20.0,
+                                    value: privacy,
+                                    onChanged: (newValue) => setState(() {
+                                          privacy = newValue!;
+                                        })),
+                              ],
+                            )
+                          : const Text(""),
                     ],
                   ),
-                  const SizedBox(
-                    height: 30.0,
+                  SizedBox(
+                    height: currentScreenHeight * 0.03,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -236,6 +260,7 @@ class _AddQuestion extends State<AddQuestion> {
                       Tooltip(
                         message: "Click to save",
                         child: ElevatedButton(
+                          key: const Key("saveButton"),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.deepPurple,
                           ),
@@ -243,25 +268,33 @@ class _AddQuestion extends State<AddQuestion> {
                           onPressed: () {
                             if (_formKey.currentState!.validate() &&
                                 module.text != null) {
-                              Question question = Question(<String, dynamic>{
-                                "Question": questionController.text,
-                                "Notes": pointersController.text,
-                                "Module": module.text,
-                                "LastUpdate": DateTime.now().toString(),
-                                "Tags": tagsController.text.isEmpty
-                                    ? List.empty()
-                                    : tagsController.text
-                                        .split(', ')
-                                        .toSet()
-                                        .toList(),
-                                "Importance": importance,
-                                "Privacy": privacy,
-                                "Owner": widget.user.uid,
-                                "FromCommunity": false,
-                              }, widget.user.uid, module.text!);
-                              question.addToDatabase().then((_) =>
-                                  Navigator.pushReplacementNamed(
-                                      context, "/questions"));
+                              if (widget.question == null) {
+                                Question question = Question(<String, dynamic>{
+                                  "Question": questionController.text,
+                                  "Notes": pointersController.text,
+                                  "Module": module.text,
+                                  "LastUpdate": DateTime.now().toString(),
+                                  "Tags": tagsController.text.isEmpty
+                                      ? List.empty()
+                                      : tagsController.text
+                                          .split(', ')
+                                          .toSet()
+                                          .toList(),
+                                  "Importance": importance,
+                                  "Privacy": privacy,
+                                  "Owner": widget.user.uid,
+                                  "FromCommunity": false,
+                                }, widget.user.uid, module.text!);
+                                question.addToDatabase().then((_) =>
+                                    Navigator.pushReplacementNamed(
+                                        context, "/questions"));
+                              } else {
+                                widget.question!
+                                    .pullToUser(widget.user.uid,
+                                        pointersController.text)
+                                    .then((_) => Navigator.pushReplacementNamed(
+                                        context, "/questions"));
+                              }
                             }
                           },
                           child: const Icon(Icons.save),
@@ -272,7 +305,7 @@ class _AddQuestion extends State<AddQuestion> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

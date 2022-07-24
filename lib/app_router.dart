@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mug_together/screens/myQns/add_question.dart';
 import 'package:mug_together/screens/bank/bank_module.dart';
+import 'package:mug_together/screens/qna/lounge.dart';
+import 'package:mug_together/screens/myQns/question_share.dart';
 import 'package:mug_together/screens/quiz/past_attempts.dart';
 import 'package:mug_together/screens/userAuth/profile.dart';
 import 'package:mug_together/screens/bank/questionbank.dart';
@@ -9,6 +11,7 @@ import 'package:mug_together/screens/myQns/questions.dart';
 import 'package:mug_together/screens/userAuth/login.dart';
 import 'package:mug_together/screens/quiz/quiz.dart';
 import 'package:mug_together/screens/userAuth/signup.dart';
+import 'package:mug_together/screens/qna/qna.dart';
 
 class AppRouter {
   /// Generate the route given the RouteSettings.
@@ -18,9 +21,10 @@ class AppRouter {
   /// an error 404 page is generated.
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+    final Uri uri = Uri.parse(settings.name ?? '');
 
     // Sign up and Log in
-    switch (settings.name) {
+    switch (uri.path) {
       case '/':
         return MaterialPageRoute(
             settings: settings, builder: (context) => const LoginPage());
@@ -30,24 +34,41 @@ class AppRouter {
       case '/questions':
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
-        return _checkUser((user) => AddQuestion(user: user), settings);
-      case '/profile/me':
-        return _checkUser((user) => ProfilePage(user: user), settings);
+        args as Map<String, dynamic>;
+        return _checkUser(
+            (user) => AddQuestion(user: user, question: args["Question"]),
+            settings);
+      case '/profile':
+        return _checkUser((user) => ProfilePage(user: user, profile: args as String), settings);
       case '/bank':
-        return _checkUser((_) => const QuestionBankPage(), settings);
+        return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':
         if (args != null) {
           return _checkUser(
               (user) => BankModulePage(user: user, module: args as String),
               settings);
         } else {
-          return _checkUser((_) => const QuestionBankPage(),
+          return _checkUser((user) => QuestionBankPage(user: user),
               const RouteSettings(name: '/bank'));
         }
       case '/quiz':
         return _checkUser((user) => QuizPage(user: user), settings);
       case '/quiz/past':
         return _checkUser((user) => PastAttempts(user: user), settings);
+      case '/qna':
+        return _checkUser((user) => QnAPage(user: user), settings);
+      case '/qna/module':
+        if (args != null) {
+          return _checkUser(
+              (user) => Lounge(user: user, module: args as String), settings);
+        } else {
+          return _checkUser(
+              (user) => QnAPage(user: user), const RouteSettings(name: '/qna'));
+        }
+      case '/shareable':
+        return _checkUser(
+            (user) => SharedQuestion(data: uri.queryParameters, user: user),
+            settings);
       default:
         return _pageNotFound();
     }
