@@ -294,7 +294,6 @@ class _AddQuestion extends State<AddQuestion> {
                                         pointersController.text)
                                     .then((_) => Navigator.pushReplacementNamed(
                                         context, "/questions"));
-                                ;
                               }
                             }
                           },

@@ -39,7 +39,7 @@ class AppRouter {
             (user) => AddQuestion(user: user, question: args["Question"]),
             settings);
       case '/profile':
-        return _checkUser((user) => ProfilePage(user: user, profile: uri.queryParameters["user"]!), settings);
+        return _checkUser((user) => ProfilePage(user: user, profile: args as String), settings);
       case '/bank':
         return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':

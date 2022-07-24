@@ -113,7 +113,7 @@ class Question {
         .collection(_uid)
         .doc(_module)
         .collection("questions")
-        .doc(_docId)
+        .doc(docId)
         .set({"Flag": FieldValue.increment(1)}, SetOptions(merge: true));
   }
 
@@ -123,11 +123,12 @@ class Question {
         .collection(_uid)
         .doc(_module)
         .collection("questions")
-        .doc(_docId)
+        .doc(docId)
         .set({
       "Difficulty": FieldValue.increment(rating),
       "No of Ratings": FieldValue.increment(1),
     }, SetOptions(merge: true));
+  }
 
   /// Push current question to QnA
   Future<void> pushToQnA(String initMessage, String name) {
