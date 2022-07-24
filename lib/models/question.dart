@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mug_together/models/discussion.dart';
 
 class Question {
   late Map<String, dynamic> data;
@@ -104,5 +105,11 @@ class Question {
     dupeQn.update("Notes", (value) => newNotes);
     dupeQn.update("Tags", (value) => <String>["Community"]);
     return Question(dupeQn, newUID, _module).addToDatabase();
+  }
+
+  /// Push current question to QnA
+  Future<void> pushToQnA(String initMessage, String name) {
+    return Discussion.create(
+        initMessage, name, data["Owner"], data["Module"], data["Question"]);
   }
 }

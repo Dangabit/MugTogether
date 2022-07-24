@@ -95,7 +95,7 @@ class _AddQuestion extends State<AddQuestion> {
                             ),
                           ),
                           validator: (String? value) {
-                            if (value == null || value.isEmpty) {
+                            if (value!.trim().isEmpty) {
                               return 'Question cannot be empty';
                             }
                             return null;
@@ -264,7 +264,7 @@ class _AddQuestion extends State<AddQuestion> {
                                 "Notes": pointersController.text,
                                 "Module": module.text,
                                 "LastUpdate": DateTime.now().toString(),
-                                "Tags": tagsController.text.isEmpty
+                                "Tags": tagsController.text.trim().isEmpty
                                     ? List.empty()
                                     : tagsController.text
                                         .split(', ')

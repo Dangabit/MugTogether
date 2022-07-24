@@ -21,7 +21,7 @@ class InAppDrawer {
                 _createDrawerItem(
                   Icons.account_circle_sharp,
                   'My Profile',
-                  () => Navigator.popAndPushNamed(context, '/profile/me'),
+                  () => Navigator.popAndPushNamed(context, '/profile?user=me'),
                 ),
                 _createDrawerItem(
                   Icons.assignment_sharp,
@@ -37,6 +37,11 @@ class InAppDrawer {
                   Icons.quiz_outlined,
                   'Quiz',
                   () => Navigator.popAndPushNamed(context, '/quiz'),
+                ),
+                _createDrawerItem(
+                  Icons.forum_outlined,
+                  'QnA Forum',
+                  () => Navigator.popAndPushNamed(context, '/qna'),
                 ),
                 const Spacer(),
                 _signOutButton(context),
@@ -86,14 +91,30 @@ class InAppDrawer {
         Positioned(
           top: 17.0,
           left: 9.0,
-          child: ClipOval(
-            child: Material(
-              color: Colors.transparent,
-              child: Image.asset(
-                'assets/images/user-profile.png',
-                fit: BoxFit.cover,
-                width: 55,
-                height: 55,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
+            ),
+            child: ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: user.photoURL == null
+                    ? Image.asset(
+                        'assets/images/user-profile.png',
+                        fit: BoxFit.cover,
+                        width: 55,
+                        height: 55,
+                      )
+                    : Image.network(
+                        user.photoURL!,
+                        fit: BoxFit.cover,
+                        width: 55,
+                        height: 55,
+                      ),
               ),
             ),
           ),
@@ -106,6 +127,7 @@ class InAppDrawer {
   static Widget _createDrawerItem(
       IconData icon, String text, GestureTapCallback onTap) {
     return ListTile(
+      key: Key(text),
       title: Row(
         children: <Widget>[
           Icon(

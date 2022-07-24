@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mug_together/widgets/size_config.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,31 +28,30 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentScreenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 222, 255),
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Center(
-          child: currentScreenWidth > 650
-              ? SizedBox(
-                  width: SizeConfig.widthSize(context, 60),
-                  child: buildLoginScreen(context),
-                )
-              : buildLoginScreen(context),
+          child: buildLoginScreen(context),
         ),
       ),
     );
   }
 
   Widget buildLoginScreen(BuildContext context) {
+    final currentScreenWidth = MediaQuery.of(context).size.width;
+    final currentScreenHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 25.0, bottom: 5.0),
-              child: Image.asset('assets/images/logo3.png'),
+              child: Image.asset(
+                'assets/images/logo3.png',
+                height: currentScreenHeight < 680 ? 130 : 160,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -85,207 +83,216 @@ class _LoginPage extends State<LoginPage> {
           ],
         ),
         Container(
+          width: currentScreenWidth < 500
+              ? currentScreenWidth
+              : currentScreenWidth < 1000
+                  ? currentScreenWidth * 0.8
+                  : currentScreenWidth * 0.6,
           margin: const EdgeInsets.only(top: 20.0),
-          color: Colors.transparent,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(197, 213, 198, 255),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
-                bottomLeft: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0),
-              ),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(197, 213, 198, 255),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              topRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 18),
-              child: Column(
-                children: <Widget>[
-                  // Login Form
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          const Text(
-                            'Log In',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 25,
-                            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: Column(
+              children: <Widget>[
+                // Login Form
+                Padding(
+                  padding: EdgeInsets.only(top: currentScreenHeight * 0.05),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        const Text(
+                          'Log In',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 25,
                           ),
-                          const SizedBox(
-                            height: 50.0,
+                        ),
+                        SizedBox(
+                          height: currentScreenHeight * 0.05,
+                        ),
+                        // Email input field
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
                           ),
-                          // Email input field
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                              vertical: currentScreenHeight * 0.001,
                             ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: TextFormField(
-                                  key: const Key("emailFormField"),
-                                  controller: emailController,
-                                  decoration: const InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 15),
-                                    border: InputBorder.none,
-                                    labelText: 'Email',
-                                    hintText: 'Enter your email',
-                                    prefixIcon: Icon(
-                                      Icons.mail_outline,
-                                      color: Colors.deepPurple,
-                                    ),
-                                  ),
-                                  validator: (String? value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please input your email';
-                                    }
-                                    return null;
-                                  },
-                                  onFieldSubmitted: _submit,
-                                ),
-                              ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ),
-
-                          const Padding(padding: EdgeInsets.all(5)),
-
-                          // Password input field
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5),
-                                child: TextFormField(
-                                  key: const Key("passwordFormField"),
-                                  controller: passwordController,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 15),
-                                    border: InputBorder.none,
-                                    labelText: 'Password',
-                                    hintText: 'Enter your password',
-                                    prefixIcon: const Icon(
-                                      Icons.lock_outline,
-                                      color: Colors.deepPurple,
-                                    ),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _passwordVisible = !_passwordVisible;
-                                        });
-                                      },
-                                      icon: Icon(
-                                        _passwordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.deepPurple,
-                                      ),
-                                    ),
-                                  ),
-                                  validator: (String? value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please input your password';
-                                    }
-                                    return null;
-                                  },
-                                  obscureText: !_passwordVisible,
-                                  onFieldSubmitted: _submit,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: TextButton(
-                                  key: const Key("forgetPassword"),
-                                  onPressed: () => showDialog(
-                                      context: context, builder: _popupForm),
-                                  child: const Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.deepPurple),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: TextFormField(
+                                key: const Key("emailFormField"),
+                                controller: emailController,
+                                decoration: const InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 15),
+                                  border: InputBorder.none,
+                                  labelText: 'Email',
+                                  hintText: 'Enter your email',
+                                  prefixIcon: Icon(
+                                    Icons.mail_outline,
+                                    color: Colors.deepPurple,
                                   ),
                                 ),
+                                validator: (String? value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please input your email';
+                                  }
+                                  return null;
+                                },
+                                onFieldSubmitted: _submit,
                               ),
-                            ],
-                          ),
-                          // Button, with function to login
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: SizedBox(
-                              width: 350.0,
-                              height: 55.0,
-                              child: ElevatedButton(
-                                key: const Key("loginButton"),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.deepPurple,
-                                ),
-                                child: const Text(
-                                  'Login!',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                onPressed: () => _submit(null),
-                              ),
-                            ),
-                          ),
-                          // Display any firebase login issue, if any
-                          Text(
-                            _exception,
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Sign Up
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text(
-                        "Not registered yet?",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(),
-                        child: TextButton(
-                          key: const Key("signupButton"),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/signup');
-                          },
-                          child: const Text(
-                            "Sign up here!",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              color: Colors.deepPurple,
                             ),
                           ),
                         ),
-                      ),
-                    ],
+
+                        const Padding(padding: EdgeInsets.all(5)),
+
+                        // Password input field
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                              vertical: currentScreenHeight * 0.001,
+                            ),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5),
+                              child: TextFormField(
+                                key: const Key("passwordFormField"),
+                                controller: passwordController,
+                                decoration: InputDecoration(
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  border: InputBorder.none,
+                                  labelText: 'Password',
+                                  hintText: 'Enter your password',
+                                  prefixIcon: const Icon(
+                                    Icons.lock_outline,
+                                    color: Colors.deepPurple,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                    icon: Icon(
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                ),
+                                validator: (String? value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please input your password';
+                                  }
+                                  return null;
+                                },
+                                obscureText: !_passwordVisible,
+                                onFieldSubmitted: _submit,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: TextButton(
+                                key: const Key("forgetPassword"),
+                                onPressed: () => showDialog(
+                                    context: context, builder: _popupForm),
+                                child: const Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.deepPurple),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Button, with function to login
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: currentScreenHeight * 0.02),
+                          child: SizedBox(
+                            width: 350.0,
+                            height: 55.0,
+                            child: ElevatedButton(
+                              key: const Key("loginButton"),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.deepPurple,
+                              ),
+                              child: const Text(
+                                'Login!',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () => _submit(null),
+                            ),
+                          ),
+                        ),
+                        // Display any firebase login issue, if any
+                        Text(
+                          _exception,
+                          style: const TextStyle(color: Colors.redAccent),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+                // Sign Up
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text(
+                      "Not registered yet?",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(),
+                      child: TextButton(
+                        key: const Key("signupButton"),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: const Text(
+                          "Sign up here!",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
