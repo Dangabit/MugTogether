@@ -176,12 +176,11 @@ class _DiscussionRoom extends State<DiscussionRoom> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(
-                      context,
-                      discussion.data["UserID"][index] == widget.user.uid
-                          ? "/profile?user=me"
-                          : "/profile?user=" + discussion.data["UserID"][index],
-                      arguments: discussion.data["UserID"][index]);
+                  Navigator.pushNamed(context, "/profile",
+                      arguments:
+                          discussion.data["UserID"][index] == widget.user.uid
+                              ? "me"
+                              : discussion.data["UserID"][index]);
                 },
                 child: Padding(
                   padding:
