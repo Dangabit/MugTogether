@@ -174,92 +174,129 @@ class _BankModulePage extends State<BankModulePage> {
                                   const SizedBox(
                                     width: 30.0,
                                   ),
-                                  SizedBox(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    child: Tooltip(
-                                      message: "View & add question",
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.deepPurple,
-                                            padding: EdgeInsets.zero,
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            height: 30.0,
+                                            width: 40.0,
+                                            child: Tooltip(
+                                              message: "View & add question",
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.deepPurple,
+                                                    padding: EdgeInsets.zero,
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(context,
+                                                        "/questions/add",
+                                                        arguments: <String,
+                                                            dynamic>{
+                                                          "Question": question
+                                                        });
+                                                  },
+                                                  child: const Icon(
+                                                      Icons.download)),
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, "/questions/add",
-                                                arguments: <String, dynamic>{
-                                                  "Question": question
-                                                });
-                                          },
-                                          child: const Icon(Icons.download)),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  SizedBox(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    child: Tooltip(
-                                      message: !_flagged
-                                          ? "Flag question"
-                                          : "Already flagged",
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.deepPurple,
-                                            padding: EdgeInsets.zero,
+                                          const SizedBox(
+                                            width: 10.0,
                                           ),
-                                          onPressed: () async {
-                                            if (_flagged) {
-                                              return;
-                                            }
-                                            if (await confirm(
-                                              context,
-                                              title: const Text("Confirm"),
-                                              content: const Text(
-                                                  "Would you like to flag this question?"),
-                                              textOK: const Text("Yes"),
-                                              textCancel: const Text("No"),
-                                            )) {
-                                              question.flagQuestion();
-                                              setState(() {
-                                                _flagged = true;
-                                              });
-                                            }
-                                          },
-                                          child: const Icon(Icons.flag)),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  SizedBox(
-                                    height: 30.0,
-                                    width: 40.0,
-                                    child: Tooltip(
-                                      message: !_rated
-                                          ? "Rate difficulty"
-                                          : "Already rated",
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.deepPurple,
-                                            padding: EdgeInsets.zero,
+                                          SizedBox(
+                                            height: 30.0,
+                                            width: 40.0,
+                                            child: Tooltip(
+                                              message: !_flagged
+                                                  ? "Flag question"
+                                                  : "Already flagged",
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.deepPurple,
+                                                    padding: EdgeInsets.zero,
+                                                  ),
+                                                  onPressed: () async {
+                                                    if (_flagged) {
+                                                      return;
+                                                    }
+                                                    if (await confirm(
+                                                      context,
+                                                      title:
+                                                          const Text("Confirm"),
+                                                      content: const Text(
+                                                          "Would you like to flag this question?"),
+                                                      textOK: const Text("Yes"),
+                                                      textCancel:
+                                                          const Text("No"),
+                                                    )) {
+                                                      question.flagQuestion();
+                                                      setState(() {
+                                                        _flagged = true;
+                                                      });
+                                                    }
+                                                  },
+                                                  child:
+                                                      const Icon(Icons.flag)),
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            _rated
-                                                ? null
-                                                : showDialog(
-                                                    context: context,
-                                                    barrierDismissible: true,
-                                                    builder: (context) =>
-                                                        _dialog,
-                                                  );
-                                          },
-                                          child: const Icon(Icons.star)),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 30.0,
+                                          const SizedBox(
+                                            width: 10.0,
+                                          ),
+                                          SizedBox(
+                                            height: 30.0,
+                                            width: 40.0,
+                                            child: Tooltip(
+                                              message: !_rated
+                                                  ? "Rate difficulty"
+                                                  : "Already rated",
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    primary: Colors.deepPurple,
+                                                    padding: EdgeInsets.zero,
+                                                  ),
+                                                  onPressed: () {
+                                                    _rated
+                                                        ? null
+                                                        : showDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                true,
+                                                            builder:
+                                                                (context) =>
+                                                                    _dialog,
+                                                          );
+                                                  },
+                                                  child:
+                                                      const Icon(Icons.star)),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 30.0,
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 5.0,
+                                          right: 28.0,
+                                        ),
+                                        child: question.data["Difficulty"] ==
+                                                    null ||
+                                                question.data[
+                                                        "No of Ratings"] ==
+                                                    null
+                                            ? const Text(
+                                                "No difficulty rating yet")
+                                            : Text("Difficulty rating: " +
+                                                (question.data["Difficulty"] /
+                                                        question.data[
+                                                            "No of Ratings"])
+                                                    .toString()),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
