@@ -234,7 +234,7 @@ class _QuizPage extends State<QuizPage> {
                 Row(
                   children: [
                     ElevatedButton(
-                      child: const Text("Continue without code"),
+                      child: const Text("Continue w/o code"),
                       onPressed: (() => Navigator.push(
                           context,
                           MaterialPageRoute(
