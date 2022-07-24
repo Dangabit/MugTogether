@@ -325,11 +325,11 @@ class _EditProfile extends State<EditProfile> {
                         .reverify({
                           "Password": newPassController.text,
                           "NewPassword": passwordController.text,
-                          "PicURL": picController.text
                         }, {
                           "Bio": bioController.text,
                           "Achievements": List.empty(),
                           "Username": nameController.text,
+                          "PicURL": picController.text
                         }, widget.user)
                         .then((_) => Navigator.pushNamedAndRemoveUntil(context,
                             '/profile?user=me', ModalRoute.withName("/")))
