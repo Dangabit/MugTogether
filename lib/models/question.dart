@@ -107,6 +107,29 @@ class Question {
     return Question(dupeQn, newUID, _module).addToDatabase();
   }
 
+  /// Flag the question for bank
+  Future<void> flagQuestion() {
+    return FirebaseFirestore.instance
+        .collection(_uid)
+        .doc(_module)
+        .collection("questions")
+        .doc(docId)
+        .set({"Flag": FieldValue.increment(1)}, SetOptions(merge: true));
+  }
+
+  /// Rate the question
+  Future<void> rateQuestion(double rating) {
+    return FirebaseFirestore.instance
+        .collection(_uid)
+        .doc(_module)
+        .collection("questions")
+        .doc(docId)
+        .set({
+      "Difficulty": FieldValue.increment(rating),
+      "No of Ratings": FieldValue.increment(1),
+    }, SetOptions(merge: true));
+  }
+
   /// Push current question to QnA
   Future<void> pushToQnA(String initMessage, String name) {
     return Discussion.create(

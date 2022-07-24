@@ -42,6 +42,8 @@ dependencies:
   http: ^0.13.4
   dropdown_search: ^3.0.1
   audioplayers: ^1.0.1
+  rating_dialog: ^2.0.4
+  confirm_dialog: ^1.0.1
   flutter_markdown: ^0.6.8
   pdf: ^3.8.1
   path_provider: ^2.0.11

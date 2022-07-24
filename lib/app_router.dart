@@ -34,9 +34,12 @@ class AppRouter {
       case '/questions':
         return _checkUser((user) => QuestionsPage(user: user), settings);
       case '/questions/add':
-        return _checkUser((user) => AddQuestion(user: user), settings);
+        args as Map<String, dynamic>;
+        return _checkUser(
+            (user) => AddQuestion(user: user, question: args["Question"]),
+            settings);
       case '/profile':
-        return _checkUser((user) => ProfilePage(user: user, profile: uri.queryParameters["user"]!), settings);
+        return _checkUser((user) => ProfilePage(user: user, profile: args as String), settings);
       case '/bank':
         return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':

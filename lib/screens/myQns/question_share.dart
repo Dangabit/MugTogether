@@ -48,9 +48,6 @@ class _SharedQuestion extends State<SharedQuestion> {
         body: FutureBuilder(
           future: questionFuture,
           builder: (context, AsyncSnapshot<Question> snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-            }
             if (snapshot.hasData) {
               MarkdownBody markdown = MarkdownBody(
                 data: snapshot.data?.data["Notes"],

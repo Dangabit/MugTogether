@@ -7,8 +7,10 @@ import 'package:mug_together/widgets/data.dart';
 import 'package:mug_together/widgets/module_list.dart';
 
 class AddQuestion extends StatefulWidget {
-  const AddQuestion({Key? key, required this.user}) : super(key: key);
+  const AddQuestion({Key? key, required this.user, this.question})
+      : super(key: key);
   final User user;
+  final Question? question;
 
   @override
   State<AddQuestion> createState() => _AddQuestion();
@@ -32,6 +34,15 @@ class _AddQuestion extends State<AddQuestion> {
     pointersController.dispose();
     tagsController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.question != null) {
+      questionController.text = widget.question!.data["Question"];
+      module.text = widget.question!.data["Module"];
+    }
   }
 
   @override
@@ -215,28 +226,26 @@ class _AddQuestion extends State<AddQuestion> {
                       const SizedBox(
                         width: 40.0,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Privatise question? ",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Checkbox(
-                            key: const Key("privacyCheckbox"),
-                            activeColor: Colors.deepPurple,
-                            splashRadius: 20.0,
-                            value: privacy,
-                            onChanged: (newValue) => setState(
-                              () {
-                                privacy = newValue!;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                      widget.question == null
+                          ? Row(
+                              children: [
+                                const Text(
+                                  "Privatise question? ",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Checkbox(
+                                    activeColor: Colors.deepPurple,
+                                    splashRadius: 20.0,
+                                    value: privacy,
+                                    onChanged: (newValue) => setState(() {
+                                          privacy = newValue!;
+                                        })),
+                              ],
+                            )
+                          : const Text(""),
                     ],
                   ),
                   SizedBox(
@@ -259,25 +268,33 @@ class _AddQuestion extends State<AddQuestion> {
                           onPressed: () {
                             if (_formKey.currentState!.validate() &&
                                 module.text != null) {
-                              Question question = Question(<String, dynamic>{
-                                "Question": questionController.text,
-                                "Notes": pointersController.text,
-                                "Module": module.text,
-                                "LastUpdate": DateTime.now().toString(),
-                                "Tags": tagsController.text.trim().isEmpty
-                                    ? List.empty()
-                                    : tagsController.text
-                                        .split(', ')
-                                        .toSet()
-                                        .toList(),
-                                "Importance": importance,
-                                "Privacy": privacy,
-                                "Owner": widget.user.uid,
-                                "FromCommunity": false,
-                              }, widget.user.uid, module.text!);
-                              question.addToDatabase().then((_) =>
-                                  Navigator.pushReplacementNamed(
-                                      context, "/questions"));
+                              if (widget.question == null) {
+                                Question question = Question(<String, dynamic>{
+                                  "Question": questionController.text,
+                                  "Notes": pointersController.text,
+                                  "Module": module.text,
+                                  "LastUpdate": DateTime.now().toString(),
+                                  "Tags": tagsController.text.isEmpty
+                                      ? List.empty()
+                                      : tagsController.text
+                                          .split(', ')
+                                          .toSet()
+                                          .toList(),
+                                  "Importance": importance,
+                                  "Privacy": privacy,
+                                  "Owner": widget.user.uid,
+                                  "FromCommunity": false,
+                                }, widget.user.uid, module.text!);
+                                question.addToDatabase().then((_) =>
+                                    Navigator.pushReplacementNamed(
+                                        context, "/questions"));
+                              } else {
+                                widget.question!
+                                    .pullToUser(widget.user.uid,
+                                        pointersController.text)
+                                    .then((_) => Navigator.pushReplacementNamed(
+                                        context, "/questions"));
+                              }
                             }
                           },
                           child: const Icon(Icons.save),

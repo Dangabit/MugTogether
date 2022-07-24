@@ -48,20 +48,11 @@ class _ProfilePage extends State<ProfilePage> {
                       height: 20.0,
                     ),
                     Center(
-                      child: Stack(children: [
-                        _buildImage(isUser
-                            ? (widget.user.photoURL == null
-                                ? ''
-                                : widget.user.photoURL!)
-                            : (profile.extraData["PicURL"] ?? '')),
-                        Positioned(
-                          bottom: 0,
-                          right: 4,
-                          child: _buildEditIcon(
-                            Colors.deepPurple,
-                          ),
-                        )
-                      ]),
+                      child: _buildImage(isUser
+                          ? (widget.user.photoURL == null
+                              ? ''
+                              : widget.user.photoURL!)
+                          : (profile.extraData["PicURL"] ?? '')),
                     ),
                     const SizedBox(
                       height: 20.0,
@@ -239,36 +230,6 @@ class _ProfilePage extends State<ProfilePage> {
                   height: 128,
                 ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildEditIcon(Color color) {
-    return _buildCircle(
-      color: Colors.white,
-      all: 3,
-      child: _buildCircle(
-        color: color,
-        all: 8,
-        child: const Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 20,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCircle({
-    required Widget child,
-    required double all,
-    required Color color,
-  }) {
-    return ClipOval(
-      child: Container(
-        padding: EdgeInsets.all(all),
-        color: color,
-        child: child,
       ),
     );
   }
