@@ -294,7 +294,8 @@ class _BankModulePage extends State<BankModulePage> {
                                                 (question.data["Difficulty"] /
                                                         question.data[
                                                             "No of Ratings"])
-                                                    .toString()),
+                                                    .toString() +
+                                                " / 5"),
                                       ),
                                     ],
                                   ),
