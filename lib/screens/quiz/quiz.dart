@@ -266,7 +266,6 @@ class _QuizPage extends State<QuizPage> {
                                 ),
                               )
                               .onError((error, stackTrace) {
-                                print(error);
                                 setState(() {
                                   _fail = true;
                                 });
