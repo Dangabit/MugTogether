@@ -112,6 +112,14 @@ class InAppDrawer {
                       )
                     : Image.network(
                         user.photoURL!,
+                        errorBuilder: (context, exception, stackTrace) {
+                          return Image.asset(
+                            'assets/images/user-profile.png',
+                            fit: BoxFit.cover,
+                            width: 55,
+                            height: 55,
+                          );
+                        },
                         fit: BoxFit.cover,
                         width: 55,
                         height: 55,

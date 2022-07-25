@@ -225,6 +225,14 @@ class _ProfilePage extends State<ProfilePage> {
                 )
               : Image.network(
                   url,
+                  errorBuilder: (context, exception, stackTrace) {
+                    return Image.asset(
+                      'assets/images/user-profile.png',
+                      fit: BoxFit.cover,
+                      width: 128,
+                      height: 128,
+                    );
+                  },
                   fit: BoxFit.cover,
                   width: 128,
                   height: 128,
