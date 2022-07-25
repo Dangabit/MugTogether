@@ -22,14 +22,12 @@ class _QuizPage extends State<QuizPage> {
   bool _timerCheck = false;
   double _countdown = 10;
   late final TextEditingController codeController;
-  late bool _validate;
   late bool _fail;
 
   @override
   void initState() {
     super.initState();
     codeController = TextEditingController();
-    _validate = false;
     _fail = false;
   }
 
@@ -56,59 +54,59 @@ class _QuizPage extends State<QuizPage> {
   Widget _buildForm() {
     final currentScreenWidth = MediaQuery.of(context).size.width;
     final currentScreenHeight = MediaQuery.of(context).size.height;
-    return Center(
-      child: SizedBox(
-        width: currentScreenWidth < 500
-            ? currentScreenWidth
-            : currentScreenWidth < 1000
-                ? currentScreenWidth * 0.8
-                : currentScreenWidth * 0.6,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: currentScreenHeight * 0.03,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Get the module choice
-                ModuleList.createListing(_currentMod),
-                const SizedBox(
-                  width: 40.0,
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: currentScreenHeight * 0.03,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Get the module choice
+              ModuleList.createListing(_currentMod),
+              SizedBox(
+                width: currentScreenWidth * 0.03,
+              ),
+              // Check if the user wants a timer
+              const Text(
+                "Enable timer? ",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontStyle: FontStyle.italic,
                 ),
-                // Check if the user wants a timer
-                const Text(
-                  "Enable timer? ",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                Checkbox(
-                  value: _timerCheck,
-                  activeColor: Colors.deepPurple,
-                  splashRadius: 20.0,
-                  onChanged: (value) {
-                    setState(() {
-                      _timerCheck = value!;
-                    });
-                  },
-                ),
-              ],
-            ),
-            SizedBox(
-              height: currentScreenHeight * 0.05,
-            ),
-            Wrap(
-              children: const [
-                Text(
-                  "Choose a number of questions (1 - 10)",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-            // Get number of questions, 1 - 10
-            Slider(
+              ),
+              Checkbox(
+                value: _timerCheck,
+                activeColor: Colors.deepPurple,
+                splashRadius: 20.0,
+                onChanged: (value) {
+                  setState(() {
+                    _timerCheck = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(
+            height: currentScreenHeight * 0.05,
+          ),
+          Wrap(
+            children: const [
+              Text(
+                "Choose a number of questions (1 - 10)",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+          // Get number of questions, 1 - 10
+          SizedBox(
+            width: currentScreenWidth < 500
+                ? currentScreenWidth
+                : currentScreenWidth < 1000
+                    ? currentScreenWidth * 0.8
+                    : currentScreenWidth * 0.6,
+            child: Slider(
               activeColor: Colors.deepPurple,
               inactiveColor: Colors.purple[100],
               value: _noOfQns,
@@ -122,19 +120,26 @@ class _QuizPage extends State<QuizPage> {
                 });
               },
             ),
-            SizedBox(
-              height: currentScreenHeight * 0.03,
-            ),
-            // If the user wants a timer, choose how long (10 - 60 min)
-            _timerCheck
-                ? Column(
-                    children: [
-                      const Text(
-                        "Select a time duration",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                      Slider(
+          ),
+          SizedBox(
+            height: currentScreenHeight * 0.03,
+          ),
+          // If the user wants a timer, choose how long (10 - 60 min)
+          _timerCheck
+              ? Column(
+                  children: [
+                    const Text(
+                      "Select a time duration",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      width: currentScreenWidth < 500
+                          ? currentScreenWidth
+                          : currentScreenWidth < 1000
+                              ? currentScreenWidth * 0.8
+                              : currentScreenWidth * 0.6,
+                      child: Slider(
                           activeColor: Colors.deepPurple,
                           inactiveColor: Colors.purple[100],
                           value: _countdown,
@@ -147,53 +152,68 @@ class _QuizPage extends State<QuizPage> {
                               _countdown = value;
                             });
                           }),
-                    ],
-                  )
-                : const Text(""),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // View past quiz attempts
-                ElevatedButton(
-                  key: const Key("pastquizButton"),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
-                  ),
-                  onPressed: () => Navigator.pushNamed(context, "/quiz/past"),
-                  child: const Text(
-                    "Past records",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
                     ),
+                  ],
+                )
+              : const Text(""),
+          SizedBox(
+            height: currentScreenHeight * 0.3,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // View past quiz attempts
+              ElevatedButton(
+                key: const Key("pastquizButton"),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.deepPurple,
+                ),
+                onPressed: () => Navigator.pushNamed(context, "/quiz/past"),
+                child: const Text(
+                  "Past records",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  width: 100.0,
+              ),
+              const SizedBox(
+                width: 100.0,
+              ),
+              // Start the quiz
+              ElevatedButton(
+                key: const Key("startQuizButton"),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.deepPurple,
                 ),
-                // Start the quiz
-                ElevatedButton(
-                  key: const Key("startQuizButton"),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
-                  ),
-                  onPressed: _submit,
-                  child: const Text(
-                    "Start quiz!",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                onPressed: _submit,
+                child: const Text(
+                  "Start quiz!",
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          Container(
+            height: 50,
+            width: 140,
+            margin: const EdgeInsets.only(left: 255.0),
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: TextField(
+              controller: codeController,
+              decoration: InputDecoration(
+                hintText: "Input code (if any)",
+                errorText: _fail ? "Invalid code" : null,
+              ),
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+        ],
       ),
     );
   }
@@ -201,95 +221,43 @@ class _QuizPage extends State<QuizPage> {
   /// Push the information needed into the next screen
   void _submit() {
     if (_currentMod.text != null) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              insetPadding: const EdgeInsets.symmetric(),
-              scrollable: true,
-              content: Column(children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1),
-                  ),
-                  child: TextField(
-                    controller: codeController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Input code (if any)",
-                      errorText: _validate
-                          ? "Code cannot be empty"
-                          : _fail
-                              ? "Invalid code"
-                              : null,
-                    ),
-                  ),
+      if (codeController.text.trim().isEmpty) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => QuizAttempt(
+                    totalQns: _noOfQns.toInt(),
+                    modName: _currentMod.text!,
+                    timerCheck: _timerCheck,
+                    countdown: _countdown.toInt())));
+      } else {
+        final data = codeController.text.split(":");
+        FirebaseFirestore.instance
+            .collection(data.first)
+            .doc("Quiz Attempts")
+            .get()
+            .then((doc) {
+              return (doc.get("AttemptList") as List)[int.parse(data.last)];
+            })
+            .then(
+              (attemptData) => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizAttempt(
+                      totalQns: attemptData["Questions"].length,
+                      modName: attemptData["Module"],
+                      timerCheck: _timerCheck,
+                      countdown: _countdown.toInt(),
+                      qnsList: attemptData["Questions"]),
                 ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      child: const Text("Continue w/o code"),
-                      onPressed: (() => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QuizAttempt(
-                                  totalQns: _noOfQns.toInt(),
-                                  modName: _currentMod.text!,
-                                  timerCheck: _timerCheck,
-                                  countdown: _countdown.toInt())))),
-                    ),
-                    const SizedBox(
-                      width: 30.0,
-                    ),
-                    ElevatedButton(
-                      child: const Text("Continue with code"),
-                      onPressed: (() {
-                        setState(() {
-                          _validate = codeController.text.trim().isEmpty;
-                        });
-                        if (!_validate) {
-                          final data = codeController.text.split(":");
-                          FirebaseFirestore.instance
-                              .collection(data.first)
-                              .doc("Quiz Attempts")
-                              .get()
-                              .then((doc) {
-                                return (doc.get("AttemptList")
-                                    as List)[int.parse(data.last)];
-                              })
-                              .then(
-                                (attemptData) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => QuizAttempt(
-                                        totalQns:
-                                            attemptData["Questions"].length,
-                                        modName: attemptData["Module"],
-                                        timerCheck: _timerCheck,
-                                        countdown: _countdown.toInt(),
-                                        qnsList: attemptData["Questions"]),
-                                  ),
-                                ),
-                              )
-                              .onError((error, stackTrace) {
-                                setState(() {
-                                  _fail = true;
-                                });
-                              });
-                        }
-                      }),
-                    ),
-                  ],
-                )
-              ]),
-            );
-          });
+              ),
+            )
+            .onError((error, stackTrace) {
+              setState(() {
+                _fail = true;
+              });
+            });
+      }
     }
   }
 }
