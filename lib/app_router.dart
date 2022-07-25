@@ -46,9 +46,15 @@ class AppRouter {
                     ),
                 settings);
       case '/profile':
-        return _checkUser(
-            (user) => ProfilePage(user: user, profile: args as String),
-            settings);
+        return args != null
+            ? _checkUser(
+                (user) => ProfilePage(user: user, profile: args as String),
+                settings)
+            : _checkUser(
+                (user) => QuestionsPage(
+                      user: user,
+                    ),
+                settings);
       case '/bank':
         return _checkUser((user) => QuestionBankPage(user: user), settings);
       case '/bank/module':
