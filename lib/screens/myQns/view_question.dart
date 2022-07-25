@@ -459,11 +459,10 @@ class _ViewQuestion extends State<ViewQuestion> {
   /// Generate URL and save into clipboard
   void _genAndSaveURL() {
     Clipboard.setData(ClipboardData(
-            text: Uri.https('mugtogether.web.app', '/shareable', {
-      'uid': widget.question.data["Owner"],
-      'qid': widget.question.docId,
-      'module': widget.question.data["Module"]
-    }).toString()))
+            text: 'mugtogether.web.app/#/shareable?uid='
+                '${widget.question.data["Owner"]}&qid='
+                '${widget.question.docId}&module='
+                '${widget.question.data["Module"]}'))
         .then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("URL is saved into your clipboard!")));

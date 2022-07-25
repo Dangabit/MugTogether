@@ -55,9 +55,9 @@ void main() {
       await tester.tap(mod);
       await tester.pumpAndSettle();
       await tester.tap(sq);
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 3));
       await tester.pumpAndSettle();
-      expect(find.text("Quiz Attempt (AC5001)"), findsOneWidget);
+      expect(find.text("AC5001"), findsOneWidget);
 
       // Enter incomplete quiz (require at least 1 question in AC5001)
       Finder fqb = find.byKey(const Key("finishQuizButton"));
@@ -66,9 +66,10 @@ void main() {
       expect(find.text("Quiz is incomplete"), findsOneWidget);
 
       // Enter a complete quiz
-      Finder qtff = find.text('Input your answer (Multiline)');
+      Finder qtff = find.byType(TextFormField);
       await tester.enterText(qtff, "Testing...");
       await tester.ensureVisible(fqb);
+      await tester.tap(fqb);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
       await tester.pumpAndSettle();

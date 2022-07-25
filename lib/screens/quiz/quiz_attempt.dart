@@ -104,7 +104,7 @@ class _QuizAttempt extends State<QuizAttempt> {
                 widget.modName,
               )
             : Text(
-                "Quiz Attempt  (" + widget.modName + ")",
+                "Quiz Attempt (" + widget.modName + ")",
               ),
         actions: [
           widget.timerCheck ? _timer.display() : const Text(""),
