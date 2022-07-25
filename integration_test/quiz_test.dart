@@ -32,14 +32,18 @@ void main() {
       await tester.tap(loginButton);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
 
       // Move to Quiz page
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
       state.openDrawer();
+      await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       Finder qnab = find.byKey(const Key('Quiz'));
       await tester.tap(qnab);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       expect(find.text("Quiz"), findsOneWidget);
 
       // Start a quiz
@@ -52,6 +56,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(sq);
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       expect(find.text("Quiz Attempt (AC5001)"), findsOneWidget);
 
       // Enter incomplete quiz (require at least 1 question in AC5001)
@@ -66,6 +71,7 @@ void main() {
       await tester.ensureVisible(fqb);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       expect(find.text("Quiz"), findsOneWidget);
 
       // Check past records
@@ -73,6 +79,7 @@ void main() {
       await tester.tap(pqb);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       expect(find.text("Past Attempts"), findsOneWidget);
       expect(find.text("Attempt 1"), findsOneWidget);
     });

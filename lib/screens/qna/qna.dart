@@ -61,7 +61,7 @@ class _QnAPage extends State<QnAPage> {
               Tooltip(
                 message: "Next!",
                 child: ElevatedButton(
-                  key: const Key("moduleDropdown"),
+                  key: const Key("nextButton"),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.deepPurple,
                   ),

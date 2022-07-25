@@ -313,7 +313,7 @@ class _LoginPage extends State<LoginPage> {
         // and move the user to their homepage
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-          email: emailController.text,
+          email: emailController.text.trim(),
           password: passwordController.text,
         )
             .then((credential) {
