@@ -416,11 +416,7 @@ class _ViewQuestion extends State<ViewQuestion> {
                           primary: Colors.deepPurple,
                         ),
                         onPressed: () async {
-                          final name = await openDialog();
-                          if (name == null || name.isEmpty) {
-                            return;
-                          }
-                          PDFcreator.createPDF(widget.question, name);
+                          await openDialog();
                         },
                         child: const Text(
                           "PDF",
@@ -494,6 +490,9 @@ class _ViewQuestion extends State<ViewQuestion> {
       );
 
   void _pdfSubmit() {
+    if (pdfController.text.isNotEmpty) {
+      PDFcreator.createPDF(widget.question, pdfController.text);
+    }
     Navigator.of(context).pop(pdfController.text);
     pdfController.clear();
   }

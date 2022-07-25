@@ -46,7 +46,6 @@ dependencies:
   confirm_dialog: ^1.0.1
   flutter_markdown: ^0.6.8
   pdf: ^3.8.1
-  path_provider: ^2.0.11
   url_launcher: ^6.1.5
   permission_handler: ^10.0.0
 
