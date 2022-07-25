@@ -121,46 +121,50 @@ class _ProfilePage extends State<ProfilePage> {
                     SizedBox(
                       height: currentScreenHeight * 0.05,
                     ),
-                    SizedBox(
-                      width: 400,
-                      child: Column(
-                        children: [
-                          const Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Achievements",
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // Generate icons here
-                                children: List.generate(
-                                  60,
-                                  (index) => Column(
-                                    children: const [
-                                      Icon(Icons.badge),
-                                      SizedBox(
-                                        width: 30,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+                    //INCOMPLETE: Achievements
+
+                    // SizedBox(
+                    //   width: 400,
+                    //   child: Column(
+                    //     children: [
+                    //       const Align(
+                    //         alignment: Alignment.topLeft,
+                    //         child: Text(
+                    //           "Achievements",
+                    //           style: TextStyle(
+                    //             fontSize: 25,
+                    //             fontWeight: FontWeight.w300,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       const SizedBox(
+                    //         height: 10,
+                    //       ),
+                    //       SizedBox(
+                    //         child: SingleChildScrollView(
+                    //           scrollDirection: Axis.horizontal,
+                    //           child: Row(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             // Generate icons here
+                    //             children: List.generate(
+                    //               60,
+                    //               (index) => Column(
+                    //                 children: const [
+                    //                   Icon(Icons.badge),
+                    //                   SizedBox(
+                    //                     width: 30,
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
                     SizedBox(
                       height: currentScreenHeight * 0.15,
                     ),
