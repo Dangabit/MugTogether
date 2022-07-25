@@ -33,6 +33,7 @@ class _QuizAttempt extends State<QuizAttempt> {
   late List<Widget> _buttonsArray;
   late Future<List> _future;
   late String _errorText;
+  late int bankModSize;
 
   @override
   void initState() {
@@ -117,19 +118,27 @@ class _QuizAttempt extends State<QuizAttempt> {
               // Not enough questions widget
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Center(
                     child: Text(
-                      "There are not enough questions in our bank, sorry :C",
+                      bankModSize == 0
+                          ? "There are no questions available in our bank for this module."
+                          : bankModSize == 1
+                              ? "There is only 1 question in our bank for this module."
+                              : "There are only " +
+                                  bankModSize.toString() +
+                                  " questions in our bank for this module.",
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Center(
                     child: Text(
-                      "Try setting fewer questions or choose from another "
-                      "module.",
+                      bankModSize == 0 || bankModSize == 1
+                          ? "Try choosing from another module."
+                          : "Try setting fewer questions or choose from another "
+                              "module.",
                     ),
                   ),
                 ],
@@ -281,6 +290,7 @@ class _QuizAttempt extends State<QuizAttempt> {
         .get()
         .then((snapshot) {
       if (snapshot.size < widget.totalQns) {
+        bankModSize = snapshot.size;
         return List.empty();
       } else {
         List<QueryDocumentSnapshot> docsList = snapshot.docs;
