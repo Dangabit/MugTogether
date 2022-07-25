@@ -10,13 +10,7 @@ class MobilePDF implements PDFcreator {
     Permission.storage.request().then((perm) async {
       if (perm.isGranted) {
         final download = Directory("/storage/emulated/0/Download");
-        File('${download.path}/$name.pdf')
-            .writeAsBytes(bytes)
-            .whenComplete(() => print("ping"))
-            .onError((error, stackTrace) {
-          print(error);
-          throw Exception("Fail");
-        });
+        File('${download.path}/$name.pdf').writeAsBytes(bytes);
       } else if (perm.isPermanentlyDenied) {
         await openAppSettings();
       }

@@ -32,10 +32,13 @@ void main() {
       await tester.tap(loginButton);
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
 
       // Move to QnA page
       final ScaffoldState state = tester.firstState(find.byType(Scaffold));
       state.openDrawer();
+      await Future.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
       Finder qnab = find.byKey(const Key('QnA Forum'));
       await tester.tap(qnab);
       await tester.pumpAndSettle();
@@ -44,10 +47,16 @@ void main() {
 
       // Enter a lounge
       Finder md = find.byKey(const Key("moduleDropdown"));
+      Finder nb = find.byKey(const Key("nextButton"));
       await tester.tap(md);
       await tester.pumpAndSettle();
       Finder mod = find.text("AC5001");
       await tester.tap(mod);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(nb);
+      await tester.tap(nb);
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 2));
       await tester.pumpAndSettle();
       await Future.delayed(const Duration(seconds: 2));
       expect(find.text("QnA Lounge (AC5001)"), findsOneWidget);

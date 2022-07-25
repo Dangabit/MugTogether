@@ -237,6 +237,7 @@ class _AddQuestion extends State<AddQuestion> {
                                   ),
                                 ),
                                 Checkbox(
+                                  key: const Key("privacyCheckbox"),
                                     activeColor: Colors.deepPurple,
                                     splashRadius: 20.0,
                                     value: privacy,

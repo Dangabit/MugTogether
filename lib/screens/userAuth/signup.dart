@@ -364,7 +364,7 @@ class _SignUpPage extends State<SignUpPage> {
         // the user to the username and move the user to login
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-              email: emailController.text,
+              email: emailController.text.trim(),
               password: passwordController.text,
             )
             .then((credential) {
