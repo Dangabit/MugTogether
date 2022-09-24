@@ -66,17 +66,17 @@ Public profiles have been implemented for other users to view. From this, we wis
 
 [List of functions]
 As per tradition for a profiling and authentication system, the following functions are implemented:
-Sign up 
+- Sign up: 
 Users are able to create an account for the app, with a custom username. Only NUS emails are allowed and an email verification will be sent to verify the user.
-Login 
+- Login: 
 Users are able to log into the app to use the features within. Users must be verified before being allowed to enter.
-Forget password
+- Forget password: 
 Users are able to reset their password if he/she were to forget. An email will be sent to the user to guide them through the password resetting procedure.
-View profile
+- View profile: 
 Users are able to view their profile details.
-Edit profile
+- Edit profile: 
 Users are able to edit their username or change their password, but cannot change their NUS email. Upon changing any details, users are required to reverify themselves with their old password.
-Public profile
+- Public profile: 
 Users can view some public details about each other via a discussion room in the QnA forum.
 
 [Implementation]
@@ -92,27 +92,27 @@ Furthermore, we also included markdown support to allow users a way to format th
 
 [List of Functions]
 For this feature, we have come up with the following functions:
-Question Overview
+- Question Overview: 
 Users are able to look at an overview of all the questions that are stored within the user’s collection of questions. From the overview, questions that are incomplete (without any notes written) will be highlighted to show that the question has not been attempted by the user. Each card will only show the question itself for simplicity.
-Add question
+- Add question: 
 Users are able to add a question into the collection. Users are required to input the module that their questions are associated with. Tags and thought processes (notes) are optional fields to give the user flexibility to bundle their questions together and tackle the questions at a later time. A privacy checkbox is also implemented to give the user their privacy to whether their questions can be seen in the question bank or not.
-View question
+- View question: 
 Users are able to view their question in more detail, revealing more information such as last modified, their notes, the tags and whether their question can be seen in the question bank.
-Edit question
+- Edit question: 
 Users are able to update their question in a similar fashion to the add question function. However, users are not able to modify their module.
-Delete question
+- Delete question: 
 Users are able to delete their questions if they do not want it anymore.
-Tagging question
+- Tagging question: 
 Users are able to bundle their questions through tags. Each question can have multiple tags attached to it.
-Filter by Module
+- Filter by Module: 
 Users are able to filter their questions by the modules in the overview. The options available to filter by will be based on whether the user has a question for that module.
-Filter by Tags
+- Filter by Tags: 
 Users are able to filter their questions by the tags in the overview. The options available to filter by will be based on whether the user has a question for that tag. This filter can be chained with the module filter, however, the options available will not change based on the filtered module.
-Note Sharing
+- Note Sharing: 
 Users are able to download a PDF copy of their question and notes or retrieve a link to view it online.
-Push to QnA
+- Push to QnA: 
 Users are able to push their question to the QnA forum.
-Markdown support
+- Markdown support: 
 Users are able to format their notes following markdown style.
 
 [Implementation]
@@ -122,13 +122,13 @@ For the note sharing function, the URL is crafted by storing the info needed to 
 
 [Limitation]
 Upon reviewing our implementation, we have considered these problems
-URL information leak
+- URL information leak: 
 From the URL link generated, encryption is not used and various data are leaked out to the user. With our limited knowledge in cryptography, we are unable to resolve this problem.
-URL manipulation
+- URL manipulation: 
 Following the previous problem, it is possible for malicious users to retrieve questions and notes that are not meant to be shared. However, with the randomised document ID, this problem is slightly mitigated since it is harder to guess which ID is used.
-PDF markdown unsupported
+- PDF markdown unsupported
 Unfortunately, the different packages used for pdf and markdown are incompatible with each other, hence we are unable to render the notes as markdown when saved as a PDF.
-DIluted/Tainted Bank
+- Diluted/Tainted Bank: 
 While we have implemented the report button, it currently does nothing as the admin accounts have not been implemented. Even so, manually curating a huge bank of questions may require a lot of manpower, which is a flaw to this idea.
 
 ## Question Bank
@@ -141,13 +141,13 @@ As we have limited control over the users, we have provided them with the functi
 
 [List of Functions]
 Currently, the users are able to perform the following functions:
-Search by Module
+- Search by Module: 
 Users are able to search for all the public questions for a certain module.
-Pull to MyQuestions
+- Pull to MyQuestions: 
 Users are able to copy a question they found interesting into their personal collection. They can then modify these questions however they like, adding in their own thought process and tags. These duplicated questions will not show up in the question bank.
-Report / Flag
+- Report / Flag: 
 Users are able to report questions for review by the admins. Currently, there is no implementation of any admins.
-Difficulty Rating
+- Difficulty Rating: 
 Users are able to provide other users a gauge of the difficulty of the question, by rating it.
 
 [Implementation]
@@ -157,7 +157,7 @@ Reporting and rating are both additional fields for the question document. While
  
 [Limitation]
 Upon reviewing our implementation, we have considered this problem.
-Lax in Firebase security rule
+- Lax in Firebase security rule: 
 In order to accommodate rating and reporting of the question, additional fields have to be stored in the same document. This results in having to relax the security such that other users are able to edit the document. A workaround to store information in another document is possible, but requires more Firebase reads which we cannot afford.
 
 Note: Currently, we only have questions available for AC5001 and CS2030S for users to try from.
@@ -168,17 +168,17 @@ For students who want to test themselves with questions from the bank, this feat
 
 [List of Functions]
 For greater customisability by the user, the following functions are implemented:
-Quiz::Number of Questions
+- Quiz::Number of Questions: 
 Users are able to indicate the number of questions they would like to attempt, up to 10 questions per quiz.
-Quiz::Timer
+- Quiz::Timer: 
 Users are able to set a timer (10 min to 1h, 5 min interval) for themselves, which they can start whenever. Upon ending, a sound will be played to indicate to the users their time is up.
-Module Selection
+- Module Selection: 
 Users are able to select modules that they wish to test themselves upon.
-View Past Attempts
+- View Past Attempts: 
 Users are able to view their past attempts, which consist of the questions and their answers to them, along with the date of their attempt.
-Past Attempt::Pull to MyQuestions
+- Past Attempt::Pull to MyQuestions: 
 Users are able to pull interesting questions from their past attempts into their collection, along with the answers they had on that particular question. They can view and modify the questions from the MyQuestions feature. These questions will not show up on the question bank.
-Sharable Quiz
+- Sharable Quiz: 
 Users can share a seed to allow their friends to try the same set of questions as them.
 
 [Implementation]
@@ -188,10 +188,9 @@ For a shareable code, it is kept simple as a code to store certain info, where w
 
 [Limitation]
 Upon reviewing the possible options, we have considered this problem.
-
-Difficulty System failed implementation
+- Difficulty System failed implementation: 
 While the algorithm to retrieve a set of questions centred around a certain difficulty level is not hard, we failed to find an efficient way to reduce the amount of document reads needed. This is particularly crucial as our project runs on the free Spark plan, which has a low limit of 50,000 reads per day. Furthermore, we feel that it is also not right to ignore questions that have not been rated by users yet.
-Code manipulation
+- Code manipulation: 
 As a side effect similar to URL manipulation, the code is unencrypted and can easily be manipulated to retrieve other users' quiz attempts. 
 
 Note: Currently, we only have questions available for AC5001 and CS2030S for users to try from.
@@ -202,11 +201,11 @@ Students facing difficulties in their question can use this feature to seek help
 
 [List of Functions]
 These functions have been implemented:
-Help Posting
+- Help Posting: 
 Users are able to post questions that they require assistance in.
-Module Filter & “Lounges”
+- Module Filter & “Lounges”: 
 Users are able to enter a lounge and look at the discussions pertaining to their module.
-Discussion
+- Discussion: 
 Users are able to freely partake in a discussion and obtain real time updates for it.
 
 [Implementation]
@@ -214,8 +213,9 @@ For this feature, a new database is required. However, we are unable to have 2 f
 
 [Limitation]
 Upon reviewing the possible options, we have considered this problem.
-Auto Save failed implementation
+- Auto Save failed implementation: 
 This function is very doable using Firebase Cloud Functions to schedule a task that will be activated a certain time later. However, the pricing plan of our project will have to be upgraded to Blaze plan (pay as you use). While it will still be free, we are unwilling to take the risk that we might incur a debt from exceeding any limits from Firestore or this Cloud Function itself.
+
 An alternative solution we have considered is to use cron jobs to clean up the database everyday, removing discussions that have exceeded the timing. However, we do not have time to implement this.
 
 Note: Currently, we only have discussions available for AC5001 and CS2030S for users to try from.
